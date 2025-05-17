@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz: Chapter 1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .question {
+      background: #fff;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      padding: 8px;
+      width: 80%;
+      margin-top: 10px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+    }
+    .correct {
+      border-color: green !important;
+      background-color: #d4edda;
+    }
+    .wrong {
+      border-color: red !important;
+      background-color: #f8d7da;
+    }
+    .disabled {
+      background-color: #e0e0e0;
+      pointer-events: none;
+    }
+    .answer-reveal {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Chapter: Geography & Science</h2>
+  <div id="quiz-container"></div>
+  <div id="result"></div>
+
+  <script>
+    const chapterName = "Geography & Science";
+    const quizData = [
+      {
+        question: "What is the capital of India?",
+        answer: "New Delhi"
+      },
+      {
+        question: "What is 5 + 7?",
+        answer: "12"
+      },
+      {
+        question: "Name the largest planet in our solar system.",
+        answer: "Jupiter"
+      }
+    ];
+
+    let correctCount = 0;
+    let wrongCount = 0;
+    const totalQuestions = quizData.length;
+
+    const container = document.getElementById("quiz-container");
+    const resultDiv = document.getElementById("result");
+
+    quizData.forEach((q, idx) => {
+      const qDiv = document.createElement("div");
+      qDiv.className = "question";
+
+      qDiv.innerHTML = `
+        <p><strong>Q${idx + 1}:</strong> ${q.question}</p>
+        <input type="text" id="input-${idx}" placeholder="Type your answer here" />
+        <button onclick="checkAnswer(${idx})">Submit</button>
+        <div class="answer-reveal" id="reveal-${idx}"></div>
+      `;
+
+      container.appendChild(qDiv);
+    });
+
+    function checkAnswer(index) {
+      const input = document.getElementById(`input-${index}`);
+      const reveal = document.getElementById(`reveal-${index}`);
+      const userAnswer = input.value.trim().toLowerCase();
+      const correctAnswer = quizData[index].answer.trim().toLowerCase();
+
+      // Disable further changes
+      input.disabled = true;
+      input.classList.add("disabled");
+
+      if (userAnswer === correctAnswer) {
+        input.classList.add("correct");
+        reveal.textContent = "Correct!";
+        reveal.style.color = "green";
+        correctCount++;
+      } else {
+        input.classList.add("wrong");
+        reveal.textContent = `Incorrect. Correct answer: ${quizData[index].answer}`;
+        reveal.style.color = "red";
+        wrongCount++;
+      }
+
+      // Disable the button after submission
+      const btn = input.nextElementSibling;
+      btn.disabled = true;
+      btn.style.backgroundColor = "#ccc";
+      btn.style.cursor = "not-allowed";
+
+      // Show final result if all questions answered
+      if (correctCount + wrongCount === totalQuestions) {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      const timestamp = new Date().toLocaleString();
+      resultDiv.innerHTML = `
+        <h3>Quiz Completed!</h3>
+        <p><strong>Chapter:</strong> ${chapterName}</p>
+        <p><strong>Time:</strong> ${timestamp}</p>
+        <p><strong>Correct Answers:</strong> ${correctCount}</p>
+        <p><strong>Incorrect Answers:</strong> ${wrongCount}</p>
+        <p><strong>Total Questions:</strong> ${totalQuestions}</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
