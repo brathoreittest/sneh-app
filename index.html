@@ -1,155 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Quiz: Chapter 1</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #f4f4f4;
-    }
-    .question {
-      background: #fff;
-      margin-bottom: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    input[type="text"] {
-      padding: 8px;
-      width: 80%;
-      margin-top: 10px;
-      border: 2px solid #ccc;
-      border-radius: 4px;
-    }
-    .correct {
-      border-color: green !important;
-      background-color: #d4edda;
-    }
-    .wrong {
-      border-color: red !important;
-      background-color: #f8d7da;
-    }
-    .disabled {
-      background-color: #e0e0e0;
-      pointer-events: none;
-    }
-    .answer-reveal {
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    button {
-      margin-top: 10px;
-      padding: 6px 12px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 30px;
-      padding: 15px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      font-size: 16px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quiz App - Show Correct After Answer</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
+  select, input[type=text] { font-size: 16px; padding: 6px; margin: 10px 0; width: 100%; box-sizing: border-box; }
+  button { font-size: 16px; padding: 8px 12px; cursor: pointer; margin-top: 10px; }
+  .question-container { margin-bottom: 25px; }
+  .question-text { font-weight: bold; margin-bottom: 6px; }
+  .answer-input { width: 100%; padding: 6px; font-size: 16px; }
+  .correct { background-color: #c8e6c9; }
+  .wrong { background-color: #ffcdd2; }
+  .disabled { opacity: 0.6; pointer-events: none; }
+  .correct-answer { margin-top: 6px; font-style: italic; color: green; }
+  #result { font-weight: bold; margin-top: 20px; }
+</style>
 </head>
 <body>
 
-  <h2>Chapter: Geography & Science</h2>
-  <div id="quiz-container"></div>
-  <div id="result"></div>
+<h1>Quiz App</h1>
 
-  <script>
-    const chapterName = "Geography & Science";
-    const quizData = [
-      {
-        question: "What is the capital of India?",
-        answer: "New Delhi"
-      },
-      {
-        question: "What is 5 + 7?",
-        answer: "12"
-      },
-      {
-        question: "Name the largest planet in our solar system.",
-        answer: "Jupiter"
+<label for="subjectSelect">Select Subject:</label>
+<select id="subjectSelect">
+  <option value="">--Choose Subject--</option>
+  <option value="maths">Maths</option>
+  <option value="hindi">Hindi</option>
+  <option value="english">English</option>
+</select>
+
+<label for="chapterSelect">Select Chapter:</label>
+<select id="chapterSelect" disabled>
+  <option value="">--Choose Chapter--</option>
+</select>
+
+<button id="loadQuizBtn" disabled>Load Quiz</button>
+
+<div id="quizContainer"></div>
+
+<div id="result"></div>
+
+<script>
+const subjectSelect = document.getElementById('subjectSelect');
+const chapterSelect = document.getElementById('chapterSelect');
+const loadQuizBtn = document.getElementById('loadQuizBtn');
+const quizContainer = document.getElementById('quizContainer');
+const resultDiv = document.getElementById('result');
+
+let currentQuestions = [];
+let answeredCount = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let chapterName = "";
+
+subjectSelect.addEventListener('change', () => {
+  const subject = subjectSelect.value;
+  chapterSelect.innerHTML = '<option value="">--Choose Chapter--</option>';
+  chapterSelect.disabled = true;
+  loadQuizBtn.disabled = true;
+  quizContainer.innerHTML = '';
+  resultDiv.innerHTML = '';
+
+  if (!subject) return;
+
+  fetch(`${subject}/chapters.json`)
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to load chapters.json');
+      return res.json();
+    })
+    .then(chapters => {
+      chapters.forEach(chap => {
+        const option = document.createElement('option');
+        option.value = chap.file;
+        option.textContent = chap.chapterName;
+        chapterSelect.appendChild(option);
+      });
+      chapterSelect.disabled = false;
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Could not load chapters for this subject.');
+    });
+});
+
+chapterSelect.addEventListener('change', () => {
+  loadQuizBtn.disabled = !chapterSelect.value;
+  quizContainer.innerHTML = '';
+  resultDiv.innerHTML = '';
+});
+
+loadQuizBtn.addEventListener('click', () => {
+  const subject = subjectSelect.value;
+  const chapterFile = chapterSelect.value;
+  if (!subject || !chapterFile) return;
+
+  quizContainer.innerHTML = '';
+  resultDiv.innerHTML = '';
+  answeredCount = 0;
+  correctCount = 0;
+  wrongCount = 0;
+
+  fetch(`${subject}/${chapterFile}`)
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to load chapter file');
+      return res.json();
+    })
+    .then(data => {
+      chapterName = chapterSelect.options[chapterSelect.selectedIndex].textContent;
+      // Pick random 30 questions
+      currentQuestions = getRandomQuestions(data, 30);
+      if (!Array.isArray(currentQuestions) || currentQuestions.length === 0) {
+        alert('No questions found in this chapter.');
+        return;
       }
-    ];
+      displayQuestions(currentQuestions);
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Failed to load questions.');
+    });
+});
 
-    let correctCount = 0;
-    let wrongCount = 0;
-    const totalQuestions = quizData.length;
+// Function to pick n random questions from an array
+function getRandomQuestions(arr, n) {
+  const shuffled = arr.slice(); // clone array
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, Math.min(n, shuffled.length));
+}
 
-    const container = document.getElementById("quiz-container");
-    const resultDiv = document.getElementById("result");
+function displayQuestions(questions) {
+  quizContainer.innerHTML = '';
+  questions.forEach((q, idx) => {
+    const container = document.createElement('div');
+    container.className = 'question-container';
+    container.dataset.index = idx;
 
-    quizData.forEach((q, idx) => {
-      const qDiv = document.createElement("div");
-      qDiv.className = "question";
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = `${idx + 1}. ${q.question}`;
+    container.appendChild(questionText);
 
-      qDiv.innerHTML = `
-        <p><strong>Q${idx + 1}:</strong> ${q.question}</p>
-        <input type="text" id="input-${idx}" placeholder="Type your answer here" />
-        <button onclick="checkAnswer(${idx})">Submit</button>
-        <div class="answer-reveal" id="reveal-${idx}"></div>
-      `;
+    // Input box for user answer
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'answer-input';
+    input.placeholder = 'Type your answer here and press Enter';
+    input.autocomplete = 'off';
 
-      container.appendChild(qDiv);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        checkAnswer(idx, input);
+      }
     });
 
-    function checkAnswer(index) {
-      const input = document.getElementById(`input-${index}`);
-      const reveal = document.getElementById(`reveal-${index}`);
-      const userAnswer = input.value.trim().toLowerCase();
-      const correctAnswer = quizData[index].answer.trim().toLowerCase();
+    container.appendChild(input);
 
-      // Disable further changes
-      input.disabled = true;
-      input.classList.add("disabled");
+    quizContainer.appendChild(container);
+  });
+}
 
-      if (userAnswer === correctAnswer) {
-        input.classList.add("correct");
-        reveal.textContent = "Correct!";
-        reveal.style.color = "green";
-        correctCount++;
-      } else {
-        input.classList.add("wrong");
-        reveal.textContent = `Incorrect. Correct answer: ${quizData[index].answer}`;
-        reveal.style.color = "red";
-        wrongCount++;
-      }
+function checkAnswer(index, inputElem) {
+  if (inputElem.disabled) return;
 
-      // Disable the button after submission
-      const btn = input.nextElementSibling;
-      btn.disabled = true;
-      btn.style.backgroundColor = "#ccc";
-      btn.style.cursor = "not-allowed";
+  const userAnswer = inputElem.value.trim().toLowerCase();
+  const question = currentQuestions[index];
+  if (!question) return;
 
-      // Show final result if all questions answered
-      if (correctCount + wrongCount === totalQuestions) {
-        showResult();
-      }
-    }
+  if (userAnswer === '') return;
 
-    function showResult() {
-      const timestamp = new Date().toLocaleString();
-      resultDiv.innerHTML = `
-        <h3>Quiz Completed!</h3>
-        <p><strong>Chapter:</strong> ${chapterName}</p>
-        <p><strong>Time:</strong> ${timestamp}</p>
-        <p><strong>Correct Answers:</strong> ${correctCount}</p>
-        <p><strong>Incorrect Answers:</strong> ${wrongCount}</p>
-        <p><strong>Total Questions:</strong> ${totalQuestions}</p>
-      `;
-    }
-  </script>
+  // Correct answer index (assuming 0-based)
+  const correctIdx = question.correctAnswer;
+
+  const correctAnswerText = question.choices[correctIdx];
+  if (!correctAnswerText) return;
+
+  const container = inputElem.parentElement;
+
+  // Check if userAnswer matches correct answer (case-insensitive)
+  if (userAnswer === correctAnswerText.toLowerCase()) {
+    inputElem.classList.add('correct');
+    correctCount++;
+  } else {
+    inputElem.classList.add('wrong');
+    wrongCount++;
+  }
+
+  answeredCount++;
+  inputElem.disabled = true;
+  container.classList.add('disabled');
+
+  // Show correct answer below input
+  const answerDiv = document.createElement('div');
+  answerDiv.className = 'correct-answer';
+  answerDiv.textContent = `Correct answer: ${correctAnswerText}`;
+  container.appendChild(answerDiv);
+
+  if (answeredCount === currentQuestions.length) {
+    showResults();
+  }
+}
+
+function showResults() {
+  const timestamp = new Date().toLocaleString();
+  resultDiv.innerHTML = `
+    Chapter: <strong>${chapterName}</strong><br />
+    Total Questions: ${currentQuestions.length}<br />
+    Correct Answers: ${correctCount}<br />
+    Wrong Answers: ${wrongCount}<br />
+    Completed at: ${timestamp}
+  `;
+}
+</script>
 
 </body>
 </html>
