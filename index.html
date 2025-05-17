@@ -109,7 +109,7 @@ loadQuizBtn.addEventListener('click', () => {
     .then(data => {
       chapterName = chapterSelect.options[chapterSelect.selectedIndex].textContent;
       // Pick random 30 questions
-      currentQuestions = getRandomQuestions(data, 30);
+      currentQuestions = getRandomQuestions(data, 20);
       if (!Array.isArray(currentQuestions) || currentQuestions.length === 0) {
         alert('No questions found in this chapter.');
         return;
