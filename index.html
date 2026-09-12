@@ -1,220 +1,1055 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quiz App - Show Correct After Answer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 6 Practice Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
-  select, input[type=text] { font-size: 16px; padding: 6px; margin: 10px 0; width: 100%; box-sizing: border-box; }
-  button { font-size: 16px; padding: 8px 12px; cursor: pointer; margin-top: 10px; }
-  .question-container { margin-bottom: 25px; }
-  .question-text { font-weight: bold; margin-bottom: 6px; }
-  .answer-input { width: 100%; padding: 6px; font-size: 16px; }
-  .correct { background-color: #c8e6c9; }
-  .wrong { background-color: #ffcdd2; }
-  .disabled { opacity: 0.6; pointer-events: none; }
-  .correct-answer { margin-top: 6px; font-style: italic; color: green; }
-  #result { font-weight: bold; margin-top: 20px; }
+  :root{
+    --paper:#FBF6E9;
+    --paper-line:#DCE3CF;
+    --board:#20463A;
+    --board-dark:#163329;
+    --ink:#2B3A4A;
+    --marker-red:#D6493C;
+    --pencil-yellow:#F2B705;
+    --leaf:#4C8B6B;
+    --leaf-light:#D9EEDF;
+    --paper-shadow: 0 18px 40px -18px rgba(32,70,58,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--board);
+    background-image:
+      radial-gradient(circle at 10% 15%, rgba(255,255,255,0.035) 0, transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(255,255,255,0.03) 0, transparent 40%);
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    padding: 28px 16px 60px;
+  }
+  h1,h2,h3,.brand,.q-marks-tag{font-family:'Baloo 2', sans-serif;}
+  .wrap{max-width:880px;margin:0 auto;}
+
+  /* ---- Header ---- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; margin-bottom:22px; flex-wrap:wrap;
+  }
+  .brand{
+    color:#fff; font-size:26px; font-weight:800; letter-spacing:0.2px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .chalk{
+    font-family:'Caveat',cursive; font-weight:700; color:var(--pencil-yellow);
+    font-size:30px; transform:rotate(-3deg); display:inline-block;
+  }
+  .key-box{
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+    border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:8px;
+  }
+  .key-box input[type="password"], .key-box input[type="text"]{
+    width:220px; border:none; background:transparent; color:#fff; font-size:13px;
+    outline:none; font-family:'Inter',sans-serif;
+  }
+  .key-box input::placeholder{color:rgba(255,255,255,0.55);}
+  .key-box select{
+    background:rgba(0,0,0,0.25); color:#fff; border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px; font-size:12px; padding:6px 6px; font-family:'Inter',sans-serif;
+  }
+  .key-btn{
+    border:none; background:var(--pencil-yellow); color:#1d2a1f; font-weight:700;
+    padding:7px 12px; border-radius:8px; font-size:12px; cursor:pointer;
+  }
+  .key-status{font-size:11px; color:var(--leaf-light); margin-top:4px; min-height:14px;}
+
+  /* ---- Notebook card ---- */
+  .notebook{
+    position:relative;
+    background:var(--paper);
+    border-radius:18px;
+    box-shadow:var(--paper-shadow);
+    padding: 34px 34px 34px 62px;
+    background-image: repeating-linear-gradient(
+        to bottom, transparent, transparent 34px, var(--paper-line) 35px
+    );
+    background-position: 0 92px;
+  }
+  .notebook::before{
+    content:"";
+    position:absolute; left:34px; top:0; bottom:0; width:2px;
+    background: rgba(214,73,60,0.35);
+  }
+  .spiral{
+    position:absolute; left:-14px; top:26px; bottom:26px; width:28px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .spiral span{
+    display:block; width:26px; height:26px; border-radius:50%;
+    background: var(--board-dark);
+    box-shadow: inset 0 0 0 6px var(--paper), inset 0 0 0 8px rgba(0,0,0,0.15);
+  }
+
+  .setup-title{font-size:24px; font-weight:700; margin:0 0 4px; color:var(--board-dark);}
+  .setup-sub{font-size:14px; color:#5b6b62; margin:0 0 22px;}
+
+  .field-row{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:18px;}
+  .field{flex:1; min-width:220px;}
+  .field label{
+    display:block; font-size:12px; text-transform:none; font-weight:600;
+    color:var(--board-dark); margin-bottom:6px;
+  }
+  select.styled, textarea.styled{
+    width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid #cdd8c6;
+    background:#fff; font-family:'Inter',sans-serif; font-size:14px; color:var(--ink);
+  }
+  textarea.styled{min-height:70px; resize:vertical;}
+
+  .chapters-box{
+    background:#fff; border:1.5px solid #cdd8c6; border-radius:12px;
+    padding:14px 16px; margin-bottom:20px; max-height:260px; overflow-y:auto;
+  }
+  .chapter-group-title{
+    font-size:12px; font-weight:700; color:var(--leaf); margin:10px 0 6px;
+  }
+  .chapter-group-title:first-child{margin-top:0;}
+  .chapter-item{display:flex; align-items:flex-start; gap:8px; padding:5px 0; font-size:14px;}
+  .chapter-item input{margin-top:3px;}
+  .chapter-item label{cursor:pointer;}
+
+  .select-row{display:flex; gap:10px; margin-bottom:10px;}
+  .mini-btn{
+    border:1px solid #cdd8c6; background:#fff; color:var(--board-dark);
+    font-size:12px; padding:5px 10px; border-radius:8px; cursor:pointer; font-weight:600;
+  }
+  .mini-btn:hover{background:var(--leaf-light);}
+
+  .generate-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--marker-red); color:#fff; border:none; font-weight:700;
+    font-size:16px; padding:13px 26px; border-radius:12px; cursor:pointer;
+    font-family:'Baloo 2', sans-serif; box-shadow:0 10px 20px -8px rgba(214,73,60,0.6);
+  }
+  .generate-btn:disabled{opacity:0.55; cursor:not-allowed; box-shadow:none;}
+  .generate-btn:hover:not(:disabled){filter:brightness(1.05);}
+
+  .status-line{margin-top:14px; font-size:13px; color:#5b6b62; min-height:18px;}
+  .error-line{color:var(--marker-red); font-weight:600;}
+
+  /* ---- Exam header/timer ---- */
+  .exam-top{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
+    gap:14px; margin-bottom:22px; padding-bottom:16px; border-bottom:2px dashed #cdd8c6;
+  }
+  .paper-title{font-size:20px; font-weight:700; color:var(--board-dark);}
+  .paper-meta{font-size:13px; color:#5b6b62;}
+  .overall-timer{
+    background:var(--board); color:#fff; padding:10px 18px; border-radius:12px;
+    font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700; letter-spacing:1px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .overall-timer.low{background:var(--marker-red);}
+  .exam-actions{display:flex; gap:10px; margin-bottom:8px;}
+  .submit-btn{
+    background:var(--board); color:#fff; border:none; font-weight:700;
+    padding:11px 20px; border-radius:10px; cursor:pointer; font-family:'Baloo 2',sans-serif;
+    font-size:15px;
+  }
+  .submit-btn:hover{background:var(--board-dark);}
+
+  /* ---- Question card ---- */
+  .qcard{
+    background:#fff; border:1.5px solid #e2e8dc; border-radius:14px;
+    padding:18px 20px; margin-bottom:16px; position:relative;
+  }
+  .qcard.locked{opacity:0.6;}
+  .qcard.active{border-color:var(--leaf); box-shadow:0 0 0 3px var(--leaf-light);}
+  .q-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;}
+  .q-title{font-size:15px; font-weight:600; color:var(--ink); line-height:1.5;}
+  .q-num{color:var(--leaf); font-weight:700; margin-right:6px;}
+  .q-marks-tag{
+    background:var(--leaf-light); color:var(--leaf); font-size:12px; font-weight:700;
+    padding:4px 10px; border-radius:20px; white-space:nowrap;
+  }
+  .q-type-tag{
+    font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#8b9a90;
+    font-weight:700; margin-bottom:6px;
+  }
+  .q-body{margin-top:8px;}
+  .opt-item{display:flex; align-items:center; gap:8px; padding:6px 0; font-size:14px;}
+  .opt-item input{cursor:pointer;}
+  .opt-item label{cursor:pointer;}
+  .q-input{
+    width:100%; padding:9px 11px; border-radius:8px; border:1.5px solid #cdd8c6;
+    font-family:'Inter',sans-serif; font-size:14px; margin-top:4px;
+  }
+  textarea.q-input{min-height:60px; resize:vertical;}
+  textarea.q-input.long{min-height:110px;}
+
+  .q-controls{display:flex; align-items:center; gap:10px; margin-top:12px;}
+  .start-btn{
+    background:var(--pencil-yellow); color:#3a2c00; border:none; font-weight:700;
+    padding:7px 16px; border-radius:8px; cursor:pointer; font-size:13px;
+    font-family:'Baloo 2', sans-serif;
+  }
+  .start-btn:disabled{background:#e5e5e5; color:#9a9a9a; cursor:not-allowed;}
+  .q-timer{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14px; color:var(--board-dark);
+    background:#f1efe4; padding:5px 12px; border-radius:8px; min-width:56px; text-align:center;
+  }
+  .q-timer.warn{color:var(--marker-red);}
+  .q-note{font-size:12px; color:#8b9a90; margin-top:4px;}
+
+  /* ---- Results ---- */
+  .score-banner{
+    background: var(--leaf); color:#fff; border-radius:14px; padding:20px 24px;
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px;
+  }
+  .score-big{font-family:'Baloo 2',sans-serif; font-size:34px; font-weight:800;}
+  .score-sub{font-size:13px; opacity:0.9;}
+  .result-card{border-radius:14px; padding:16px 20px; margin-bottom:14px; border:1.5px solid #e2e8dc;}
+  .result-card.correct{border-color:#8ec9a1; background:#f2fbf4;}
+  .result-card.wrong{border-color:#e6a9a2; background:#fdf4f3;}
+  .result-card.pending{border-color:#e3d18f; background:#fdfaf0;}
+  .answer-line{font-size:13px; margin-top:6px;}
+  .answer-line b{color:var(--board-dark);}
+  .your-answer{font-style:italic; color:#5b6b62;}
+  .self-grade{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .self-grade button{
+    border:1.5px solid #cdd8c6; background:#fff; padding:6px 12px; border-radius:8px;
+    font-size:12px; cursor:pointer; font-weight:600;
+  }
+  .self-grade button.chosen{background:var(--leaf); color:#fff; border-color:var(--leaf);}
+  .key-points{margin:6px 0 0 18px; padding:0; font-size:13px;}
+
+  .hidden{display:none !important;}
+  .spinner{
+    width:16px; height:16px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff;
+    border-radius:50%; animation:spin 0.8s linear infinite; display:inline-block;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  footer.hint{
+    text-align:center; color:rgba(255,255,255,0.55); font-size:12px; margin-top:26px;
+  }
+  a.reset-link{color:rgba(255,255,255,0.75); cursor:pointer; text-decoration:underline;}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<h1>Quiz App</h1>
+  <div class="topbar">
+    <div class="brand"><span class="chalk">Class 6</span> Practice Exam</div>
+    <div>
+      <div class="key-box">
+        <input id="apiKeyInput" type="password" placeholder="Gemini API key (AIza...)">
+        <select id="modelSelect">
+          <option value="gemini-3.8-flash">Gemini 3.8 Flash (recommended)</option>
+          <option value="gemini-3.1-pro">Gemini 3.1 Pro (higher quality, slower)</option>
+          <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (fastest)</option>
+        </select>
+        <button class="key-btn" id="saveKeyBtn">Save</button>
+      </div>
+      <div class="key-status" id="keyStatus"></div>
+    </div>
+  </div>
 
-<label for="subjectSelect">Select Subject:</label>
-<select id="subjectSelect">
-  <option value="">--Choose Subject--</option>
-  <option value="maths">Maths</option>
-  <option value="hindi">Hindi</option>
-  <option value="english">English</option>
-</select>
+  <!-- SETUP SCREEN -->
+  <div class="notebook" id="setupScreen">
+    <div class="spiral" id="spiral"></div>
+    <div class="setup-title">Set up your practice paper</div>
+    <p class="setup-sub">Pick a subject, tick the chapters you want to be tested on, then generate a fresh 30-mark paper.</p>
 
-<label for="chapterSelect">Select Chapter:</label>
-<select id="chapterSelect" disabled>
-  <option value="">--Choose Chapter--</option>
-</select>
+    <div class="field-row">
+      <div class="field">
+        <label>Subject</label>
+        <select class="styled" id="subjectSelect"></select>
+      </div>
+    </div>
 
-<button id="loadQuizBtn" disabled>Load Quiz</button>
+    <div class="field">
+      <label id="chaptersLabel">Chapters to include</label>
+      <div class="select-row" id="chapterQuickActions">
+        <button class="mini-btn" id="selectAllBtn" type="button">Select all</button>
+        <button class="mini-btn" id="clearAllBtn" type="button">Clear all</button>
+      </div>
+      <div class="chapters-box" id="chaptersBox"></div>
+    </div>
 
-<div id="quizContainer"></div>
+    <button class="generate-btn" id="generateBtn">Generate question paper</button>
+    <div class="status-line" id="statusLine"></div>
+  </div>
 
-<div id="result"></div>
+  <!-- EXAM SCREEN -->
+  <div class="notebook hidden" id="examScreen">
+    <div class="spiral"></div>
+    <div class="exam-top">
+      <div>
+        <div class="paper-title" id="examTitle">Paper</div>
+        <div class="paper-meta" id="examMeta"></div>
+      </div>
+      <div class="overall-timer" id="overallTimer">⏱ 30:00</div>
+    </div>
+    <div class="exam-actions">
+      <button class="submit-btn" id="submitBtn">Submit paper</button>
+    </div>
+    <div id="questionsContainer"></div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div class="notebook hidden" id="resultsScreen">
+    <div class="spiral"></div>
+    <div class="score-banner">
+      <div>
+        <div class="score-big" id="scoreBig">0 / 30</div>
+        <div class="score-sub">Total score</div>
+      </div>
+      <div class="score-sub" id="scoreNote"></div>
+    </div>
+    <div id="resultsContainer"></div>
+    <button class="generate-btn" id="newPaperBtn" style="margin-top:6px;">Start a new paper</button>
+  </div>
+
+  <footer class="hint">
+    Your API key is stored only in this browser's local storage. It never leaves your device except in direct calls to Google's Gemini API.
+    &nbsp;·&nbsp; <a class="reset-link" id="forgetKeyLink">Forget saved key</a>
+  </footer>
+</div>
 
 <script>
-const subjectSelect = document.getElementById('subjectSelect');
-const chapterSelect = document.getElementById('chapterSelect');
-const loadQuizBtn = document.getElementById('loadQuizBtn');
-const quizContainer = document.getElementById('quizContainer');
-const resultDiv = document.getElementById('result');
+(function(){
 
-let currentQuestions = [];
-let answeredCount = 0;
-let correctCount = 0;
-let wrongCount = 0;
-let chapterName = "";
+/* ---------------------------------------------------------------
+   1. SUBJECT / CHAPTER DATA
+---------------------------------------------------------------- */
+const SUBJECTS = {
+  "English": {
+    book: "Inspire Course Book 6 / New Grammar Way 6",
+    groups: {
+      "Reader — Inspire Course Book 6": [
+        "The White Elephant","The Arrow and the Song","The Great Automatic Grammatizator",
+        "Vocation","A Grain of Mustard Seed","The Brook","The Ransom of Red Chief","If",
+        "The Wizard of Oz (Excerpt)","Sympathy"
+      ],
+      "Grammar — New Grammar Way 6": [
+        "Nouns","Singular and Plural Nouns","Gender","Case","Verbs",
+        "Auxiliary Verbs, Including Modals","Subject and Predicate","The Tense",
+        "Simple Tenses","Continuous Tenses","Perfect Tenses","Active and Passive Voice",
+        "Sentence and Its Kinds","Short Forms — Contractions","Interjections"
+      ]
+    }
+  },
+  "Hindi": {
+    book: "Pratham Hindi Pathyapustak 6 / Pratham Hindi Vyakaran 6",
+    groups: {
+      "Reader — Pratham Hindi Pathyapustak 6": [
+        "साहसी अमित","वह चिड़िया जो","बचपन","नादान दोस्त","चाँद से थोड़ी सी गप्पें",
+        "उनकी याद में... / उनकी जय बोल","ऐसा क्यों होता है?","स्कूल मुझे अच्छा लगा",
+        "संसार पुस्तक है","झांसी की रानी","तिवारी का तोता","लोकगीत",
+        "जो देखकर भी नहीं देखते","संसार में शांति"
+      ],
+      "Grammar — Pratham Hindi Vyakaran 6": [
+        "भाषा, लिपि और व्याकरण","वर्ण विचार","शब्द विचार","संज्ञा","लिंग","वचन","कारक",
+        "सर्वनाम","विशेषण","क्रिया","काल","अव्यय / अविकारी शब्द","संधि","समास",
+        "उपसर्ग और प्रत्यय","पर्यायवाची, विलोम एवं अनेकार्थी शब्द","वाक्य विचार",
+        "मुहावरे और लोकोक्तियाँ","अशुद्धि शोधन","पत्र लेखन एवं निबंध लेखन"
+      ]
+    }
+  },
+  "Mathematics": {
+    book: "SMART Minds Mathematics 6",
+    groups: {
+      "Chapters": [
+        "Patterns in Mathematics","Lines and Angles","Number Play",
+        "Data Handling and Presentation","Prime Time","Perimeter and Area",
+        "Fractions","Playing with Constructions","Symmetry","The Other Side of Zero"
+      ]
+    }
+  },
+  "Science": {
+    book: "SURE Science 6",
+    groups: {
+      "Chapters": [
+        "Components of Food","Sorting Materials into Groups","Separation of Substances",
+        "Getting to Know Plants","Body Movements",
+        "The Living Organisms — Characteristics and Habitats",
+        "Motion and Measurement of Distances","Light, Shadows and Reflections",
+        "Electricity and Circuits","Fun with Magnets","Air Around Us","Water"
+      ]
+    }
+  },
+  "Social Science": {
+    book: "Society & Beyond 6",
+    groups: {
+      "Chapters": [
+        "Locating Places on the Earth","Oceans and Continents","Landforms and Life",
+        "Timeline of History and Its Sources","Bharat, That Is India",
+        "The Beginning of Indian Civilization","India's Cultural Roots",
+        "Unity in Diversity","Family and Community","Basic Democracy — Governance",
+        "Local Government — Rural Areas","Local Government — Urban Areas",
+        "Importance of Work","Economic Activities Around Us"
+      ]
+    }
+  },
+  "Sanskrit": {
+    book: "Pratham Sanskrit Textbook 6",
+    groups: {
+      "Chapters": [
+        "अस्मद्-युष्मद् परिचयः / वर्णमाला","अकारान्त पुल्लिंग शब्दाः",
+        "आकारान्त स्त्रीलिङ्ग शब्दाः","अकारान्त नपुंसकलिङ्ग शब्दाः","प्रथम पुरुषः",
+        "मध्यम पुरुषः","उत्तम पुरुषः","कारक एवं विभक्ति परिचयः",
+        "अव्‍यय पदानाम् प्रयोगः","सङ्ख्या परिचयः","चित्राधारितं वर्णनम्","सुभाषितानि"
+      ]
+    }
+  },
+  "Computer / Information Technology": {
+    book: "Skill Gate 6",
+    groups: {
+      "Chapters": [
+        "Mastering Windows 10","Using Mail Merge","More on Excel 2010",
+        "Formulas and Functions in Excel 2010","Advanced Features of Excel",
+        "Inserting Tables and Objects in PowerPoint 2010","Animating Text and Objects",
+        "Computer Language"
+      ]
+    }
+  },
+  "General Knowledge / General Awareness": { book: null, groups: null, freeText: true },
+  "Art / Work Education": { book: null, groups: null, freeText: true },
+  "Physical Education / Sports": { book: null, groups: null, freeText: true },
+  "Value Education / Life Skills": { book: null, groups: null, freeText: true }
+};
 
-subjectSelect.addEventListener('change', () => {
-  const subject = subjectSelect.value;
-  chapterSelect.innerHTML = '<option value="">--Choose Chapter--</option>';
-  chapterSelect.disabled = true;
-  loadQuizBtn.disabled = true;
-  quizContainer.innerHTML = '';
-  resultDiv.innerHTML = '';
+/* ---------------------------------------------------------------
+   2. STATE
+---------------------------------------------------------------- */
+let state = {
+  apiKey: '',
+  model: 'gemini-3.8-flash',
+  questions: [],
+  currentActiveIndex: -1,
+  overallSeconds: 30 * 60,
+  overallTimerId: null,
+  perQTimerId: null,
+  submitted: false,
+  examSubject: '',
+  examChapters: []
+};
 
-  if (!subject) return;
+/* ---------------------------------------------------------------
+   3. API KEY PERSISTENCE (localStorage — works once this file is
+      downloaded and opened directly in a normal browser tab; inside
+      Claude.ai's own artifact preview iframe, storage may be
+      sandboxed and simply fall back to remembering it for this tab
+      only.)
+---------------------------------------------------------------- */
+const LS_KEY = 'class6_exam_app_gemini_api_key';
+const LS_MODEL = 'class6_exam_app_gemini_model';
 
-  fetch(`${subject}/chapters.json`)
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to load chapters.json');
-      return res.json();
-    })
-    .then(chapters => {
-      chapters.forEach(chap => {
-        const option = document.createElement('option');
-        option.value = chap.file;
-        option.textContent = chap.chapterName;
-        chapterSelect.appendChild(option);
-      });
-      chapterSelect.disabled = false;
-    })
-    .catch(err => {
-      console.error(err);
-      alert('Could not load chapters for this subject.');
-    });
-});
-
-chapterSelect.addEventListener('change', () => {
-  loadQuizBtn.disabled = !chapterSelect.value;
-  quizContainer.innerHTML = '';
-  resultDiv.innerHTML = '';
-});
-
-loadQuizBtn.addEventListener('click', () => {
-  const subject = subjectSelect.value;
-  const chapterFile = chapterSelect.value;
-  if (!subject || !chapterFile) return;
-
-  quizContainer.innerHTML = '';
-  resultDiv.innerHTML = '';
-  answeredCount = 0;
-  correctCount = 0;
-  wrongCount = 0;
-
-  fetch(`${subject}/${chapterFile}`)
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to load chapter file');
-      return res.json();
-    })
-    .then(data => {
-      chapterName = chapterSelect.options[chapterSelect.selectedIndex].textContent;
-      // Pick random 30 questions
-      currentQuestions = getRandomQuestions(data, 20);
-      if (!Array.isArray(currentQuestions) || currentQuestions.length === 0) {
-        alert('No questions found in this chapter.');
-        return;
-      }
-      displayQuestions(currentQuestions);
-    })
-    .catch(err => {
-      console.error(err);
-      alert('Failed to load questions.');
-    });
-});
-
-// Function to pick n random questions from an array
-function getRandomQuestions(arr, n) {
-  const shuffled = arr.slice(); // clone array
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+function loadSavedKey(){
+  try{
+    const saved = window.localStorage.getItem(LS_KEY);
+    const savedModel = window.localStorage.getItem(LS_MODEL);
+    if(saved){
+      state.apiKey = saved;
+      document.getElementById('apiKeyInput').value = saved;
+      setKeyStatus('Using saved key from this browser.');
+    }
+    if(savedModel){
+      state.model = savedModel;
+      document.getElementById('modelSelect').value = savedModel;
+    }
+  }catch(e){
+    setKeyStatus('Browser storage unavailable here — key will only be kept for this session.');
   }
-  return shuffled.slice(0, Math.min(n, shuffled.length));
 }
 
-function displayQuestions(questions) {
-  quizContainer.innerHTML = '';
-  questions.forEach((q, idx) => {
-    const container = document.createElement('div');
-    container.className = 'question-container';
-    container.dataset.index = idx;
+function saveKey(){
+  const val = document.getElementById('apiKeyInput').value.trim();
+  const model = document.getElementById('modelSelect').value;
+  state.apiKey = val;
+  state.model = model;
+  try{
+    window.localStorage.setItem(LS_KEY, val);
+    window.localStorage.setItem(LS_MODEL, model);
+    setKeyStatus(val ? 'Key saved in this browser.' : 'Key cleared.');
+  }catch(e){
+    setKeyStatus('Could not persist to storage (sandboxed preview) — kept for this session only.');
+  }
+}
 
-    const questionText = document.createElement('div');
-    questionText.className = 'question-text';
-    questionText.textContent = `${idx + 1}. ${q.question}`;
-    container.appendChild(questionText);
+function forgetKey(){
+  state.apiKey = '';
+  document.getElementById('apiKeyInput').value = '';
+  try{ window.localStorage.removeItem(LS_KEY); }catch(e){}
+  setKeyStatus('Saved key removed.');
+}
 
-    // Input box for user answer
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'answer-input';
-    input.placeholder = 'Type your answer here and press Enter';
-    input.autocomplete = 'off';
+function setKeyStatus(msg){
+  document.getElementById('keyStatus').textContent = msg;
+}
 
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        checkAnswer(idx, input);
-      }
+/* ---------------------------------------------------------------
+   4. SETUP SCREEN — subject / chapter rendering
+---------------------------------------------------------------- */
+function populateSubjects(){
+  const sel = document.getElementById('subjectSelect');
+  Object.keys(SUBJECTS).forEach(name=>{
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', renderChapters);
+}
+
+function renderChapters(){
+  const subject = document.getElementById('subjectSelect').value;
+  const data = SUBJECTS[subject];
+  const box = document.getElementById('chaptersBox');
+  const quick = document.getElementById('chapterQuickActions');
+  const label = document.getElementById('chaptersLabel');
+  box.innerHTML = '';
+
+  if(data.freeText){
+    quick.classList.add('hidden');
+    label.textContent = 'Topics to include (this subject has no fixed chapter list)';
+    const ta = document.createElement('textarea');
+    ta.className = 'styled'; ta.id = 'freeTextChapters'; ta.rows = 3;
+    ta.placeholder = 'e.g. Current affairs, sports rules, basic first aid, road safety...';
+    box.appendChild(ta);
+    return;
+  }
+
+  quick.classList.remove('hidden');
+  label.textContent = 'Chapters to include';
+  Object.keys(data.groups).forEach(groupName=>{
+    const gTitle = document.createElement('div');
+    gTitle.className = 'chapter-group-title';
+    gTitle.textContent = groupName;
+    box.appendChild(gTitle);
+    data.groups[groupName].forEach((ch, idx)=>{
+      const row = document.createElement('div');
+      row.className = 'chapter-item';
+      const id = 'ch_' + groupName.replace(/\W+/g,'_') + '_' + idx;
+      row.innerHTML = `<input type="checkbox" id="${id}" value="${escapeAttr(ch)}">
+                        <label for="${id}">${ch}</label>`;
+      box.appendChild(row);
     });
-
-    container.appendChild(input);
-
-    quizContainer.appendChild(container);
   });
 }
 
-function checkAnswer(index, inputElem) {
-  if (inputElem.disabled) return;
+function escapeAttr(s){
+  return String(s).replace(/"/g,'&quot;');
+}
 
-  const userAnswer = inputElem.value.trim().toLowerCase();
-  const question = currentQuestions[index];
-  if (!question) return;
+function getSelectedChapters(){
+  const subject = document.getElementById('subjectSelect').value;
+  const data = SUBJECTS[subject];
+  if(data.freeText){
+    const ta = document.getElementById('freeTextChapters');
+    const txt = ta ? ta.value.trim() : '';
+    return txt ? txt.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  }
+  const boxes = document.querySelectorAll('#chaptersBox input[type="checkbox"]:checked');
+  return Array.from(boxes).map(b=>b.value);
+}
 
-  if (userAnswer === '') return;
+/* ---------------------------------------------------------------
+   5. PROMPT BUILDING + API CALL
+---------------------------------------------------------------- */
+function buildPrompt(subject, chapters){
+  const data = SUBJECTS[subject];
+  const bookLine = data.book ? `The textbook used is "${data.book}".` : '';
+  const chapterLine = chapters.length
+    ? `Base every question strictly on these chapters/topics: ${chapters.join(', ')}.`
+    : `No specific chapters were chosen, so cover general Class 6 topics for this subject.`;
 
-  // Correct answer index (assuming 0-based)
-  const correctIdx = question.correctAnswer;
+  return `You are an experienced Indian Class 6 school teacher setting a practice exam paper for the subject "${subject}". ${bookLine}
+${chapterLine}
 
-  const correctAnswerText = question.choices[correctIdx];
-  if (!correctAnswerText) return;
+Create a question paper worth EXACTLY 30 marks in total, using a realistic mix of question types seen in real Class 6 exams:
+- "mcq": multiple choice, 1 mark each, with exactly 4 options.
+- "truefalse": true/false, 1 mark each.
+- "fillblank": fill in the blank, 1 mark each, with a clear blank shown as "____" in the question text.
+- "short": short answer, 2 or 3 marks each.
+- "long": long answer, 4 or 5 marks each.
 
-  const container = inputElem.parentElement;
+Include at least one question of every type above. Vary difficulty appropriately for an 11-year-old. Keep language simple and clear. Do not include any question that depends on an image or audio.
 
-  // Check if userAnswer matches correct answer (case-insensitive)
-  if (userAnswer === correctAnswerText.toLowerCase()) {
-    inputElem.classList.add('correct');
-    correctCount++;
-  } else {
-    inputElem.classList.add('wrong');
-    wrongCount++;
+Return ONLY a valid JSON array (no markdown code fences, no commentary, no trailing text) where each element has this exact shape depending on its type:
+
+MCQ: {"id":1,"type":"mcq","marks":1,"question":"...","options":["...","...","...","..."],"answer":"exact text of correct option","explanation":"one short sentence"}
+
+True/False: {"id":2,"type":"truefalse","marks":1,"question":"...","answer":true,"explanation":"one short sentence"}
+
+Fill in the blank: {"id":3,"type":"fillblank","marks":1,"question":"... ____ ...","answer":"expected word or phrase","acceptableAnswers":["alternate1","alternate2"],"explanation":"one short sentence"}
+
+Short answer: {"id":4,"type":"short","marks":2,"question":"...","modelAnswer":"a concise ideal answer in 1-3 sentences"}
+
+Long answer: {"id":5,"type":"long","marks":5,"question":"...","modelAnswer":"a fuller ideal answer in a short paragraph","keyPoints":["point 1","point 2","point 3"]}
+
+The "marks" values across ALL questions in the array MUST sum to exactly 30. Double-check your arithmetic before responding. Respond with the JSON array only.`;
+}
+
+async function callClaude(prompt){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.model)}:generateContent?key=${encodeURIComponent(state.apiKey)}`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 4000 }
+    })
+  });
+
+  if(!resp.ok){
+    let detail = '';
+    try{ const j = await resp.json(); detail = j?.error?.message || JSON.stringify(j); }
+    catch(e){ detail = resp.statusText; }
+    throw new Error(`API error (${resp.status}): ${detail}`);
   }
 
-  answeredCount++;
-  inputElem.disabled = true;
-  container.classList.add('disabled');
+  const data = await resp.json();
+  const candidate = (data.candidates || [])[0];
+  const parts = candidate && candidate.content && candidate.content.parts;
+  const text = parts && parts.map(p => p.text || '').join('');
+  if(!text) throw new Error('No text content returned by the API. The response may have been blocked — try again or rephrase the chapters.');
+  return text;
+}
 
-  // Show correct answer below input
-  const answerDiv = document.createElement('div');
-  answerDiv.className = 'correct-answer';
-  answerDiv.textContent = `Correct answer: ${correctAnswerText}`;
-  container.appendChild(answerDiv);
+function extractJson(text){
+  let cleaned = text.trim();
+  cleaned = cleaned.replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+  const start = cleaned.indexOf('[');
+  const end = cleaned.lastIndexOf(']');
+  if(start === -1 || end === -1) throw new Error('Could not find a JSON array in the response.');
+  const jsonStr = cleaned.slice(start, end+1);
+  return JSON.parse(jsonStr);
+}
 
-  if (answeredCount === currentQuestions.length) {
-    showResults();
+async function generatePaper(){
+  const subject = document.getElementById('subjectSelect').value;
+  const chapters = getSelectedChapters();
+  const btn = document.getElementById('generateBtn');
+  const statusLine = document.getElementById('statusLine');
+
+  if(!state.apiKey){
+    statusLine.innerHTML = '<span class="error-line">Please enter and save your Gemini API key first.</span>';
+    return;
+  }
+
+  btn.disabled = true;
+  statusLine.innerHTML = '<span class="spinner"></span> Writing your question paper... this can take up to 30 seconds.';
+
+  try{
+    const prompt = buildPrompt(subject, chapters);
+    let raw = await callClaude(prompt);
+    let questions = extractJson(raw);
+
+    let totalMarks = questions.reduce((s,q)=> s + Number(q.marks||0), 0);
+    if(Math.abs(totalMarks - 30) > 0.01){
+      // one retry with a stricter nudge
+      statusLine.innerHTML = '<span class="spinner"></span> Adjusting marks to total 30, regenerating...';
+      const fixPrompt = prompt + `\n\nIMPORTANT: your previous attempt summed to ${totalMarks} marks, not 30. Recount and make sure marks sum to exactly 30 this time.`;
+      raw = await callClaude(fixPrompt);
+      questions = extractJson(raw);
+      totalMarks = questions.reduce((s,q)=> s + Number(q.marks||0), 0);
+    }
+
+    questions.forEach((q, i)=>{ q.id = i+1; });
+    state.questions = questions;
+    state.examSubject = subject;
+    state.examChapters = chapters;
+    state.totalMarks = totalMarks;
+
+    statusLine.textContent = '';
+    startExam();
+  }catch(err){
+    statusLine.innerHTML = `<span class="error-line">${err.message}</span>`;
+  }finally{
+    btn.disabled = false;
   }
 }
 
-function showResults() {
-  const timestamp = new Date().toLocaleString();
-  resultDiv.innerHTML = `
-    Chapter: <strong>${chapterName}</strong><br />
-    Total Questions: ${currentQuestions.length}<br />
-    Correct Answers: ${correctCount}<br />
-    Wrong Answers: ${wrongCount}<br />
-    Completed at: ${timestamp}
-  `;
+/* ---------------------------------------------------------------
+   6. SOUND (Web Audio API — no external audio files needed)
+---------------------------------------------------------------- */
+let audioCtx = null;
+function playBeep(freq, duration, delay){
+  delay = delay || 0;
+  setTimeout(()=>{
+    try{
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }catch(e){ /* audio unsupported, ignore */ }
+  }, delay);
 }
+function playQuestionEndSound(){ playBeep(660, 0.25); }
+function playExamEndSound(){
+  playBeep(523,0.3,0); playBeep(659,0.3,300); playBeep(784,0.5,600);
+}
+
+/* ---------------------------------------------------------------
+   7. EXAM SCREEN RENDERING
+---------------------------------------------------------------- */
+function startExam(){
+  document.getElementById('setupScreen').classList.add('hidden');
+  document.getElementById('examScreen').classList.remove('hidden');
+  document.getElementById('resultsScreen').classList.add('hidden');
+
+  document.getElementById('examTitle').textContent = `${state.examSubject} — Practice Paper`;
+  document.getElementById('examMeta').textContent =
+    `Total marks: ${state.totalMarks} · ${state.questions.length} questions · 30 minutes overall`;
+
+  state.overallSeconds = 30*60;
+  state.submitted = false;
+  state.currentActiveIndex = -1;
+  renderQuestions();
+  updateOverallTimerDisplay();
+  clearInterval(state.overallTimerId);
+  state.overallTimerId = setInterval(tickOverall, 1000);
+}
+
+function renderQuestions(){
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+  state.questions.forEach((q, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.id = 'qcard_' + idx;
+
+    const allotted = Math.round(Number(q.marks) * 60);
+    q._allottedSeconds = allotted;
+    q._remaining = allotted;
+    q._started = false;
+    q._locked = false;
+
+    const typeLabel = {
+      mcq:'Multiple choice', truefalse:'True or False', fillblank:'Fill in the blank',
+      short:'Short answer', long:'Long answer'
+    }[q.type] || q.type;
+
+    card.innerHTML = `
+      <div class="q-type-tag">${typeLabel}</div>
+      <div class="q-head">
+        <div class="q-title"><span class="q-num">Q${idx+1}.</span>${escapeHtml(q.question)}</div>
+        <div class="q-marks-tag">${q.marks} mark${q.marks==1?'':'s'}</div>
+      </div>
+      <div class="q-body" id="qbody_${idx}"></div>
+      <div class="q-controls">
+        <button class="start-btn" id="startbtn_${idx}">Start (${formatTime(allotted)})</button>
+        <div class="q-timer" id="qtimer_${idx}">${formatTime(allotted)}</div>
+      </div>
+      <div class="q-note" id="qnote_${idx}"></div>
+    `;
+    container.appendChild(card);
+    renderAnswerInput(q, idx);
+    document.getElementById('startbtn_'+idx).addEventListener('click', ()=>startQuestion(idx));
+  });
+}
+
+function renderAnswerInput(q, idx){
+  const body = document.getElementById('qbody_'+idx);
+  if(q.type === 'mcq'){
+    body.innerHTML = (q.options||[]).map((opt,oi)=>`
+      <div class="opt-item">
+        <input type="radio" name="mcq_${idx}" id="mcq_${idx}_${oi}" value="${escapeAttr(opt)}" disabled>
+        <label for="mcq_${idx}_${oi}">${escapeHtml(opt)}</label>
+      </div>`).join('');
+  }else if(q.type === 'truefalse'){
+    body.innerHTML = `
+      <div class="opt-item"><input type="radio" name="tf_${idx}" id="tf_${idx}_t" value="true" disabled><label for="tf_${idx}_t">True</label></div>
+      <div class="opt-item"><input type="radio" name="tf_${idx}" id="tf_${idx}_f" value="false" disabled><label for="tf_${idx}_f">False</label></div>`;
+  }else if(q.type === 'fillblank'){
+    body.innerHTML = `<input type="text" class="q-input" id="fb_${idx}" placeholder="Your answer" disabled>`;
+  }else if(q.type === 'short'){
+    body.innerHTML = `<textarea class="q-input" id="sa_${idx}" placeholder="Write your answer here" disabled></textarea>`;
+  }else if(q.type === 'long'){
+    body.innerHTML = `<textarea class="q-input long" id="la_${idx}" placeholder="Write your answer here" disabled></textarea>`;
+  }
+}
+
+function setInputsEnabled(idx, enabled){
+  const card = document.getElementById('qcard_'+idx);
+  card.querySelectorAll('input, textarea').forEach(el=> el.disabled = !enabled);
+}
+
+function startQuestion(idx){
+  if(state.submitted) return;
+  const q = state.questions[idx];
+  if(q._locked) return;
+
+  // stop any currently running per-question timer
+  if(state.currentActiveIndex !== -1 && state.currentActiveIndex !== idx){
+    const prev = state.questions[state.currentActiveIndex];
+    document.getElementById('qcard_'+state.currentActiveIndex).classList.remove('active');
+  }
+  clearInterval(state.perQTimerId);
+
+  state.currentActiveIndex = idx;
+  q._started = true;
+  document.getElementById('qcard_'+idx).classList.add('active');
+  document.getElementById('startbtn_'+idx).disabled = true;
+  document.getElementById('startbtn_'+idx).textContent = 'In progress...';
+  setInputsEnabled(idx, true);
+
+  state.perQTimerId = setInterval(()=>tickQuestion(idx), 1000);
+}
+
+function tickQuestion(idx){
+  const q = state.questions[idx];
+  q._remaining -= 1;
+  const timerEl = document.getElementById('qtimer_'+idx);
+  timerEl.textContent = formatTime(Math.max(q._remaining,0));
+  if(q._remaining <= 10) timerEl.classList.add('warn');
+
+  if(q._remaining <= 0){
+    clearInterval(state.perQTimerId);
+    lockQuestion(idx);
+    playQuestionEndSound();
+  }
+}
+
+function lockQuestion(idx){
+  const q = state.questions[idx];
+  q._locked = true;
+  setInputsEnabled(idx, false);
+  document.getElementById('qcard_'+idx).classList.add('locked');
+  document.getElementById('qcard_'+idx).classList.remove('active');
+  document.getElementById('startbtn_'+idx).textContent = 'Time up';
+  document.getElementById('qnote_'+idx).textContent = "Time's up for this question — move to the next one.";
+  if(state.currentActiveIndex === idx) state.currentActiveIndex = -1;
+}
+
+function updateOverallTimerDisplay(){
+  const el = document.getElementById('overallTimer');
+  el.textContent = '⏱ ' + formatTime(state.overallSeconds);
+  el.classList.toggle('low', state.overallSeconds <= 60);
+}
+
+function tickOverall(){
+  state.overallSeconds -= 1;
+  updateOverallTimerDisplay();
+  if(state.overallSeconds <= 0){
+    clearInterval(state.overallTimerId);
+    clearInterval(state.perQTimerId);
+    playExamEndSound();
+    submitPaper(true);
+  }
+}
+
+function formatTime(totalSeconds){
+  const m = Math.floor(totalSeconds/60);
+  const s = totalSeconds % 60;
+  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ---------------------------------------------------------------
+   8. SUBMISSION + GRADING
+---------------------------------------------------------------- */
+function collectAnswer(q, idx){
+  if(q.type === 'mcq'){
+    const sel = document.querySelector(`input[name="mcq_${idx}"]:checked`);
+    return sel ? sel.value : null;
+  }
+  if(q.type === 'truefalse'){
+    const sel = document.querySelector(`input[name="tf_${idx}"]:checked`);
+    return sel ? (sel.value === 'true') : null;
+  }
+  if(q.type === 'fillblank'){
+    const el = document.getElementById('fb_'+idx);
+    return el ? el.value.trim() : '';
+  }
+  if(q.type === 'short'){
+    const el = document.getElementById('sa_'+idx);
+    return el ? el.value.trim() : '';
+  }
+  if(q.type === 'long'){
+    const el = document.getElementById('la_'+idx);
+    return el ? el.value.trim() : '';
+  }
+  return null;
+}
+
+function submitPaper(auto){
+  if(state.submitted) return;
+  state.submitted = true;
+  clearInterval(state.overallTimerId);
+  clearInterval(state.perQTimerId);
+
+  state.questions.forEach((q, idx)=>{
+    q._userAnswer = collectAnswer(q, idx);
+    setInputsEnabled(idx, false);
+  });
+
+  renderResults(auto);
+}
+
+function gradeAuto(q){
+  if(q.type === 'mcq'){
+    return q._userAnswer !== null && q._userAnswer === q.answer;
+  }
+  if(q.type === 'truefalse'){
+    return q._userAnswer !== null && q._userAnswer === Boolean(q.answer);
+  }
+  if(q.type === 'fillblank'){
+    const given = (q._userAnswer || '').trim().toLowerCase();
+    if(!given) return false;
+    const accepted = [q.answer, ...(q.acceptableAnswers||[])]
+      .filter(Boolean).map(a=>String(a).trim().toLowerCase());
+    return accepted.includes(given);
+  }
+  return null; // not auto-gradable
+}
+
+function renderResults(auto){
+  document.getElementById('examScreen').classList.add('hidden');
+  document.getElementById('resultsScreen').classList.remove('hidden');
+  const container = document.getElementById('resultsContainer');
+  container.innerHTML = '';
+
+  let autoScore = 0;
+  let pendingMarks = 0;
+
+  state.questions.forEach((q, idx)=>{
+    const isAuto = ['mcq','truefalse','fillblank'].includes(q.type);
+    let correct = null;
+    if(isAuto){
+      correct = gradeAuto(q);
+      if(correct) autoScore += Number(q.marks);
+    }else{
+      pendingMarks += Number(q.marks);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'result-card ' + (isAuto ? (correct ? 'correct' : 'wrong') : 'pending');
+
+    let bodyHtml = '';
+    const userDisplay = formatUserAnswer(q);
+
+    if(isAuto){
+      bodyHtml += `<div class="answer-line your-answer">Your answer: ${userDisplay || '(no answer given)'}</div>`;
+      bodyHtml += `<div class="answer-line"><b>Correct answer:</b> ${formatCorrectAnswer(q)}</div>`;
+      if(q.explanation) bodyHtml += `<div class="answer-line">${escapeHtml(q.explanation)}</div>`;
+      bodyHtml += `<div class="answer-line"><b>${correct ? '✔ Correct' : '✘ Incorrect'}</b> — ${correct ? q.marks : 0} / ${q.marks} marks</div>`;
+    }else{
+      bodyHtml += `<div class="answer-line your-answer">Your answer: ${userDisplay || '(no answer given)'}</div>`;
+      bodyHtml += `<div class="answer-line"><b>Model answer:</b> ${escapeHtml(q.modelAnswer||'')}</div>`;
+      if(q.keyPoints && q.keyPoints.length){
+        bodyHtml += `<div class="answer-line"><b>Key points expected:</b></div><ul class="key-points">` +
+          q.keyPoints.map(p=>`<li>${escapeHtml(p)}</li>`).join('') + `</ul>`;
+      }
+      bodyHtml += `<div class="answer-line">Compare your answer above, then mark yourself honestly:</div>
+        <div class="self-grade" data-idx="${idx}" data-marks="${q.marks}">
+          <button data-frac="1">Full marks (${q.marks})</button>
+          <button data-frac="0.5">Half marks (${Math.round(q.marks/2)})</button>
+          <button data-frac="0">No marks (0)</button>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="q-type-tag">${({mcq:'Multiple choice',truefalse:'True or False',fillblank:'Fill in the blank',short:'Short answer',long:'Long answer'})[q.type]}</div>
+      <div class="q-head">
+        <div class="q-title"><span class="q-num">Q${idx+1}.</span>${escapeHtml(q.question)}</div>
+        <div class="q-marks-tag">${q.marks} mark${q.marks==1?'':'s'}</div>
+      </div>
+      ${bodyHtml}
+    `;
+    container.appendChild(card);
+  });
+
+  // wire up self-grading buttons
+  container.querySelectorAll('.self-grade').forEach(row=>{
+    row.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        row.querySelectorAll('button').forEach(b=>b.classList.remove('chosen'));
+        btn.classList.add('chosen');
+        updateFinalScore();
+      });
+    });
+  });
+
+  document.getElementById('scoreBig').textContent = `${autoScore} / ${state.totalMarks}`;
+  document.getElementById('scoreNote').textContent = auto
+    ? 'Time ran out — paper auto-submitted. Mark your short/long answers below to see your final score.'
+    : 'Mark your short/long answers below to see your final score.';
+
+  state._autoScoreBase = autoScore;
+  state._pendingMax = pendingMarks;
+}
+
+function updateFinalScore(){
+  let total = state._autoScoreBase;
+  document.querySelectorAll('.self-grade').forEach(row=>{
+    const chosen = row.querySelector('button.chosen');
+    const marks = Number(row.dataset.marks);
+    if(chosen){
+      total += Math.round(marks * Number(chosen.dataset.frac));
+    }
+  });
+  document.getElementById('scoreBig').textContent = `${total} / ${state.totalMarks}`;
+}
+
+function formatUserAnswer(q){
+  if(q._userAnswer === null || q._userAnswer === undefined || q._userAnswer === '') return '';
+  if(q.type === 'truefalse') return q._userAnswer ? 'True' : 'False';
+  return escapeHtml(String(q._userAnswer));
+}
+function formatCorrectAnswer(q){
+  if(q.type === 'truefalse') return q.answer ? 'True' : 'False';
+  return escapeHtml(String(q.answer));
+}
+
+/* ---------------------------------------------------------------
+   9. WIRE UP
+---------------------------------------------------------------- */
+document.getElementById('saveKeyBtn').addEventListener('click', saveKey);
+document.getElementById('forgetKeyLink').addEventListener('click', forgetKey);
+document.getElementById('generateBtn').addEventListener('click', generatePaper);
+document.getElementById('submitBtn').addEventListener('click', ()=>submitPaper(false));
+document.getElementById('newPaperBtn').addEventListener('click', ()=>{
+  document.getElementById('resultsScreen').classList.add('hidden');
+  document.getElementById('setupScreen').classList.remove('hidden');
+  document.getElementById('statusLine').textContent = '';
+});
+document.getElementById('selectAllBtn').addEventListener('click', ()=>{
+  document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(b=>b.checked = true);
+});
+document.getElementById('clearAllBtn').addEventListener('click', ()=>{
+  document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(b=>b.checked = false);
+});
+
+function buildSpiral(){
+  const spirals = document.querySelectorAll('.spiral');
+  spirals.forEach(sp=>{
+    sp.innerHTML = '';
+    for(let i=0;i<10;i++){
+      const dot = document.createElement('span');
+      sp.appendChild(dot);
+    }
+  });
+}
+
+populateSubjects();
+renderChapters();
+buildSpiral();
+loadSavedKey();
+
+})();
 </script>
-
 </body>
 </html>
