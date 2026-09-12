@@ -581,8 +581,8 @@ function getSelectedChapters(){
 /* ---------------------------------------------------------------
    5. PROMPT BUILDING + API CALL
 ---------------------------------------------------------------- */
-function buildPrompt(subject, chapters){
-  const data = SUBJECTS[subject];
+function buildPrompt(subject, chapters) {
+  const data = SUBJECTS[subject] || {};
   const bookLine = data.book ? `The textbook used is "${data.book}".` : '';
   const chapterLine = chapters.length
     ? `Base every question strictly on these chapters/topics: ${chapters.join(', ')}.`
@@ -591,28 +591,38 @@ function buildPrompt(subject, chapters){
   return `You are an experienced Indian Class 6 school teacher setting a practice exam paper for the subject "${subject}". ${bookLine}
 ${chapterLine}
 
-Create a question paper worth EXACTLY 30 marks in total, using a realistic mix of question types seen in real Class 6 exams:
-- "mcq": multiple choice, 1 mark each, with exactly 4 options.
-- "truefalse": true/false, 1 mark each.
-- "fillblank": fill in the blank, 1 mark each, with a clear blank shown as "____" in the question text.
-- "short": short answer, 2 or 3 marks each.
-- "long": long answer, 4 or 5 marks each.
+SUBJECT-SPECIFIC RULES:
+- Mathematics: Ensure all questions are solvable via standard text/numbers without requiring drawn geometric figures or diagrams.
+- English / Hindi / Languages: Provide standalone grammar/vocabulary/literature questions, OR embed a short 2-3 sentence reading passage directly inside the "question" field of question #1 for comprehension.
+- Science / Social Studies / Computer Science: Keep any code snippet or term formatted in plain text.
 
-Include at least one question of every type above. Vary difficulty appropriately for an 11-year-old. Keep language simple and clear. Do not include any question that depends on an image or audio.
+EXAM REQUIREMENTS:
+1. Create a question paper worth EXACTLY 30 marks total.
+2. The sum of the "marks" values across ALL questions in the array MUST sum to EXACTLY 30. Double-check your arithmetic.
+3. Include at least one question of every type listed below.
+4. Keep all answers and explanations short to ensure the output fits completely within token limits.
+5. Do not include any question that depends on images, diagrams, or audio.
+6. Vary difficulty appropriately for an 11-year-old student.
 
-Return ONLY a valid JSON array (no markdown code fences, no commentary, no trailing text) where each element has this exact shape depending on its type:
+QUESTION TYPES & COMPACT JSON SCHEMAS:
+Return ONLY a valid JSON array (no markdown code fences, no commentary, no trailing text) where each element has this exact shape:
 
-MCQ: {"id":1,"type":"mcq","marks":1,"question":"...","options":["...","...","...","..."],"answer":"exact text of correct option","explanation":"one short sentence"}
+MCQ (1 mark each, 4 options):
+{"id":1,"type":"mcq","marks":1,"question":"...","options":["...","...","...","..."],"answer":"exact text of correct option"}
 
-True/False: {"id":2,"type":"truefalse","marks":1,"question":"...","answer":"true","explanation":"one short sentence"} (answer must be the exact lowercase string "true" or "false")
+True/False (1 mark each):
+{"id":2,"type":"truefalse","marks":1,"question":"...","answer":"true"}
 
-Fill in the blank: {"id":3,"type":"fillblank","marks":1,"question":"... ____ ...","answer":"expected word or phrase","acceptableAnswers":["alternate1","alternate2"],"explanation":"one short sentence"}
+Fill in the blank (1 mark each, use "____" in question):
+{"id":3,"type":"fillblank","marks":1,"question":"... ____ ...","answer":"expected word","acceptableAnswers":["alternate1"]}
 
-Short answer: {"id":4,"type":"short","marks":2,"question":"...","modelAnswer":"a concise ideal answer in 1-3 sentences"}
+Short answer (2 or 3 marks each):
+{"id":4,"type":"short","marks":2,"question":"...","modelAnswer":"concise answer in 1-2 sentences"}
 
-Long answer: {"id":5,"type":"long","marks":5,"question":"...","modelAnswer":"a fuller ideal answer in a short paragraph","keyPoints":["point 1","point 2","point 3"]}
+Long answer (4 or 5 marks each):
+{"id":5,"type":"long","marks":5,"question":"...","modelAnswer":"concise short paragraph","keyPoints":["point 1","point 2"]}
 
-The "marks" values across ALL questions in the array MUST sum to exactly 30. Double-check your arithmetic before responding. Respond with the JSON array only.`;
+Respond with the raw JSON array ONLY.`;
 }
 
 async function callClaude(prompt){
