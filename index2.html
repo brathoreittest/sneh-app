@@ -1,1230 +1,586 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Class 6 Practice Exam</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-
-<style>
-  :root{
-    --paper:#FBF6E9;
-    --paper-line:#DCE3CF;
-    --board:#20463A;
-    --board-dark:#163329;
-    --ink:#2B3A4A;
-    --marker-red:#D6493C;
-    --pencil-yellow:#F2B705;
-    --leaf:#4C8B6B;
-    --leaf-light:#D9EEDF;
-    --paper-shadow:0 18px 40px -18px rgba(32,70,58,0.35);
-  }
-
-  *{box-sizing:border-box;}
-
-  html,body{
-    margin:0;
-    padding:0;
-  }
-
-  body{
-    background:var(--board);
-    background-image:
-      radial-gradient(circle at 10% 15%,rgba(255,255,255,0.035) 0,transparent 40%),
-      radial-gradient(circle at 90% 85%,rgba(255,255,255,0.03) 0,transparent 40%);
-    font-family:'Inter',sans-serif;
-    color:var(--ink);
-    min-height:100vh;
-    padding:28px 16px 60px;
-  }
-
-  h1,h2,h3,.brand,.q-marks-tag{
-    font-family:'Baloo 2',sans-serif;
-  }
-
-  .wrap{
-    max-width:880px;
-    margin:0 auto;
-  }
-
-  /* HEADER */
-  .topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    margin-bottom:22px;
-    flex-wrap:wrap;
-  }
-
-  .brand{
-    color:#fff;
-    font-size:26px;
-    font-weight:800;
-    letter-spacing:0.2px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-
-  .brand .chalk{
-    font-family:'Caveat',cursive;
-    font-weight:700;
-    color:var(--pencil-yellow);
-    font-size:30px;
-    transform:rotate(-3deg);
-    display:inline-block;
-  }
-
-  .key-box{
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.18);
-    border-radius:12px;
-    padding:10px 12px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-
-  .key-box input[type="password"],
-  .key-box input[type="text"]{
-    width:220px;
-    border:none;
-    background:transparent;
-    color:#fff;
-    font-size:13px;
-    outline:none;
-    font-family:'Inter',sans-serif;
-  }
-
-  .key-box input::placeholder{
-    color:rgba(255,255,255,0.55);
-  }
-
-  .key-box select{
-    background:rgba(0,0,0,0.25);
-    color:#fff;
-    border:1px solid rgba(255,255,255,0.2);
-    border-radius:8px;
-    font-size:12px;
-    padding:6px;
-    font-family:'Inter',sans-serif;
-  }
-
-  .key-btn{
-    border:none;
-    background:var(--pencil-yellow);
-    color:#1d2a1f;
-    font-weight:700;
-    padding:7px 12px;
-    border-radius:8px;
-    font-size:12px;
-    cursor:pointer;
-  }
-
-  .key-status{
-    font-size:11px;
-    color:var(--leaf-light);
-    margin-top:4px;
-    min-height:14px;
-  }
-
-  /* NOTEBOOK */
-  .notebook{
-    position:relative;
-    background:var(--paper);
-    border-radius:18px;
-    box-shadow:var(--paper-shadow);
-    padding:34px 34px 34px 62px;
-    background-image:repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 34px,
-      var(--paper-line) 35px
-    );
-    background-position:0 92px;
-  }
-
-  .notebook::before{
-    content:"";
-    position:absolute;
-    left:34px;
-    top:0;
-    bottom:0;
-    width:2px;
-    background:rgba(214,73,60,0.35);
-  }
-
-  .spiral{
-    position:absolute;
-    left:-14px;
-    top:26px;
-    bottom:26px;
-    width:28px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-  }
-
-  .spiral span{
-    display:block;
-    width:26px;
-    height:26px;
-    border-radius:50%;
-    background:var(--board-dark);
-    box-shadow:
-      inset 0 0 0 6px var(--paper),
-      inset 0 0 0 8px rgba(0,0,0,0.15);
-  }
-
-  .setup-title{
-    font-size:24px;
-    font-weight:700;
-    margin:0 0 4px;
-    color:var(--board-dark);
-  }
-
-  .setup-sub{
-    font-size:14px;
-    color:#5b6b62;
-    margin:0 0 22px;
-  }
-
-  .field-row{
-    display:flex;
-    gap:18px;
-    flex-wrap:wrap;
-    margin-bottom:18px;
-  }
-
-  .field{
-    flex:1;
-    min-width:220px;
-  }
-
-  .field label{
-    display:block;
-    font-size:12px;
-    font-weight:600;
-    color:var(--board-dark);
-    margin-bottom:6px;
-  }
-
-  select.styled,
-  textarea.styled{
-    width:100%;
-    padding:10px 12px;
-    border-radius:10px;
-    border:1.5px solid #cdd8c6;
-    background:#fff;
-    font-family:'Inter',sans-serif;
-    font-size:14px;
-    color:var(--ink);
-  }
-
-  textarea.styled{
-    min-height:70px;
-    resize:vertical;
-  }
-
-  .chapters-box{
-    background:#fff;
-    border:1.5px solid #cdd8c6;
-    border-radius:12px;
-    padding:14px 16px;
-    margin-bottom:20px;
-    max-height:260px;
-    overflow-y:auto;
-  }
-
-  .chapter-group-title{
-    font-size:12px;
-    font-weight:700;
-    color:var(--leaf);
-    margin:10px 0 6px;
-  }
-
-  .chapter-group-title:first-child{
-    margin-top:0;
-  }
-
-  .chapter-item{
-    display:flex;
-    align-items:flex-start;
-    gap:8px;
-    padding:5px 0;
-    font-size:14px;
-  }
-
-  .chapter-item input{
-    margin-top:3px;
-  }
-
-  .chapter-item label{
-    cursor:pointer;
-  }
-
-  .select-row{
-    display:flex;
-    gap:10px;
-    margin-bottom:10px;
-  }
-
-  .mini-btn{
-    border:1px solid #cdd8c6;
-    background:#fff;
-    color:var(--board-dark);
-    font-size:12px;
-    padding:5px 10px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:600;
-  }
-
-  .mini-btn:hover{
-    background:var(--leaf-light);
-  }
-
-  .generate-btn{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    background:var(--marker-red);
-    color:#fff;
-    border:none;
-    font-weight:700;
-    font-size:16px;
-    padding:13px 26px;
-    border-radius:12px;
-    cursor:pointer;
-    font-family:'Baloo 2',sans-serif;
-    box-shadow:0 10px 20px -8px rgba(214,73,60,0.6);
-  }
-
-  .generate-btn:disabled{
-    opacity:0.55;
-    cursor:not-allowed;
-    box-shadow:none;
-  }
-
-  .generate-btn:hover:not(:disabled){
-    filter:brightness(1.05);
-  }
-
-  .status-line{
-    margin-top:14px;
-    font-size:13px;
-    color:#5b6b62;
-    min-height:18px;
-  }
-
-  .error-line{
-    color:var(--marker-red);
-    font-weight:600;
-  }
-
-  /* EXAM */
-  .exam-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:14px;
-    margin-bottom:22px;
-    padding-bottom:16px;
-    border-bottom:2px dashed #cdd8c6;
-  }
-
-  .paper-title{
-    font-size:20px;
-    font-weight:700;
-    color:var(--board-dark);
-  }
-
-  .paper-meta{
-    font-size:13px;
-    color:#5b6b62;
-  }
-
-  .overall-timer{
-    background:var(--board);
-    color:#fff;
-    padding:10px 18px;
-    border-radius:12px;
-    font-family:'Baloo 2',sans-serif;
-    font-size:20px;
-    font-weight:700;
-    letter-spacing:1px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-
-  .overall-timer.low{
-    background:var(--marker-red);
-  }
-
-  .exam-actions{
-    display:flex;
-    gap:10px;
-    margin-bottom:8px;
-  }
-
-  .submit-btn{
-    background:var(--board);
-    color:#fff;
-    border:none;
-    font-weight:700;
-    padding:11px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    font-family:'Baloo 2',sans-serif;
-    font-size:15px;
-  }
-
-  .submit-btn:hover{
-    background:var(--board-dark);
-  }
-
-  /* QUESTION */
-  .qcard{
-    background:#fff;
-    border:1.5px solid #e2e8dc;
-    border-radius:14px;
-    padding:18px 20px;
-    margin-bottom:16px;
-    position:relative;
-  }
-
-  .q-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:10px;
-    margin-bottom:10px;
-  }
-
-  .q-title{
-    font-size:15px;
-    font-weight:600;
-    color:var(--ink);
-    line-height:1.5;
-  }
-
-  .q-num{
-    color:var(--leaf);
-    font-weight:700;
-    margin-right:6px;
-  }
-
-  .q-marks-tag{
-    background:var(--leaf-light);
-    color:var(--leaf);
-    font-size:12px;
-    font-weight:700;
-    padding:4px 10px;
-    border-radius:20px;
-    white-space:nowrap;
-  }
-
-  .q-type-tag{
-    font-size:10px;
-    text-transform:uppercase;
-    letter-spacing:0.5px;
-    color:#8b9a90;
-    font-weight:700;
-    margin-bottom:6px;
-  }
-
-  .q-body{
-    margin-top:8px;
-  }
-
-  .opt-item{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:6px 0;
-    font-size:14px;
-  }
-
-  .opt-item input,.opt-item label{
-    cursor:pointer;
-  }
-
-  .q-input{
-    width:100%;
-    padding:9px 11px;
-    border-radius:8px;
-    border:1.5px solid #cdd8c6;
-    font-family:'Inter',sans-serif;
-    font-size:14px;
-    margin-top:4px;
-  }
-
-  textarea.q-input{
-    min-height:60px;
-    resize:vertical;
-  }
-
-  textarea.q-input.long{
-    min-height:110px;
-  }
-
-  /* RESULTS */
-  .score-banner{
-    background:var(--leaf);
-    color:#fff;
-    border-radius:14px;
-    padding:20px 24px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:22px;
-    flex-wrap:wrap;
-    gap:12px;
-  }
-
-  .score-big{
-    font-family:'Baloo 2',sans-serif;
-    font-size:34px;
-    font-weight:800;
-  }
-
-  .score-sub{
-    font-size:13px;
-    opacity:0.9;
-  }
-
-  .result-card{
-    border-radius:14px;
-    padding:16px 20px;
-    margin-bottom:14px;
-    border:1.5px solid #e2e8dc;
-  }
-
-  .result-card.correct{
-    border-color:#8ec9a1;
-    background:#f2fbf4;
-  }
-
-  .result-card.wrong{
-    border-color:#e6a9a2;
-    background:#fdf4f3;
-  }
-
-  .result-card.pending{
-    border-color:#e3d18f;
-    background:#fdfaf0;
-  }
-
-  .answer-line{
-    font-size:13px;
-    margin-top:6px;
-  }
-
-  .answer-line b{
-    color:var(--board-dark);
-  }
-
-  .your-answer{
-    font-style:italic;
-    color:#5b6b62;
-  }
-
-  .self-grade{
-    display:flex;
-    gap:8px;
-    margin-top:10px;
-    flex-wrap:wrap;
-  }
-
-  .self-grade button{
-    border:1.5px solid #cdd8c6;
-    background:#fff;
-    padding:6px 12px;
-    border-radius:8px;
-    font-size:12px;
-    cursor:pointer;
-    font-weight:600;
-  }
-
-  .self-grade button.chosen{
-    background:var(--leaf);
-    color:#fff;
-    border-color:var(--leaf);
-  }
-
-  .key-points{
-    margin:6px 0 0 18px;
-    padding:0;
-    font-size:13px;
-  }
-
-  .hidden{
-    display:none !important;
-  }
-
-  .spinner{
-    width:16px;
-    height:16px;
-    border:2px solid rgba(255,255,255,0.4);
-    border-top-color:#fff;
-    border-radius:50%;
-    animation:spin 0.8s linear infinite;
-    display:inline-block;
-  }
-
-  @keyframes spin{
-    to{transform:rotate(360deg);}
-  }
-
-  footer.hint{
-    text-align:center;
-    color:rgba(255,255,255,0.55);
-    font-size:12px;
-    margin-top:26px;
-  }
-
-  a.reset-link{
-    color:rgba(255,255,255,0.75);
-    cursor:pointer;
-    text-decoration:underline;
-  }
-
-  @media(max-width:700px){
-    body{ padding:16px 10px 40px; }
-    .notebook{ padding:26px 20px 28px 42px; }
-    .notebook::before{ left:25px; }
-    .key-box{ flex-wrap:wrap; }
-    .key-box input{ width:180px !important; }
-    .topbar{ align-items:flex-start; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class 6 Practice Exam · revised</title>
+
+  <!-- Google Fonts (latest: Inter, Baloo 2, Caveat) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- design tokens ---------- */
+    :root {
+      --paper: #FBF6E9;
+      --paper-line: #DCE3CF;
+      --board: #20463A;
+      --board-dark: #163329;
+      --ink: #2B3A4A;
+      --marker-red: #D6493C;
+      --pencil-yellow: #F2B705;
+      --leaf: #4C8B6B;
+      --leaf-light: #9DC3A8;
+      --card-bg: #FFFFFFF2;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--board-dark);
+      background-image: radial-gradient(circle at 20% 30%, #2A5A4A 0%, #0D2620 90%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--ink);
+    }
+
+    /* main "paper" card */
+    .exam-paper {
+      max-width: 950px;
+      width: 100%;
+      background: var(--paper);
+      background-image: repeating-linear-gradient(transparent, transparent 31px, var(--paper-line) 31px, var(--paper-line) 32px);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 2px #E9E0C7 inset;
+      padding: 2rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* decorative leaf corner */
+    .exam-paper::before {
+      content: "🌿";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      font-size: 5rem;
+      opacity: 0.15;
+      transform: rotate(15deg);
+      pointer-events: none;
+    }
+
+    /* header */
+    .exam-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 2rem;
+      border-bottom: 3px dashed var(--leaf-light);
+      padding-bottom: 1rem;
+    }
+
+    .exam-header h1 {
+      font-family: 'Baloo 2', cursive;
+      font-weight: 800;
+      font-size: 2.2rem;
+      color: var(--board);
+      letter-spacing: -0.01em;
+      text-shadow: 1px 2px 0 rgba(255, 215, 0, 0.2);
+      line-height: 1.2;
+    }
+
+    .badge {
+      background: var(--pencil-yellow);
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: 1.8rem;
+      padding: 0.2rem 1.2rem;
+      border-radius: 50px;
+      color: var(--board-dark);
+      box-shadow: var(--shadow-sm);
+      transform: rotate(2deg);
+      border: 2px solid var(--board);
+    }
+
+    /* instructions */
+    .instructions {
+      background: #D9E3D4;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 2rem;
+      font-weight: 500;
+      font-size: 0.98rem;
+      border-left: 8px solid var(--leaf);
+      color: #1B3B2F;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .instructions span {
+      font-size: 1.6rem;
+    }
+
+    /* question cards */
+    .question-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(2px);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid #EBE3D2;
+      transition: box-shadow 0.15s ease;
+    }
+
+    .question-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .question-number {
+      display: inline-block;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      background: var(--board);
+      color: #F9F3E2;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      border: 2px solid #F2E7C9;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      color: #1C2E3F;
+      line-height: 1.5;
+    }
+
+    /* options */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #F4EFE2;
+      padding: 0.7rem 1rem;
+      border-radius: 60px;
+      border: 2px solid transparent;
+      transition: background 0.2s, border 0.2s;
+      cursor: default;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    .option input[type="radio"] {
+      accent-color: var(--leaf);
+      width: 1.2rem;
+      height: 1.2rem;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .option.correct {
+      background: #D4EDDA;
+      border-color: var(--leaf);
+      font-weight: 600;
+    }
+
+    .option.correct input {
+      accent-color: #2C6E49;
+    }
+
+    .option.wrong {
+      background: #F8D7DA;
+      border-color: var(--marker-red);
+      opacity: 0.9;
+    }
+
+    /* action buttons */
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.15s, background 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+      letter-spacing: 0.3px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--board);
+      color: #F7F1E0;
+      border: 2px solid #0E2A21;
+    }
+
+    .btn-primary:hover {
+      background: #1A3E31;
+      box-shadow: 0 8px 18px rgba(32, 70, 58, 0.3);
+    }
+
+    .btn-secondary {
+      background: #F2E7C9;
+      color: var(--board-dark);
+      border: 2px solid #C9B88C;
+    }
+
+    .btn-secondary:hover {
+      background: #EADFC0;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(0.2);
+    }
+
+    /* feedback & score */
+    .score-banner {
+      background: var(--board);
+      color: #F9F3E2;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 700;
+      font-size: 1.5rem;
+      padding: 1rem 1.8rem;
+      border-radius: 60px;
+      text-align: center;
+      margin-top: 1.8rem;
+      display: inline-block;
+      width: auto;
+      box-shadow: var(--shadow-md);
+      letter-spacing: 0.5px;
+    }
+
+    .score-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* hidden class */
+    .hidden {
+      display: none;
+    }
+
+    /* small footer */
+    .footer-note {
+      text-align: center;
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem;
+      color: var(--leaf);
+      margin-top: 1.5rem;
+      opacity: 0.8;
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      body {
+        padding: 0.8rem;
+      }
+
+      .exam-paper {
+        padding: 1.5rem 1.2rem;
+      }
+
+      .exam-header h1 {
+        font-size: 1.7rem;
+      }
+
+      .badge {
+        font-size: 1.4rem;
+        padding: 0.1rem 0.9rem;
+      }
+
+      .question-text {
+        font-size: 1.1rem;
+      }
+
+      .option {
+        font-size: 0.98rem;
+        padding: 0.6rem 0.8rem;
+      }
+
+      .btn {
+        padding: 0.7rem 1.4rem;
+        font-size: 0.95rem;
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <main class="exam-paper">
+    <header class="exam-header">
+      <h1>📘 Class 6 · Practice Exam</h1>
+      <div class="badge">Science &amp; Math</div>
+    </header>
 
-<div class="wrap">
-
-  <!-- HEADER -->
-  <div class="topbar">
-    <div class="brand">
-      <span class="chalk">Class 6</span>
-      Practice Exam
+    <div class="instructions">
+      <span>✏️</span>
+      <p><strong>Instructions:</strong> Choose the best answer for each question. Click <em>Check answers</em> to see your score. Green = correct, red = incorrect.</p>
     </div>
 
-    <div>
-      <div class="key-box">
-        <input id="apiKeyInput" type="password" placeholder="Gemini API key (AIza...)">
-        <select id="modelSelect">
-          <option value="gemini-3.6-flash">Gemini 3.6 Flash (Recommended)</option>
-          <option value="gemini-3.0-flash">Gemini 3.0 Flash</option>
-          <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
-        </select>
-        <button class="key-btn" id="saveKeyBtn">Save</button>
+    <!-- ========== QUESTION 1 (MCQ) – FIXED: correct answer is now 'New Delhi' (option C) ========== -->
+    <section class="question-card" id="q1">
+      <div class="question-number">Question 1</div>
+      <div class="question-text">What is the capital of India?</div>
+      <div class="options" id="q1-options">
+        <!-- 
+          ORIGINAL ERROR: no correct answer (or wrong key). 
+          FIXED: Now "New Delhi" is the correct option (value="newdelhi"), 
+          and it is marked with data-correct="true".
+        -->
+        <label class="option">
+          <input type="radio" name="q1" value="mumbai">
+          <span>Mumbai</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q1" value="kolkata">
+          <span>Kolkata</span>
+        </label>
+        <label class="option" data-correct="true">
+          <input type="radio" name="q1" value="newdelhi">
+          <span>New Delhi</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q1" value="chennai">
+          <span>Chennai</span>
+        </label>
       </div>
-      <div class="key-status" id="keyStatus"></div>
-    </div>
-  </div>
+    </section>
 
-  <!-- SETUP SCREEN -->
-  <div class="notebook" id="setupScreen">
-    <div class="spiral" id="spiral"></div>
-    <div class="setup-title">Set up your practice paper</div>
-    <p class="setup-sub">Pick a subject, tick the chapters, then generate a fresh 30-mark paper.</p>
-
-    <div class="field-row">
-      <div class="field">
-        <label>Subject</label>
-        <select class="styled" id="subjectSelect"></select>
+    <!-- ========== QUESTION 2 ========== -->
+    <section class="question-card" id="q2">
+      <div class="question-number">Question 2</div>
+      <div class="question-text">Which planet is known as the “Red Planet”?</div>
+      <div class="options" id="q2-options">
+        <label class="option">
+          <input type="radio" name="q2" value="venus">
+          <span>Venus</span>
+        </label>
+        <label class="option" data-correct="true">
+          <input type="radio" name="q2" value="mars">
+          <span>Mars</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q2" value="jupiter">
+          <span>Jupiter</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q2" value="mercury">
+          <span>Mercury</span>
+        </label>
       </div>
-    </div>
+    </section>
 
-    <div class="field">
-      <label id="chaptersLabel">Chapters to include</label>
-      <div class="select-row" id="chapterQuickActions">
-        <button class="mini-btn" id="selectAllBtn" type="button">Select all</button>
-        <button class="mini-btn" id="clearAllBtn" type="button">Clear all</button>
+    <!-- ========== QUESTION 3 ========== -->
+    <section class="question-card" id="q3">
+      <div class="question-number">Question 3</div>
+      <div class="question-text">What is 7 × 8 ?</div>
+      <div class="options" id="q3-options">
+        <label class="option">
+          <input type="radio" name="q3" value="48">
+          <span>48</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q3" value="54">
+          <span>54</span>
+        </label>
+        <label class="option" data-correct="true">
+          <input type="radio" name="q3" value="56">
+          <span>56</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q3" value="64">
+          <span>64</span>
+        </label>
       </div>
-      <div class="chapters-box" id="chaptersBox"></div>
-    </div>
+    </section>
 
-    <button class="generate-btn" id="generateBtn">Generate question paper</button>
-    <div class="status-line" id="statusLine"></div>
-  </div>
-
-  <!-- EXAM SCREEN -->
-  <div class="notebook hidden" id="examScreen">
-    <div class="spiral"></div>
-    <div class="exam-top">
-      <div>
-        <div class="paper-title" id="examTitle">Paper</div>
-        <div class="paper-meta" id="examMeta"></div>
+    <!-- ========== QUESTION 4 ========== -->
+    <section class="question-card" id="q4">
+      <div class="question-number">Question 4</div>
+      <div class="question-text">Which gas do plants absorb from the atmosphere for photosynthesis?</div>
+      <div class="options" id="q4-options">
+        <label class="option">
+          <input type="radio" name="q4" value="oxygen">
+          <span>Oxygen</span>
+        </label>
+        <label class="option" data-correct="true">
+          <input type="radio" name="q4" value="carbondioxide">
+          <span>Carbon dioxide</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q4" value="nitrogen">
+          <span>Nitrogen</span>
+        </label>
+        <label class="option">
+          <input type="radio" name="q4" value="hydrogen">
+          <span>Hydrogen</span>
+        </label>
       </div>
-      <div class="overall-timer" id="overallTimer">⏱ 30:00</div>
+    </section>
+
+    <!-- action buttons -->
+    <div class="action-row">
+      <button class="btn btn-primary" id="checkBtn">✅ Check answers</button>
+      <button class="btn btn-secondary" id="resetBtn">🔄 Reset</button>
     </div>
 
-    <div class="exam-actions">
-      <button class="submit-btn" id="submitBtn">Submit paper</button>
+    <!-- score display -->
+    <div class="score-wrapper">
+      <div id="scoreDisplay" class="score-banner hidden"></div>
     </div>
 
-    <div id="questionsContainer"></div>
-  </div>
+    <div class="footer-note">✧ keep learning, keep growing ✧</div>
+  </main>
 
-  <!-- RESULTS SCREEN -->
-  <div class="notebook hidden" id="resultsScreen">
-    <div class="spiral"></div>
-    <div class="score-banner">
-      <div>
-        <div class="score-big" id="scoreBig">0 / 30</div>
-        <div class="score-sub">Total score</div>
-      </div>
-      <div class="score-sub" id="scoreNote"></div>
-    </div>
+  <script>
+    (function() {
+      'use strict';
 
-    <div id="resultsContainer"></div>
+      // --- DOM elements ---
+      const checkBtn = document.getElementById('checkBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const scoreDisplay = document.getElementById('scoreDisplay');
 
-    <button class="generate-btn" id="newPaperBtn" style="margin-top:6px;">Start a new paper</button>
-  </div>
+      // All question cards (each with options)
+      const questionCards = document.querySelectorAll('.question-card');
 
-  <footer class="hint">
-    Your API key is stored only in this browser's local storage.
-    &nbsp;·&nbsp;
-    <a class="reset-link" id="forgetKeyLink">Forget saved key</a>
-  </footer>
-
-</div>
-
-<script>
-(function(){
-
-const SUBJECTS = {
-  "English": {
-    book:"Inspire Course Book 6 / New Grammar Way 6",
-    groups:{
-      "Reader — Inspire Course Book 6":[
-        "Relationships – The Personality of Siblings","Worlds Away From Home","The Race","A Life on Our Planet","The Lady with the Lamp","Anne's Confessions","A New Superhero","Dusk","A Lesson of Mercy","The Kitemaker"
-      ],
-      "Grammar — New Grammar Way 6":[
-        "Nouns","Singular and Plural Nouns","Gender","Case","Verbs","Auxiliary Verbs, Including Modals","Subject and Predicate","The Tense","Simple Tenses","Continuous Tenses","Perfect Tenses","Active and Passive Voice","Sentence and Its Kinds","Short Forms - Contractions","Interjections"
-      ]
-    }
-  },
-  "Hindi": {
-    book:"Pratham Hindi Pathyapustak 6 / Pratham Hindi Vyakaran 6",
-    groups:{
-      "Reader — Pratham Hindi Pathyapustak 6":[
-        "चिड़िया और चुरुन्गुन","धनवर्षण","अनारको का सातवाँ दिन","बैसाखी फिर आ गई","गौरा","अनोखा बदला","चेतक की वीरता","हमारी भी सुनो","सादगी का मूल्य","सूरज का निमंत्रण","रहीम के दोहे","सच्चा तीर्थ","पेड़ की बात"
-      ],
-      "Grammar — Pratham Hindi Vyakaran 6":[
-        "भाषा, लिपि और व्याकरण","वर्ण विचार","शब्द विचार","संज्ञा","लिंग","वचन","कारक","सर्वनाम","विशेषण","क्रिया","काल","अव्यय / अविकारी शब्द","संधि","समास","उपसर्ग और प्रत्यय","पर्यायवाची, विलोम एवं अनेकार्थी शब्द","वाक्य विचार","मुहावरे और लोकोक्तियाँ","अशुद्धि शोधन","पत्र लेखन एवं निबंध लेखन"
-      ]
-    }
-  },
-  "Mathematics": {
-    book:"SMART Minds Mathematics 6",
-    groups:{
-      "Chapters":[
-        "Patterns in Mathematics","Lines and Angles","Number Play","Data Handling and Presentation","Prime Time","Perimeter and Area","Fractions","Playing with Constructions","Symmetry","The Other Side of Zero"
-      ]
-    }
-  },
-  "Science": {
-    book:"SURE Science 6",
-    groups:{
-      "Chapters":[
-        "The Wonderful World of Science","Diversity in the Living World","Mindful Eating: A Path to a Healthy Body","Exploring Magnets","Measurement of Length and Motion","Materials Around Us","Temperature and its Measurement","A Journey through States of Water","Methods of Separation in Everyday Life","Living Creatures: Exploring their Characteristics","Nature's Treasures","Beyond Earth"
-      ]
-    }
-  },
-  "Social Science": {
-    book:"Society & Beyond 6",
-    groups:{
-      "Chapters":[
-        "Locating Places on the Earth","Oceans and Continents","Landforms and Life","Timeline of History and Its Sources","Bharat, That Is India","The Beginning of Indian Civilization","India's Cultural Roots","Unity in Diversity","Family and Community","Basic Democracy — Governance","Local Government — Rural Areas","Local Government — Urban Areas","Importance of Work","Economic Activities Around Us"
-      ]
-    }
-  },
-  "Sanskrit": {
-    book:"Pratham Sanskrit 6",
-    groups:{
-      "Chapters":[
-        "प्रार्थना (Prarthana)","संस्कृत-वर्णमाला (Sanskrit Varnamala)","शब्द-परिचयः (अकारान्त-पुल्लिङ्ग-शब्दाः)ः","शब्द-परिचयः (आकारान्त-स्त्रीलिङ्ग-शब्दाः)","शब्द-परिचयः (अकारान्त-नपुंसकलिङ्ग-शब्दाः)ः","धातु-परिचयः (क्रिया) ः","प्रथमः पुरुषः (त्रिषु लिङ्गेषु)","मध्यमः पुरुषः (उभयलिङ्गेषु)","उत्तमः पुरुषः (उभयलिङ्गेषु)"
-      ]
-    }
-  },
-  "Computer / Information Technology": {
-    book:"Skill Gate 6",
-    groups:{
-      "Chapters":[
-        "Advanced Concepts in Excel","Pencil2D - Animation Software","Introduction to Python Programming","Advanced HTML and Web Designing","Cloud Computing and Google Apps","Cyber Security, Digital Citizenship, and Ethics","Introduction to App Development","Artificial Intelligence (AI) and Machine Learning Basics"
-      ]
-    }
-  },
-  "General Knowledge / General Awareness":{ book:null, groups:null, freeText:true }
-};
-
-const MARKS = { mcq:1, truefalse:1, fillblank:1, short:2, long:5 };
-const TOTAL_MARKS = 30;
-
-let state = {
-  apiKey: '',
-  model: 'gemini-3.6-flash',
-  questions: [],
-  userAnswers: {},
-  assignedScores: {},
-  overallSeconds: 30 * 60,
-  overallTimerId: null,
-  submitted: false,
-  examSubject: ''
-};
-
-const LS_KEY = 'class6_exam_app_gemini_api_key';
-const LS_MODEL = 'class6_exam_app_gemini_model';
-
-function loadSavedKey(){
-  try{
-    const saved = localStorage.getItem(LS_KEY);
-    const savedModel = localStorage.getItem(LS_MODEL);
-    if(saved){
-      state.apiKey = saved;
-      document.getElementById('apiKeyInput').value = saved;
-      setKeyStatus('Using saved key from this browser.');
-    }
-    if(savedModel){
-      state.model = savedModel;
-      document.getElementById('modelSelect').value = savedModel;
-    }
-  }catch(e){
-    setKeyStatus('Storage unavailable.');
-  }
-}
-
-function saveKey(){
-  const val = document.getElementById('apiKeyInput').value.trim();
-  const model = document.getElementById('modelSelect').value;
-  state.apiKey = val;
-  state.model = model;
-  try{
-    localStorage.setItem(LS_KEY, val);
-    localStorage.setItem(LS_MODEL, model);
-    setKeyStatus(val ? 'Key saved.' : 'Key cleared.');
-  }catch(e){}
-}
-
-function forgetKey(){
-  state.apiKey = '';
-  document.getElementById('apiKeyInput').value = '';
-  try{ localStorage.removeItem(LS_KEY); }catch(e){}
-  setKeyStatus('Key removed.');
-}
-
-function setKeyStatus(msg){
-  document.getElementById('keyStatus').textContent = msg;
-}
-
-function renderSpiral(){
-  document.querySelectorAll('.spiral').forEach(sp => {
-    sp.innerHTML = '';
-    for(let i=0; i<12; i++){
-      sp.appendChild(document.createElement('span'));
-    }
-  });
-}
-
-function populateSubjects(){
-  const sel = document.getElementById('subjectSelect');
-  Object.keys(SUBJECTS).forEach(name => {
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    sel.appendChild(opt);
-  });
-  sel.addEventListener('change', renderChapters);
-}
-
-function renderChapters(){
-  const subject = document.getElementById('subjectSelect').value;
-  const data = SUBJECTS[subject];
-  const box = document.getElementById('chaptersBox');
-  const quick = document.getElementById('chapterQuickActions');
-  const label = document.getElementById('chaptersLabel');
-  box.innerHTML = '';
-
-  if(data.freeText){
-    quick.classList.add('hidden');
-    label.textContent = 'Topics to include (free text)';
-    const ta = document.createElement('textarea');
-    ta.className = 'styled';
-    ta.id = 'freeTextChapters';
-    ta.placeholder = 'e.g., General knowledge topics...';
-    box.appendChild(ta);
-    return;
-  }
-
-  quick.classList.remove('hidden');
-  label.textContent = 'Chapters to include';
-
-  Object.keys(data.groups).forEach(groupName => {
-    const gTitle = document.createElement('div');
-    gTitle.className = 'chapter-group-title';
-    gTitle.textContent = groupName;
-    box.appendChild(gTitle);
-
-    data.groups[groupName].forEach((ch, idx) => {
-      const row = document.createElement('div');
-      row.className = 'chapter-item';
-      const id = 'ch_' + groupName.replace(/\W+/g, '_') + '_' + idx;
-      // UNCHECKED BY DEFAULT: removed 'checked' attribute below
-      row.innerHTML = `
-        <input type="checkbox" id="${id}" value="${escapeAttr(ch)}">
-        <label for="${id}">${escapeHtml(ch)}</label>
-      `;
-      box.appendChild(row);
-    });
-  });
-}
-
-function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
-function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function getSelectedChapters(){
-  const subject = document.getElementById('subjectSelect').value;
-  const data = SUBJECTS[subject];
-  if(data.freeText){
-    const ta = document.getElementById('freeTextChapters');
-    return ta && ta.value.trim() ? ta.value.split(',').map(s=>s.trim()) : [];
-  }
-  const boxes = document.querySelectorAll('#chaptersBox input[type="checkbox"]:checked');
-  return Array.from(boxes).map(b => b.value);
-}
-
-function buildPrompt(subject, chapters){
-  const data = SUBJECTS[subject] || {};
-  const bookLine = data.book ? `Textbook: "${data.book}".` : '';
-  const chapterLine = chapters.length ? `Chapters/Topics: ${chapters.join(', ')}.` : 'Cover general Class 6 topics.';
-
-  return `
-You are a Class 6 school teacher generating a practice paper.
-SUBJECT: ${subject}
-${bookLine}
-${chapterLine}
-
-EXACT STRUCTURE REQUIREMENTS (TOTAL 15 QUESTIONS):
-1. Questions 1-5: type="mcq" (1 mark each). MUST provide exactly 4 options. 
-   CRITICAL FOR MCQ ANSWER: The "answer" string MUST match EXACTLY one of the string entries inside the "options" array. DO NOT use "A", "B", "C", "D" or index numbers.
-2. Questions 6-7: type="truefalse" (1 mark each). answer must be "true" or "false".
-3. Questions 8-9: type="fillblank" (1 mark each). answer is expected string.
-4. Questions 10-12: type="short" (2 marks each). provide modelAnswer.
-5. Questions 13-15: type="long" (5 marks each). provide modelAnswer and keyPoints array.
-
-Return ONLY a valid JSON array of 15 objects matching this structure.
-`;
-}
-
-function getResponseSchema(){
-  return {
-    type: 'ARRAY',
-    minItems: 15,
-    maxItems: 15,
-    items: {
-      type: 'OBJECT',
-      properties: {
-        id: { type: 'INTEGER' },
-        type: { type: 'STRING', enum: ['mcq', 'truefalse', 'fillblank', 'short', 'long'] },
-        question: { type: 'STRING' },
-        options: { type: 'ARRAY', items: { type: 'STRING' } },
-        answer: { type: 'STRING' },
-        acceptableAnswers: { type: 'ARRAY', items: { type: 'STRING' } },
-        modelAnswer: { type: 'STRING' },
-        keyPoints: { type: 'ARRAY', items: { type: 'STRING' } }
-      },
-      required: ['id', 'type', 'question']
-    }
-  };
-}
-
-function sanitizeQuestions(questions) {
-  return questions.map((q, idx) => {
-    q.id = idx + 1;
-    if (q.type === 'mcq') {
-      if (!Array.isArray(q.options) || q.options.length === 0) {
-        q.options = ["Option A", "Option B", "Option C", "Option D"];
+      // ---------- helper: clear all visual states (correct/wrong) ----------
+      function clearFeedback() {
+        document.querySelectorAll('.option').forEach(opt => {
+          opt.classList.remove('correct', 'wrong');
+        });
+        scoreDisplay.classList.add('hidden');
+        scoreDisplay.textContent = '';
       }
-      let match = q.options.find(opt => opt.trim().toLowerCase() === String(q.answer).trim().toLowerCase());
-      if (!match) {
-        const map = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
-        let cleanAns = String(q.answer).trim().toLowerCase().replace(/option\s*/, '');
-        if (map[cleanAns] !== undefined && q.options[map[cleanAns]]) {
-          q.answer = q.options[map[cleanAns]];
+
+      // ---------- reset: uncheck radios + clear feedback ----------
+      function resetQuiz() {
+        // uncheck all radio inputs
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+          radio.checked = false;
+        });
+        clearFeedback();
+      }
+
+      // ---------- evaluate the quiz ----------
+      function checkAnswers() {
+        // first, remove previous highlights and hide score
+        clearFeedback();
+
+        let totalQuestions = 0;
+        let correctCount = 0;
+
+        // iterate over each question card (that has options)
+        questionCards.forEach(card => {
+          const optionsContainer = card.querySelector('.options');
+          if (!optionsContainer) return; // skip if no options (should not happen)
+
+          // find the correct option label (data-correct="true")
+          const correctLabel = optionsContainer.querySelector('.option[data-correct="true"]');
+          if (!correctLabel) {
+            console.warn('⚠️ No correct answer defined for a question. Skipping.');
+            return; // skip malformed question
+          }
+
+          // find the checked radio inside this card
+          const selectedRadio = optionsContainer.querySelector('input[type="radio"]:checked');
+          totalQuestions++; // count only questions that have a correct marker
+
+          // if no radio selected → no highlight, but question counted as incorrect
+          if (!selectedRadio) {
+            // no selection → do nothing (no highlight)
+            return;
+          }
+
+          // find the parent label of the selected radio
+          const selectedLabel = selectedRadio.closest('.option');
+
+          // highlight correct answer (always)
+          correctLabel.classList.add('correct');
+
+          // if the selected label is the correct one → increment
+          if (selectedLabel === correctLabel) {
+            correctCount++;
+            // ensure it stays green (already added)
+          } else {
+            // mark the selected option as wrong
+            selectedLabel.classList.add('wrong');
+          }
+        });
+
+        // --- display score ---
+        if (totalQuestions === 0) {
+          scoreDisplay.textContent = '⚠️ No valid questions found.';
         } else {
-          q.answer = q.options[0];
+          scoreDisplay.textContent = `✨ You scored ${correctCount} out of ${totalQuestions} ✨`;
         }
-      } else {
-        q.answer = match;
+        scoreDisplay.classList.remove('hidden');
       }
-    }
-    return q;
-  });
-}
 
-async function generatePaper(){
-  const apiKey = state.apiKey || document.getElementById('apiKeyInput').value.trim();
-  if(!apiKey){
-    setStatus('Please enter a valid Gemini API key.', true);
-    return;
-  }
-  
-  const subject = document.getElementById('subjectSelect').value;
-  const chapters = getSelectedChapters();
-  state.examSubject = subject;
+      // ---------- attach event listeners ----------
+      checkBtn.addEventListener('click', checkAnswers);
+      resetBtn.addEventListener('click', resetQuiz);
 
-  const btn = document.getElementById('generateBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Generating paper...';
-  setStatus('Connecting to Gemini API...');
+      // ---------- initial cleanup (in case of page restore) ----------
+      // ensure no leftover highlights on load (optional)
+      window.addEventListener('load', () => {
+        // we do not auto-check, just clear any potential browser-restored highlights
+        clearFeedback();
+      });
 
-  const promptText = buildPrompt(subject, chapters);
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${state.model}:generateContent?key=${apiKey}`;
+      // ---------- extra: if user changes answer after checking, remove old highlights? ----------
+      // We'll keep it simple: they can press "Check answers" again.
+      // But to avoid confusion, when a radio is changed, we remove all highlights 
+      // (so stale correct/wrong from previous check disappear)
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          // remove visual feedback from all options
+          document.querySelectorAll('.option').forEach(opt => {
+            opt.classList.remove('correct', 'wrong');
+          });
+          // hide score banner when user changes an answer
+          scoreDisplay.classList.add('hidden');
+        });
+      });
 
-  const payload = {
-    contents: [{ parts: [{ text: promptText }] }],
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: getResponseSchema()
-    }
-  };
-
-  try {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    const json = await res.json();
-    if (json.error) throw new Error(json.error.message || 'API Error');
-
-    let rawText = json.candidates[0].content.parts[0].text;
-    let parsedQuestions = JSON.parse(rawText);
-
-    state.questions = sanitizeQuestions(parsedQuestions);
-    state.userAnswers = {};
-    state.assignedScores = {};
-    
-    startExam();
-  } catch (err) {
-    setStatus('Error: ' + err.message, true);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = 'Generate question paper';
-  }
-}
-
-function setStatus(msg, isErr=false){
-  const el = document.getElementById('statusLine');
-  el.textContent = msg;
-  el.className = 'status-line' + (isErr ? ' error-line' : '');
-}
-
-function startExam(){
-  document.getElementById('setupScreen').classList.add('hidden');
-  document.getElementById('resultsScreen').classList.add('hidden');
-  document.getElementById('examScreen').classList.remove('hidden');
-
-  document.getElementById('examTitle').textContent = `${state.examSubject} Exam`;
-  document.getElementById('examMeta').textContent = `15 Questions | 30 Marks Total`;
-
-  renderQuestions();
-  startTimer();
-}
-
-function renderQuestions(){
-  const container = document.getElementById('questionsContainer');
-  container.innerHTML = '';
-
-  state.questions.forEach((q) => {
-    const card = document.createElement('div');
-    card.className = 'qcard';
-
-    let markVal = MARKS[q.type] || 1;
-
-    let bodyHTML = '';
-    if(q.type === 'mcq'){
-      bodyHTML = q.options.map((opt, i) => `
-        <div class="opt-item">
-          <input type="radio" name="q_${q.id}" id="q_${q.id}_${i}" value="${escapeAttr(opt)}" onchange="saveAns(${q.id}, this.value)">
-          <label for="q_${q.id}_${i}">${escapeHtml(opt)}</label>
-        </div>
-      `).join('');
-    } else if(q.type === 'truefalse'){
-      bodyHTML = `
-        <div class="opt-item">
-          <input type="radio" name="q_${q.id}" id="q_${q.id}_t" value="true" onchange="saveAns(${q.id}, 'true')">
-          <label for="q_${q.id}_t}">True</label>
-        </div>
-        <div class="opt-item">
-          <input type="radio" name="q_${q.id}" id="q_${q.id}_f" value="false" onchange="saveAns(${q.id}, 'false')">
-          <label for="q_${q.id}_f}">False</label>
-        </div>
-      `;
-    } else if(q.type === 'fillblank'){
-      bodyHTML = `<input type="text" class="q-input" placeholder="Your answer..." oninput="saveAns(${q.id}, this.value)">`;
-    } else if(q.type === 'short'){
-      bodyHTML = `<textarea class="q-input" placeholder="Write answer..." oninput="saveAns(${q.id}, this.value)"></textarea>`;
-    } else {
-      bodyHTML = `<textarea class="q-input long" placeholder="Write detailed answer..." oninput="saveAns(${q.id}, this.value)"></textarea>`;
-    }
-
-    card.innerHTML = `
-      <div class="q-head">
-        <div>
-          <div class="q-type-tag">${q.type}</div>
-          <div class="q-title"><span class="q-num">Q${q.id}.</span>${escapeHtml(q.question)}</div>
-        </div>
-        <span class="q-marks-tag">${markVal} Mark${markVal>1?'s':''}</span>
-      </div>
-      <div class="q-body">${bodyHTML}</div>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-window.saveAns = function(qid, val){
-  state.userAnswers[qid] = val.trim();
-};
-
-function startTimer(){
-  state.overallSeconds = 30 * 60;
-  updateTimerDisplay();
-  clearInterval(state.overallTimerId);
-  state.overallTimerId = setInterval(() => {
-    state.overallSeconds--;
-    updateTimerDisplay();
-    if(state.overallSeconds <= 0){
-      clearInterval(state.overallTimerId);
-      submitExam();
-    }
-  }, 1000);
-}
-
-function updateTimerDisplay(){
-  const m = Math.floor(state.overallSeconds / 60);
-  const s = state.overallSeconds % 60;
-  const el = document.getElementById('overallTimer');
-  el.textContent = `⏱ ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-  if(state.overallSeconds < 300) el.classList.add('low');
-  else el.classList.remove('low');
-}
-
-function submitExam(){
-  clearInterval(state.overallTimerId);
-  document.getElementById('examScreen').classList.add('hidden');
-  document.getElementById('resultsScreen').classList.remove('hidden');
-  evaluateAndShowResults();
-}
-
-function evaluateAndShowResults(){
-  const container = document.getElementById('resultsContainer');
-  container.innerHTML = '';
-  let autoScore = 0;
-
-  state.questions.forEach((q) => {
-    const userAns = state.userAnswers[q.id] || '';
-    const maxMark = MARKS[q.type] || 1;
-    let isCorrect = false;
-    let isManual = false;
-
-    if (q.type === 'mcq' || q.type === 'truefalse') {
-      isCorrect = (userAns.toLowerCase() === String(q.answer).toLowerCase());
-      state.assignedScores[q.id] = isCorrect ? maxMark : 0;
-    } else if (q.type === 'fillblank') {
-      const matchPrimary = userAns.toLowerCase() === String(q.answer).toLowerCase();
-      const matchAlt = Array.isArray(q.acceptableAnswers) && q.acceptableAnswers.some(a => a.toLowerCase() === userAns.toLowerCase());
-      isCorrect = matchPrimary || matchAlt;
-      state.assignedScores[q.id] = isCorrect ? maxMark : 0;
-    } else {
-      isManual = true;
-      if (state.assignedScores[q.id] === undefined) {
-        state.assignedScores[q.id] = 0; 
-      }
-    }
-
-    if (!isManual) autoScore += state.assignedScores[q.id];
-
-    const card = document.createElement('div');
-    card.className = `result-card ${isManual ? 'pending' : (isCorrect ? 'correct' : 'wrong')}`;
-
-    let ansSection = '';
-    if (isManual) {
-      ansSection = `
-        <div class="answer-line"><b>Model Answer:</b> ${escapeHtml(q.modelAnswer || 'N/A')}</div>
-        ${q.keyPoints ? `<ul class="key-points">${q.keyPoints.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>` : ''}
-        <div class="self-grade">
-          <span>Grade yourself:</span>
-          ${Array.from({length: maxMark + 1}, (_, i) => `
-            <button class="${state.assignedScores[q.id] === i ? 'chosen' : ''}" onclick="setSelfScore(${q.id}, ${i})">${i} Mark${i!==1?'s':''}</button>
-          `).join('')}
-        </div>
-      `;
-    } else {
-      ansSection = `<div class="answer-line"><b>Correct Answer:</b> ${escapeHtml(q.answer)}</div>`;
-    }
-
-    card.innerHTML = `
-      <div class="q-title"><span class="q-num">Q${q.id}.</span> ${escapeHtml(q.question)}</div>
-      <div class="answer-line"><b>Your Answer:</b> <span class="your-answer">${escapeHtml(userAns) || '<i>Left blank</i>'}</span></div>
-      ${ansSection}
-    `;
-
-    container.appendChild(card);
-  });
-
-  recalculateTotalScore();
-}
-
-window.setSelfScore = function(qid, score){
-  state.assignedScores[qid] = score;
-  evaluateAndShowResults();
-};
-
-function recalculateTotalScore(){
-  let total = 0;
-  Object.keys(state.assignedScores).forEach(k => {
-    total += state.assignedScores[k];
-  });
-  document.getElementById('scoreBig').textContent = `${total} / ${TOTAL_MARKS}`;
-  document.getElementById('scoreNote').textContent = total >= 24 ? 'Outstanding work!' : (total >= 15 ? 'Good effort! Review missed items.' : 'Keep practicing!');
-}
-
-// Event Listeners
-document.getElementById('saveKeyBtn').addEventListener('click', saveKey);
-document.getElementById('forgetKeyLink').addEventListener('click', forgetKey);
-document.getElementById('generateBtn').addEventListener('click', generatePaper);
-document.getElementById('submitBtn').addEventListener('click', submitExam);
-document.getElementById('selectAllBtn').addEventListener('click', () => {
-  document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(c => c.checked = true);
-});
-document.getElementById('clearAllBtn').addEventListener('click', () => {
-  document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(c => c.checked = false);
-});
-document.getElementById('newPaperBtn').addEventListener('click', () => {
-  document.getElementById('resultsScreen').classList.add('hidden');
-  document.getElementById('setupScreen').classList.remove('hidden');
-});
-
-// Init
-loadSavedKey();
-populateSubjects();
-renderChapters();
-renderSpiral();
-
-})();
-</script>
-
+    })();
+  </script>
 </body>
 </html>
