@@ -728,14 +728,19 @@ async function callGemini(prompt){
 
   const generationConfig = {
     temperature: 0.6,
-    maxOutputTokens: 16384,
+    maxOutputTokens: 65536,          // ← raised to Gemini 3.8 Flash's full output capacity
     responseMimeType: 'application/json',
     responseSchema: responseSchema
   };
 
-  // Gemini 3.x uses thinkingLevel (low/medium/high) — NOT thinkingBudget
+  // -----------------------------------------------------------------
+  // DISABLE THINKING on Gemini 3.x models.
+  // thinkingLevel: 'low' still consumes output tokens, which was
+  // truncating the JSON response. thinkingBudget: 0 gives the entire
+  // token budget to the actual question-paper output.
+  // -----------------------------------------------------------------
   if (/gemini-3\./.test(state.model)) {
-    generationConfig.thinkingConfig = { thinkingLevel: 'low' };
+    generationConfig.thinkingConfig = { thinkingBudget: 0 };
   }
 
   const resp = await fetch(url, {
