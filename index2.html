@@ -1,586 +1,1244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Class 6 Practice Exam · revised</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 6 Practice Exam</title>
 
-  <!-- Google Fonts (latest: Inter, Baloo 2, Caveat) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<!-- Preconnect to BOTH font hosts (gstatic was missing) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Variable fonts: fewer files, faster render -->
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500..800&family=Inter:opsz,wght@14..32,400..700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 
-  <style>
-    /* ---------- design tokens ---------- */
-    :root {
-      --paper: #FBF6E9;
-      --paper-line: #DCE3CF;
-      --board: #20463A;
-      --board-dark: #163329;
-      --ink: #2B3A4A;
-      --marker-red: #D6493C;
-      --pencil-yellow: #F2B705;
-      --leaf: #4C8B6B;
-      --leaf-light: #9DC3A8;
-      --card-bg: #FFFFFFF2;
-      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-      --radius-lg: 24px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
-    }
+<style>
+  :root{
+    --paper:#FBF6E9;
+    --paper-line:#DCE3CF;
+    --board:#20463A;
+    --board-dark:#163329;
+    --ink:#2B3A4A;
+    --marker-red:#D6493C;
+    --pencil-yellow:#F2B705;
+    --leaf:#4C8B6B;
+    --leaf-light:#D9EEDF;
+    --paper-shadow: 0 18px 40px -18px rgba(32,70,58,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--board);
+    background-image:
+      radial-gradient(circle at 10% 15%, rgba(255,255,255,0.035) 0, transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(255,255,255,0.03) 0, transparent 40%);
+    font-family:'Inter', system-ui, -apple-system, sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    padding: 28px 16px 60px;
+    font-optical-sizing: auto;
+  }
+  h1,h2,h3,.brand,.q-marks-tag{font-family:'Baloo 2', system-ui, sans-serif;}
+  .wrap{max-width:880px;margin:0 auto;}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  /* ---- Header ---- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; margin-bottom:22px; flex-wrap:wrap;
+  }
+  .brand{
+    color:#fff; font-size:26px; font-weight:800; letter-spacing:0.2px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .brand .chalk{
+    font-family:'Caveat',cursive; font-weight:700; color:var(--pencil-yellow);
+    font-size:30px; transform:rotate(-3deg); display:inline-block;
+    will-change: transform;
+  }
+  .key-box{
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+    border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:8px;
+    flex-wrap:wrap;
+  }
+  .key-box input[type="password"], .key-box input[type="text"]{
+    width:220px; border:none; background:transparent; color:#fff; font-size:13px;
+    outline:none; font-family:'Inter',sans-serif;
+  }
+  .key-box input::placeholder{color:rgba(255,255,255,0.55);}
+  .key-box select{
+    background:rgba(0,0,0,0.25); color:#fff; border:1px solid rgba(255,255,255,0.2);
+    border-radius:8px; font-size:12px; padding:6px 6px; font-family:'Inter',sans-serif;
+    max-width: 200px;
+  }
+  .key-btn{
+    border:none; background:var(--pencil-yellow); color:#1d2a1f; font-weight:700;
+    padding:7px 12px; border-radius:8px; font-size:12px; cursor:pointer;
+  }
+  .key-btn:hover{filter:brightness(1.05);}
+  .key-status{font-size:11px; color:var(--leaf-light); margin-top:4px; min-height:14px;}
 
-    body {
-      background-color: var(--board-dark);
-      background-image: radial-gradient(circle at 20% 30%, #2A5A4A 0%, #0D2620 90%);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      padding: 1.5rem;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: var(--ink);
-    }
+  /* ---- Notebook card ---- */
+  .notebook{
+    position:relative;
+    background:var(--paper);
+    border-radius:18px;
+    box-shadow:var(--paper-shadow);
+    padding: 34px 34px 34px 62px;
+    background-image: repeating-linear-gradient(
+        to bottom, transparent, transparent 34px, var(--paper-line) 35px
+    );
+    background-position: 0 92px;
+  }
+  .notebook::before{
+    content:"";
+    position:absolute; left:34px; top:0; bottom:0; width:2px;
+    background: rgba(214,73,60,0.35);
+  }
+  .spiral{
+    position:absolute; left:-14px; top:26px; bottom:26px; width:28px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .spiral span{
+    display:block; width:26px; height:26px; border-radius:50%;
+    background: var(--board-dark);
+    box-shadow: inset 0 0 0 6px var(--paper), inset 0 0 0 8px rgba(0,0,0,0.15);
+  }
 
-    /* main "paper" card */
-    .exam-paper {
-      max-width: 950px;
-      width: 100%;
-      background: var(--paper);
-      background-image: repeating-linear-gradient(transparent, transparent 31px, var(--paper-line) 31px, var(--paper-line) 32px);
-      border-radius: var(--radius-lg);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 2px #E9E0C7 inset;
-      padding: 2rem 2rem 2.5rem;
-      position: relative;
-      overflow: hidden;
-    }
+  .setup-title{font-size:24px; font-weight:700; margin:0 0 4px; color:var(--board-dark);}
+  .setup-sub{font-size:14px; color:#5b6b62; margin:0 0 22px;}
 
-    /* decorative leaf corner */
-    .exam-paper::before {
-      content: "🌿";
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      font-size: 5rem;
-      opacity: 0.15;
-      transform: rotate(15deg);
-      pointer-events: none;
-    }
+  .field-row{display:flex; gap:18px; flex-wrap:wrap; margin-bottom:18px;}
+  .field{flex:1; min-width:220px;}
+  .field label{
+    display:block; font-size:12px; font-weight:600;
+    color:var(--board-dark); margin-bottom:6px;
+  }
+  select.styled, textarea.styled{
+    width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid #cdd8c6;
+    background:#fff; font-family:'Inter',sans-serif; font-size:14px; color:var(--ink);
+  }
+  textarea.styled{min-height:70px; resize:vertical;}
 
-    /* header */
-    .exam-header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 2rem;
-      border-bottom: 3px dashed var(--leaf-light);
-      padding-bottom: 1rem;
-    }
+  .chapters-box{
+    background:#fff; border:1.5px solid #cdd8c6; border-radius:12px;
+    padding:14px 16px; margin-bottom:20px; max-height:260px; overflow-y:auto;
+  }
+  .chapter-group-title{
+    font-size:12px; font-weight:700; color:var(--leaf); margin:10px 0 6px;
+  }
+  .chapter-group-title:first-child{margin-top:0;}
+  .chapter-item{display:flex; align-items:flex-start; gap:8px; padding:5px 0; font-size:14px;}
+  .chapter-item input{margin-top:3px; cursor:pointer;}
+  .chapter-item label{cursor:pointer;}
 
-    .exam-header h1 {
-      font-family: 'Baloo 2', cursive;
-      font-weight: 800;
-      font-size: 2.2rem;
-      color: var(--board);
-      letter-spacing: -0.01em;
-      text-shadow: 1px 2px 0 rgba(255, 215, 0, 0.2);
-      line-height: 1.2;
-    }
+  .select-row{display:flex; gap:10px; margin-bottom:10px;}
+  .mini-btn{
+    border:1px solid #cdd8c6; background:#fff; color:var(--board-dark);
+    font-size:12px; padding:5px 10px; border-radius:8px; cursor:pointer; font-weight:600;
+  }
+  .mini-btn:hover{background:var(--leaf-light);}
+  .mini-btn:disabled{opacity:0.5; cursor:not-allowed;}
 
-    .badge {
-      background: var(--pencil-yellow);
-      font-family: 'Caveat', cursive;
-      font-weight: 700;
-      font-size: 1.8rem;
-      padding: 0.2rem 1.2rem;
-      border-radius: 50px;
-      color: var(--board-dark);
-      box-shadow: var(--shadow-sm);
-      transform: rotate(2deg);
-      border: 2px solid var(--board);
-    }
+  .generate-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--marker-red); color:#fff; border:none; font-weight:700;
+    font-size:16px; padding:13px 26px; border-radius:12px; cursor:pointer;
+    font-family:'Baloo 2', sans-serif; box-shadow:0 10px 20px -8px rgba(214,73,60,0.6);
+    transition: filter .15s;
+  }
+  .generate-btn:disabled{opacity:0.55; cursor:not-allowed; box-shadow:none;}
+  .generate-btn:hover:not(:disabled){filter:brightness(1.05);}
 
-    /* instructions */
-    .instructions {
-      background: #D9E3D4;
-      padding: 1rem 1.5rem;
-      border-radius: var(--radius-md);
-      margin-bottom: 2rem;
-      font-weight: 500;
-      font-size: 0.98rem;
-      border-left: 8px solid var(--leaf);
-      color: #1B3B2F;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      box-shadow: var(--shadow-sm);
-    }
+  .status-line{margin-top:14px; font-size:13px; color:#5b6b62; min-height:18px;}
+  .error-line{color:var(--marker-red); font-weight:600;}
 
-    .instructions span {
-      font-size: 1.6rem;
-    }
+  /* ---- Exam header/timer ---- */
+  .exam-top{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
+    gap:14px; margin-bottom:22px; padding-bottom:16px; border-bottom:2px dashed #cdd8c6;
+  }
+  .paper-title{font-size:20px; font-weight:700; color:var(--board-dark);}
+  .paper-meta{font-size:13px; color:#5b6b62;}
+  .overall-timer{
+    background:var(--board); color:#fff; padding:10px 18px; border-radius:12px;
+    font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700; letter-spacing:1px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .overall-timer.low{background:var(--marker-red);}
+  .exam-actions{display:flex; gap:10px; margin-bottom:8px;}
+  .submit-btn{
+    background:var(--board); color:#fff; border:none; font-weight:700;
+    padding:11px 20px; border-radius:10px; cursor:pointer; font-family:'Baloo 2',sans-serif;
+    font-size:15px;
+  }
+  .submit-btn:hover{background:var(--board-dark);}
 
-    /* question cards */
-    .question-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(2px);
-      border-radius: var(--radius-md);
-      padding: 1.5rem 1.8rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid #EBE3D2;
-      transition: box-shadow 0.15s ease;
-    }
+  /* ---- Question card ---- */
+  .qcard{
+    background:#fff; border:1.5px solid #e2e8dc; border-radius:14px;
+    padding:18px 20px; margin-bottom:16px; position:relative;
+    transition: border-color .2s, box-shadow .2s, opacity .2s;
+  }
+  .qcard.locked{opacity:0.6;}
+  .qcard.active{border-color:var(--leaf); box-shadow:0 0 0 3px var(--leaf-light);}
+  .q-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px;}
+  .q-title{font-size:15px; font-weight:600; color:var(--ink); line-height:1.5;}
+  .q-num{color:var(--leaf); font-weight:700; margin-right:6px;}
+  .q-marks-tag{
+    background:var(--leaf-light); color:var(--leaf); font-size:12px; font-weight:700;
+    padding:4px 10px; border-radius:20px; white-space:nowrap;
+  }
+  .q-type-tag{
+    font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#8b9a90;
+    font-weight:700; margin-bottom:6px;
+  }
+  .q-body{margin-top:8px;}
+  .opt-item{display:flex; align-items:center; gap:8px; padding:6px 0; font-size:14px;}
+  .opt-item input{cursor:pointer;}
+  .opt-item label{cursor:pointer;}
+  .q-input{
+    width:100%; padding:9px 11px; border-radius:8px; border:1.5px solid #cdd8c6;
+    font-family:'Inter',sans-serif; font-size:14px; margin-top:4px;
+  }
+  textarea.q-input{min-height:60px; resize:vertical;}
+  textarea.q-input.long{min-height:110px;}
 
-    .question-card:hover {
-      box-shadow: var(--shadow-md);
-    }
+  .q-controls{display:flex; align-items:center; gap:10px; margin-top:12px;}
+  .start-btn{
+    background:var(--pencil-yellow); color:#3a2c00; border:none; font-weight:700;
+    padding:7px 16px; border-radius:8px; cursor:pointer; font-size:13px;
+    font-family:'Baloo 2', sans-serif;
+  }
+  .start-btn:disabled{background:#e5e5e5; color:#9a9a9a; cursor:not-allowed;}
+  .q-timer{
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14px; color:var(--board-dark);
+    background:#f1efe4; padding:5px 12px; border-radius:8px; min-width:56px; text-align:center;
+  }
+  .q-timer.warn{color:var(--marker-red);}
+  .q-note{font-size:12px; color:#8b9a90; margin-top:4px;}
 
-    .question-number {
-      display: inline-block;
-      font-family: 'Baloo 2', cursive;
-      font-weight: 700;
-      background: var(--board);
-      color: #F9F3E2;
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      font-size: 1.1rem;
-      letter-spacing: 0.5px;
-      margin-bottom: 1rem;
-      border: 2px solid #F2E7C9;
-    }
+  /* ---- Results ---- */
+  .score-banner{
+    background: var(--leaf); color:#fff; border-radius:14px; padding:20px 24px;
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px;
+  }
+  .score-big{font-family:'Baloo 2',sans-serif; font-size:34px; font-weight:800;}
+  .score-sub{font-size:13px; opacity:0.9;}
+  .result-card{border-radius:14px; padding:16px 20px; margin-bottom:14px; border:1.5px solid #e2e8dc;}
+  .result-card.correct{border-color:#8ec9a1; background:#f2fbf4;}
+  .result-card.wrong{border-color:#e6a9a2; background:#fdf4f3;}
+  .result-card.pending{border-color:#e3d18f; background:#fdfaf0;}
+  .answer-line{font-size:13px; margin-top:6px;}
+  .answer-line b{color:var(--board-dark);}
+  .your-answer{font-style:italic; color:#5b6b62;}
+  .self-grade{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .self-grade button{
+    border:1.5px solid #cdd8c6; background:#fff; padding:6px 12px; border-radius:8px;
+    font-size:12px; cursor:pointer; font-weight:600;
+  }
+  .self-grade button.chosen{background:var(--leaf); color:#fff; border-color:var(--leaf);}
+  .key-points{margin:6px 0 0 18px; padding:0; font-size:13px;}
 
-    .question-text {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1.2rem;
-      color: #1C2E3F;
-      line-height: 1.5;
-    }
+  .hidden{display:none !important;}
+  .spinner{
+    width:16px; height:16px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff;
+    border-radius:50%; animation:spin 0.8s linear infinite; display:inline-block;
+    vertical-align: middle;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
 
-    /* options */
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      margin-bottom: 0.5rem;
-    }
+  footer.hint{
+    text-align:center; color:rgba(255,255,255,0.55); font-size:12px; margin-top:26px;
+  }
+  a.reset-link{color:rgba(255,255,255,0.75); cursor:pointer; text-decoration:underline;}
 
-    .option {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      background: #F4EFE2;
-      padding: 0.7rem 1rem;
-      border-radius: 60px;
-      border: 2px solid transparent;
-      transition: background 0.2s, border 0.2s;
-      cursor: default;
-      font-weight: 500;
-      font-size: 1.05rem;
-    }
-
-    .option input[type="radio"] {
-      accent-color: var(--leaf);
-      width: 1.2rem;
-      height: 1.2rem;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .option.correct {
-      background: #D4EDDA;
-      border-color: var(--leaf);
-      font-weight: 600;
-    }
-
-    .option.correct input {
-      accent-color: #2C6E49;
-    }
-
-    .option.wrong {
-      background: #F8D7DA;
-      border-color: var(--marker-red);
-      opacity: 0.9;
-    }
-
-    /* action buttons */
-    .action-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .btn {
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      padding: 0.8rem 2rem;
-      border-radius: 50px;
-      border: none;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.15s, background 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-sm);
-      letter-spacing: 0.3px;
-    }
-
-    .btn:active {
-      transform: scale(0.97);
-    }
-
-    .btn-primary {
-      background: var(--board);
-      color: #F7F1E0;
-      border: 2px solid #0E2A21;
-    }
-
-    .btn-primary:hover {
-      background: #1A3E31;
-      box-shadow: 0 8px 18px rgba(32, 70, 58, 0.3);
-    }
-
-    .btn-secondary {
-      background: #F2E7C9;
-      color: var(--board-dark);
-      border: 2px solid #C9B88C;
-    }
-
-    .btn-secondary:hover {
-      background: #EADFC0;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      filter: grayscale(0.2);
-    }
-
-    /* feedback & score */
-    .score-banner {
-      background: var(--board);
-      color: #F9F3E2;
-      font-family: 'Baloo 2', cursive;
-      font-weight: 700;
-      font-size: 1.5rem;
-      padding: 1rem 1.8rem;
-      border-radius: 60px;
-      text-align: center;
-      margin-top: 1.8rem;
-      display: inline-block;
-      width: auto;
-      box-shadow: var(--shadow-md);
-      letter-spacing: 0.5px;
-    }
-
-    .score-wrapper {
-      display: flex;
-      justify-content: center;
-    }
-
-    /* hidden class */
-    .hidden {
-      display: none;
-    }
-
-    /* small footer */
-    .footer-note {
-      text-align: center;
-      font-family: 'Caveat', cursive;
-      font-size: 1.3rem;
-      color: var(--leaf);
-      margin-top: 1.5rem;
-      opacity: 0.8;
-    }
-
-    /* responsive */
-    @media (max-width: 600px) {
-      body {
-        padding: 0.8rem;
-      }
-
-      .exam-paper {
-        padding: 1.5rem 1.2rem;
-      }
-
-      .exam-header h1 {
-        font-size: 1.7rem;
-      }
-
-      .badge {
-        font-size: 1.4rem;
-        padding: 0.1rem 0.9rem;
-      }
-
-      .question-text {
-        font-size: 1.1rem;
-      }
-
-      .option {
-        font-size: 0.98rem;
-        padding: 0.6rem 0.8rem;
-      }
-
-      .btn {
-        padding: 0.7rem 1.4rem;
-        font-size: 0.95rem;
-        flex: 1 1 auto;
-        justify-content: center;
-      }
-    }
-  </style>
+  @media (max-width: 600px){
+    .notebook{padding: 24px 18px 24px 48px;}
+    .setup-title{font-size:20px;}
+    .brand{font-size:20px;}
+    .brand .chalk{font-size:24px;}
+    .key-box input{width:140px;}
+  }
+</style>
 </head>
 <body>
-  <main class="exam-paper">
-    <header class="exam-header">
-      <h1>📘 Class 6 · Practice Exam</h1>
-      <div class="badge">Science &amp; Math</div>
-    </header>
+<div class="wrap">
 
-    <div class="instructions">
-      <span>✏️</span>
-      <p><strong>Instructions:</strong> Choose the best answer for each question. Click <em>Check answers</em> to see your score. Green = correct, red = incorrect.</p>
+  <div class="topbar">
+    <div class="brand"><span class="chalk">Class 6</span> Practice Exam</div>
+    <div>
+      <div class="key-box">
+        <input id="apiKeyInput" type="password" placeholder="Gemini API key (AIza...)" autocomplete="off">
+        <select id="modelSelect" aria-label="Gemini model">
+          <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (fastest)</option>
+          <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (recommended)</option>
+          <option value="gemini-2.5-pro">Gemini 2.5 Pro (best quality)</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+        </select>
+        <button class="key-btn" id="saveKeyBtn">Save</button>
+      </div>
+      <div class="key-status" id="keyStatus" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- SETUP SCREEN -->
+  <div class="notebook" id="setupScreen">
+    <div class="spiral"></div>
+    <div class="setup-title">Set up your practice paper</div>
+    <p class="setup-sub">Pick a subject, tick the chapters you want to be tested on, then generate a fresh 30-mark paper.</p>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="subjectSelect">Subject</label>
+        <select class="styled" id="subjectSelect"></select>
+      </div>
     </div>
 
-    <!-- ========== QUESTION 1 (MCQ) – FIXED: correct answer is now 'New Delhi' (option C) ========== -->
-    <section class="question-card" id="q1">
-      <div class="question-number">Question 1</div>
-      <div class="question-text">What is the capital of India?</div>
-      <div class="options" id="q1-options">
-        <!-- 
-          ORIGINAL ERROR: no correct answer (or wrong key). 
-          FIXED: Now "New Delhi" is the correct option (value="newdelhi"), 
-          and it is marked with data-correct="true".
-        -->
-        <label class="option">
-          <input type="radio" name="q1" value="mumbai">
-          <span>Mumbai</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q1" value="kolkata">
-          <span>Kolkata</span>
-        </label>
-        <label class="option" data-correct="true">
-          <input type="radio" name="q1" value="newdelhi">
-          <span>New Delhi</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q1" value="chennai">
-          <span>Chennai</span>
-        </label>
+    <div class="field">
+      <label id="chaptersLabel">Chapters to include</label>
+      <div class="select-row" id="chapterQuickActions">
+        <button class="mini-btn" id="selectAllBtn" type="button">Select all</button>
+        <button class="mini-btn" id="clearAllBtn" type="button">Clear all</button>
       </div>
-    </section>
-
-    <!-- ========== QUESTION 2 ========== -->
-    <section class="question-card" id="q2">
-      <div class="question-number">Question 2</div>
-      <div class="question-text">Which planet is known as the “Red Planet”?</div>
-      <div class="options" id="q2-options">
-        <label class="option">
-          <input type="radio" name="q2" value="venus">
-          <span>Venus</span>
-        </label>
-        <label class="option" data-correct="true">
-          <input type="radio" name="q2" value="mars">
-          <span>Mars</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q2" value="jupiter">
-          <span>Jupiter</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q2" value="mercury">
-          <span>Mercury</span>
-        </label>
-      </div>
-    </section>
-
-    <!-- ========== QUESTION 3 ========== -->
-    <section class="question-card" id="q3">
-      <div class="question-number">Question 3</div>
-      <div class="question-text">What is 7 × 8 ?</div>
-      <div class="options" id="q3-options">
-        <label class="option">
-          <input type="radio" name="q3" value="48">
-          <span>48</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q3" value="54">
-          <span>54</span>
-        </label>
-        <label class="option" data-correct="true">
-          <input type="radio" name="q3" value="56">
-          <span>56</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q3" value="64">
-          <span>64</span>
-        </label>
-      </div>
-    </section>
-
-    <!-- ========== QUESTION 4 ========== -->
-    <section class="question-card" id="q4">
-      <div class="question-number">Question 4</div>
-      <div class="question-text">Which gas do plants absorb from the atmosphere for photosynthesis?</div>
-      <div class="options" id="q4-options">
-        <label class="option">
-          <input type="radio" name="q4" value="oxygen">
-          <span>Oxygen</span>
-        </label>
-        <label class="option" data-correct="true">
-          <input type="radio" name="q4" value="carbondioxide">
-          <span>Carbon dioxide</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q4" value="nitrogen">
-          <span>Nitrogen</span>
-        </label>
-        <label class="option">
-          <input type="radio" name="q4" value="hydrogen">
-          <span>Hydrogen</span>
-        </label>
-      </div>
-    </section>
-
-    <!-- action buttons -->
-    <div class="action-row">
-      <button class="btn btn-primary" id="checkBtn">✅ Check answers</button>
-      <button class="btn btn-secondary" id="resetBtn">🔄 Reset</button>
+      <div class="chapters-box" id="chaptersBox"></div>
     </div>
 
-    <!-- score display -->
-    <div class="score-wrapper">
-      <div id="scoreDisplay" class="score-banner hidden"></div>
+    <button class="generate-btn" id="generateBtn">Generate question paper</button>
+    <div class="status-line" id="statusLine" aria-live="polite"></div>
+  </div>
+
+  <!-- EXAM SCREEN -->
+  <div class="notebook hidden" id="examScreen">
+    <div class="spiral"></div>
+    <div class="exam-top">
+      <div>
+        <div class="paper-title" id="examTitle">Paper</div>
+        <div class="paper-meta" id="examMeta"></div>
+      </div>
+      <div class="overall-timer" id="overallTimer">⏱ 30:00</div>
     </div>
+    <div class="exam-actions">
+      <button class="submit-btn" id="submitBtn">Submit paper</button>
+    </div>
+    <div id="questionsContainer"></div>
+  </div>
 
-    <div class="footer-note">✧ keep learning, keep growing ✧</div>
-  </main>
+  <!-- RESULTS SCREEN -->
+  <div class="notebook hidden" id="resultsScreen">
+    <div class="spiral"></div>
+    <div class="score-banner">
+      <div>
+        <div class="score-big" id="scoreBig">0 / 30</div>
+        <div class="score-sub">Total score</div>
+      </div>
+      <div class="score-sub" id="scoreNote"></div>
+    </div>
+    <div id="resultsContainer"></div>
+    <button class="generate-btn" id="newPaperBtn" style="margin-top:6px;">Start a new paper</button>
+  </div>
 
-  <script>
-    (function() {
-      'use strict';
+  <footer class="hint">
+    Your API key is stored only in this browser's local storage. It never leaves your device except in direct calls to Google's Gemini API.
+    &nbsp;·&nbsp; <a class="reset-link" id="forgetKeyLink">Forget saved key</a>
+  </footer>
+</div>
 
-      // --- DOM elements ---
-      const checkBtn = document.getElementById('checkBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      const scoreDisplay = document.getElementById('scoreDisplay');
+<script>
+'use strict';
+(function(){
 
-      // All question cards (each with options)
-      const questionCards = document.querySelectorAll('.question-card');
+/* ---------------------------------------------------------------
+   1. SUBJECT / CHAPTER DATA
+---------------------------------------------------------------- */
+const SUBJECTS = {
+  "English": {
+    book: "Inspire Course Book 6 / New Grammar Way 6",
+    groups: {
+      "Reader — Inspire Course Book 6": [
+        "Relationships – The Personality of Siblings","Worlds Away From Home (includes Poem: Playthings)","The Race (includes Poem: The Echoing Green)",
+        "A Life on Our Planet","The Lady with the Lamp (includes Poem: The Heart of a Bird)","Anne's Confessions","A New Superhero","Dusk",
+        "A Lesson of Mercy","The Kitemaker (includes Poem: The Earthen Pot and the Iron Pot)"
+      ],
+      "Grammar — New Grammar Way 6": [
+        "Nouns","Singular and Plural Nouns","Gender","Case","Verbs",
+        "Auxiliary Verbs, Including Modals","Subject and Predicate","The Tense",
+        "Simple Tenses","Continuous Tenses","Perfect Tenses","Active and Passive Voice",
+        "Sentence and Its Kinds","Short Forms - Contractions","Interjections"
+      ]
+    }
+  },
+  "Hindi": {
+    book: "Pratham Hindi Pathyapustak 6 / Pratham Hindi Vyakaran 6",
+    groups: {
+      "Reader — Pratham Hindi Pathyapustak 6": [
+        "चिड़िया और चुरुन्गुन","धनवर्षण","अनारको का सातवाँ दिन","बैसाखी फिर आ गई","गौरा",
+        "अनोखा बदला","चेतक की वीरता","हमारी भी सुनो","सादगी का मूल्य","सूरज का निमंत्रण",
+        "रहीम के दोहे","सच्चा तीर्थ","पेड़ की बात"
+      ],
+      "Grammar — Pratham Hindi Vyakaran 6": [
+        "भाषा, लिपि और व्याकरण","वर्ण विचार","शब्द विचार","संज्ञा","लिंग","वचन","कारक",
+        "सर्वनाम","विशेषण","क्रिया","काल","अव्यय / अविकारी शब्द","संधि","समास",
+        "उपसर्ग और प्रत्यय","पर्यायवाची, विलोम एवं अनेकार्थी शब्द","वाक्य विचार",
+        "मुहावरे और लोकोक्तियाँ","अशुद्धि शोधन","पत्र लेखन एवं निबंध लेखन"
+      ]
+    }
+  },
+  "Mathematics": {
+    book: "SMART Minds Mathematics 6",
+    groups: {
+      "Chapters": [
+        "Patterns in Mathematics","Lines and Angles","Number Play",
+        "Data Handling and Presentation","Prime Time","Perimeter and Area",
+        "Fractions","Playing with Constructions","Symmetry","The Other Side of Zero"
+      ]
+    }
+  },
+  "Science": {
+    book: "SURE Science 6",
+    groups: {
+      "Chapters": [
+        "The Wonderful World of Science","Diversity in the Living World",
+        "Mindful Eating: A Path to a Healthy Body","Exploring Magnets",
+        "Measurement of Length and Motion","Materials Around Us",
+        "Temperature and its Measurement","A Journey through States of Water",
+        "Methods of Separation in Everyday Life","Living Creatures: Exploring their Characteristics",
+        "Nature's Treasures","Beyond Earth"
+      ]
+    }
+  },
+  "Social Science": {
+    book: "Society & Beyond 6",
+    groups: {
+      "Chapters": [
+        "Locating Places on the Earth","Oceans and Continents","Landforms and Life",
+        "Timeline of History and Its Sources","Bharat, That Is India",
+        "The Beginning of Indian Civilization","India's Cultural Roots",
+        "Unity in Diversity","Family and Community","Basic Democracy — Governance",
+        "Local Government — Rural Areas","Local Government — Urban Areas",
+        "Importance of Work","Economic Activities Around Us"
+      ]
+    }
+  },
+  "Sanskrit": {
+    book: "Pratham Sanskrit 6",
+    groups: {
+      "Chapters": [
+        "प्रार्थना (Prarthana)","संस्कृत-वर्णमाला (Sanskrit Varnamala)",
+        "शब्द-परिचयः (अकारान्त-पुल्लिङ्ग-शब्दाः)","शब्द-परिचयः (आकारान्त-स्त्रीलिङ्ग-शब्दाः)",
+        "शब्द-परिचयः (अकारान्त-नपुंसकलिङ्ग-शब्दाः)","धातु-परिचयः (क्रिया)",
+        "प्रथमः पुरुषः (त्रिषु लिङ्गेषु)","मध्यमः पुरुषः (उभयलिङ्गेषु)","उत्तमः पुरुषः (उभयलिङ्गेषु)"
+      ]
+    }
+  },
+  "Computer / Information Technology": {
+    book: "Skill Gate 6",
+    groups: {
+      "Chapters": [
+        "Advanced Concepts in Excel","Pencil2D - Animation Software",
+        "Introduction to Python Programming","Advanced HTML and Web Designing",
+        "Cloud Computing and Google Apps","Cyber Security, Digital Citizenship, and Ethics",
+        "Introduction to App Development","Artificial Intelligence (AI) and Machine Learning Basics"
+      ]
+    }
+  },
+  "General Knowledge / General Awareness": { book: null, groups: null, freeText: true },
+  "Art / Work Education": { book: null, groups: null, freeText: true },
+  "Physical Education / Sports": { book: null, groups: null, freeText: true },
+  "Value Education / Life Skills": { book: null, groups: null, freeText: true }
+};
 
-      // ---------- helper: clear all visual states (correct/wrong) ----------
-      function clearFeedback() {
-        document.querySelectorAll('.option').forEach(opt => {
-          opt.classList.remove('correct', 'wrong');
+/* ---------------------------------------------------------------
+   2. STATE
+---------------------------------------------------------------- */
+const state = {
+  apiKey: '',
+  model: 'gemini-2.5-flash',
+  questions: [],
+  currentActiveIndex: -1,
+  overallSeconds: 30 * 60,
+  overallTimerId: null,
+  perQTimerId: null,
+  submitted: false,
+  examSubject: '',
+  examChapters: [],
+  totalMarks: 30,
+  _autoScoreBase: 0,
+  _pendingMax: 0
+};
+
+/* ---------------------------------------------------------------
+   3. HELPERS
+---------------------------------------------------------------- */
+function $(id){ return document.getElementById(id); }
+function escapeHtml(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escapeAttr(s){ return escapeHtml(s); }
+function formatTime(totalSeconds){
+  const s = Math.max(0, Math.floor(totalSeconds));
+  const m = Math.floor(s/60);
+  const r = s % 60;
+  return String(m).padStart(2,'0') + ':' + String(r).padStart(2,'0');
+}
+function setKeyStatus(msg){ $('keyStatus').textContent = msg; }
+
+/**
+ * Normalize an answer string for comparison.
+ * Strips: case, punctuation, extra whitespace, leading articles.
+ */
+function normalizeAnswer(s){
+  return String(s == null ? '' : s)
+    .toLowerCase()
+    .replace(/[.,!?;:'"()\[\]{}\-_/\\]/g, ' ')
+    .replace(/\b(a|an|the)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/* ---------------------------------------------------------------
+   4. API KEY PERSISTENCE
+---------------------------------------------------------------- */
+const LS_KEY = 'class6_exam_app_gemini_api_key';
+const LS_MODEL = 'class6_exam_app_gemini_model';
+
+function loadSavedKey(){
+  try{
+    const saved = window.localStorage.getItem(LS_KEY);
+    const savedModel = window.localStorage.getItem(LS_MODEL);
+    if(saved){
+      state.apiKey = saved;
+      $('apiKeyInput').value = saved;
+      setKeyStatus('Using saved key from this browser.');
+    }
+    if(savedModel){
+      state.model = savedModel;
+      $('modelSelect').value = savedModel;
+    }
+  }catch(e){
+    setKeyStatus('Browser storage unavailable — key will be kept for this session only.');
+  }
+}
+
+function saveKey(){
+  const val = $('apiKeyInput').value.trim();
+  const model = $('modelSelect').value;
+  state.apiKey = val;
+  state.model = model;
+  try{
+    window.localStorage.setItem(LS_KEY, val);
+    window.localStorage.setItem(LS_MODEL, model);
+    setKeyStatus(val ? 'Key saved in this browser.' : 'Key cleared.');
+  }catch(e){
+    setKeyStatus('Could not persist to storage — kept for this session only.');
+  }
+}
+
+function forgetKey(){
+  state.apiKey = '';
+  $('apiKeyInput').value = '';
+  try{ window.localStorage.removeItem(LS_KEY); }catch(e){}
+  setKeyStatus('Saved key removed.');
+}
+
+/* ---------------------------------------------------------------
+   5. SETUP SCREEN — subject / chapter rendering
+---------------------------------------------------------------- */
+function populateSubjects(){
+  const sel = $('subjectSelect');
+  sel.innerHTML = '';
+  Object.keys(SUBJECTS).forEach(name=>{
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', renderChapters);
+}
+
+function renderChapters(){
+  const subject = $('subjectSelect').value;
+  const data = SUBJECTS[subject];
+  const box = $('chaptersBox');
+  const quick = $('chapterQuickActions');
+  const label = $('chaptersLabel');
+  box.innerHTML = '';
+
+  if(!data){ return; }
+
+  if(data.freeText){
+    quick.classList.add('hidden');
+    label.textContent = 'Topics to include (this subject has no fixed chapter list)';
+    const ta = document.createElement('textarea');
+    ta.className = 'styled'; ta.id = 'freeTextChapters'; ta.rows = 3;
+    ta.placeholder = 'e.g. Current affairs, sports rules, basic first aid, road safety...';
+    box.appendChild(ta);
+    return;
+  }
+
+  quick.classList.remove('hidden');
+  label.textContent = 'Chapters to include';
+  Object.keys(data.groups).forEach(groupName=>{
+    const gTitle = document.createElement('div');
+    gTitle.className = 'chapter-group-title';
+    gTitle.textContent = groupName;
+    box.appendChild(gTitle);
+    data.groups[groupName].forEach((ch, idx)=>{
+      const row = document.createElement('div');
+      row.className = 'chapter-item';
+      const id = 'ch_' + groupName.replace(/\W+/g,'_') + '_' + idx;
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.id = id; cb.value = ch;
+      const lb = document.createElement('label');
+      lb.htmlFor = id; lb.textContent = ch;
+      row.appendChild(cb); row.appendChild(lb);
+      box.appendChild(row);
+    });
+  });
+}
+
+function getSelectedChapters(){
+  const subject = $('subjectSelect').value;
+  const data = SUBJECTS[subject];
+  if(!data) return [];
+  if(data.freeText){
+    const ta = $('freeTextChapters');
+    const txt = ta ? ta.value.trim() : '';
+    if(!txt) return [];
+    // split on commas, semicolons, or newlines
+    return txt.split(/[,;\n]+/).map(s=>s.trim()).filter(Boolean);
+  }
+  const boxes = document.querySelectorAll('#chaptersBox input[type="checkbox"]:checked');
+  return Array.from(boxes).map(b=>b.value);
+}
+
+/* ---------------------------------------------------------------
+   6. PROMPT BUILDING + API CALL
+---------------------------------------------------------------- */
+function buildPrompt(subject, chapters) {
+  const data = SUBJECTS[subject] || {};
+  const bookLine = data.book ? `The textbook used is "${data.book}".` : '';
+  const chapterLine = chapters.length
+    ? `Base every question strictly on these chapters/topics: ${chapters.join(', ')}.`
+    : `No specific chapters were chosen, so cover general Class 6 topics for this subject.`;
+
+  return `You are an experienced Indian Class 6 school teacher setting a practice exam paper for the subject "${subject}". ${bookLine}
+${chapterLine}
+
+SUBJECT-SPECIFIC RULES:
+- Mathematics: Ensure all questions are solvable via standard text/numbers without requiring drawn geometric figures or diagrams.
+- English / Hindi / Languages: Provide standalone grammar/vocabulary/literature questions, OR embed a short 2-3 sentence reading passage directly inside the "question" field of question #1 for comprehension.
+- Science / Social Studies / Computer Science: Keep any code snippet or term formatted in plain text.
+
+EXAM REQUIREMENTS:
+1. Create a question paper worth EXACTLY 30 marks total.
+2. The sum of the "marks" values across ALL questions in the array MUST sum to EXACTLY 30. Double-check your arithmetic.
+3. Include at least one question of every type listed below.
+4. Keep all answers and explanations short to ensure the output fits completely within token limits.
+5. Do not include any question that depends on images, diagrams, or audio.
+6. Vary difficulty appropriately for an 11-year-old student.
+
+CRITICAL: For MCQ questions, the "answer" field MUST be the EXACT text of one of the options (character-for-character). Do not paraphrase.
+
+QUESTION TYPES & COMPACT JSON SCHEMAS:
+Return ONLY a valid JSON array (no markdown code fences, no commentary, no trailing text) where each element has this exact shape:
+
+MCQ (1 mark each, 4 options):
+{"id":1,"type":"mcq","marks":1,"question":"...","options":["...","...","...","..."],"answer":"exact text of correct option"}
+
+True/False (1 mark each):
+{"id":2,"type":"truefalse","marks":1,"question":"...","answer":"true"}
+
+Fill in the blank (1 mark each, use "____" in question):
+{"id":3,"type":"fillblank","marks":1,"question":"... ____ ...","answer":"expected word","acceptableAnswers":["alternate1"]}
+
+Short answer (2 or 3 marks each):
+{"id":4,"type":"short","marks":2,"question":"...","modelAnswer":"concise answer in 1-2 sentences"}
+
+Long answer (4 or 5 marks each):
+{"id":5,"type":"long","marks":5,"question":"...","modelAnswer":"concise short paragraph","keyPoints":["point 1","point 2"]}
+
+Respond with the raw JSON array ONLY.`;
+}
+
+/**
+ * Validate & repair a generated question array.
+ * - Ensures MCQ.answer matches one of its options (fuzzy).
+ * - Ensures truefalse.answer is "true"/"false".
+ * - Drops questions that can't be salvaged.
+ */
+function validateQuestions(questions){
+  const cleaned = [];
+  for(const q of questions){
+    if(!q || typeof q !== 'object') continue;
+    if(!q.question || typeof q.question !== 'string') continue;
+    q.marks = Number(q.marks) || 1;
+
+    if(q.type === 'mcq'){
+      if(!Array.isArray(q.options) || q.options.length < 2) continue;
+      // Try to match q.answer against options
+      const target = normalizeAnswer(q.answer);
+      let matched = q.options.find(o => normalizeAnswer(o) === target);
+      if(!matched){
+        // Fuzzy: option contains answer or answer contains option
+        matched = q.options.find(o => {
+          const n = normalizeAnswer(o);
+          return n && target && (n.includes(target) || target.includes(n));
         });
-        scoreDisplay.classList.add('hidden');
-        scoreDisplay.textContent = '';
       }
-
-      // ---------- reset: uncheck radios + clear feedback ----------
-      function resetQuiz() {
-        // uncheck all radio inputs
-        document.querySelectorAll('input[type="radio"]').forEach(radio => {
-          radio.checked = false;
-        });
-        clearFeedback();
-      }
-
-      // ---------- evaluate the quiz ----------
-      function checkAnswers() {
-        // first, remove previous highlights and hide score
-        clearFeedback();
-
-        let totalQuestions = 0;
-        let correctCount = 0;
-
-        // iterate over each question card (that has options)
-        questionCards.forEach(card => {
-          const optionsContainer = card.querySelector('.options');
-          if (!optionsContainer) return; // skip if no options (should not happen)
-
-          // find the correct option label (data-correct="true")
-          const correctLabel = optionsContainer.querySelector('.option[data-correct="true"]');
-          if (!correctLabel) {
-            console.warn('⚠️ No correct answer defined for a question. Skipping.');
-            return; // skip malformed question
-          }
-
-          // find the checked radio inside this card
-          const selectedRadio = optionsContainer.querySelector('input[type="radio"]:checked');
-          totalQuestions++; // count only questions that have a correct marker
-
-          // if no radio selected → no highlight, but question counted as incorrect
-          if (!selectedRadio) {
-            // no selection → do nothing (no highlight)
-            return;
-          }
-
-          // find the parent label of the selected radio
-          const selectedLabel = selectedRadio.closest('.option');
-
-          // highlight correct answer (always)
-          correctLabel.classList.add('correct');
-
-          // if the selected label is the correct one → increment
-          if (selectedLabel === correctLabel) {
-            correctCount++;
-            // ensure it stays green (already added)
-          } else {
-            // mark the selected option as wrong
-            selectedLabel.classList.add('wrong');
-          }
-        });
-
-        // --- display score ---
-        if (totalQuestions === 0) {
-          scoreDisplay.textContent = '⚠️ No valid questions found.';
-        } else {
-          scoreDisplay.textContent = `✨ You scored ${correctCount} out of ${totalQuestions} ✨`;
+      if(!matched){
+        // Salvage: pick the option with the most word-overlap with the answer
+        const tWords = new Set(target.split(' ').filter(Boolean));
+        let best = null, bestScore = 0;
+        for(const o of q.options){
+          const oWords = normalizeAnswer(o).split(' ').filter(Boolean);
+          const score = oWords.filter(w => tWords.has(w)).length;
+          if(score > bestScore){ bestScore = score; best = o; }
         }
-        scoreDisplay.classList.remove('hidden');
+        if(best && bestScore > 0) matched = best;
       }
+      if(!matched){
+        // Give up on this question rather than ship a broken one
+        console.warn('Dropping MCQ with unmatchable answer:', q);
+        continue;
+      }
+      q.answer = matched; // normalise to exact option text
+    }
 
-      // ---------- attach event listeners ----------
-      checkBtn.addEventListener('click', checkAnswers);
-      resetBtn.addEventListener('click', resetQuiz);
+    if(q.type === 'truefalse'){
+      const a = String(q.answer).toLowerCase().trim();
+      if(a !== 'true' && a !== 'false') continue;
+      q.answer = a;
+    }
 
-      // ---------- initial cleanup (in case of page restore) ----------
-      // ensure no leftover highlights on load (optional)
-      window.addEventListener('load', () => {
-        // we do not auto-check, just clear any potential browser-restored highlights
-        clearFeedback();
+    if(q.type === 'fillblank'){
+      if(!q.answer) continue;
+    }
+
+    if(q.type === 'short' || q.type === 'long'){
+      if(!q.modelAnswer) q.modelAnswer = '';
+    }
+
+    cleaned.push(q);
+  }
+  // renumber ids
+  cleaned.forEach((q,i)=> q.id = i+1);
+  return cleaned;
+}
+
+async function callGemini(prompt){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.model)}:generateContent?key=${encodeURIComponent(state.apiKey)}`;
+
+  const responseSchema = {
+    type: 'ARRAY',
+    items: {
+      type: 'OBJECT',
+      properties: {
+        id: { type: 'INTEGER' },
+        type: { type: 'STRING', enum: ['mcq','truefalse','fillblank','short','long'] },
+        marks: { type: 'INTEGER' },
+        question: { type: 'STRING' },
+        options: { type: 'ARRAY', items: { type: 'STRING' } },
+        answer: { type: 'STRING' },
+        acceptableAnswers: { type: 'ARRAY', items: { type: 'STRING' } },
+        explanation: { type: 'STRING' },
+        modelAnswer: { type: 'STRING' },
+        keyPoints: { type: 'ARRAY', items: { type: 'STRING' } }
+      },
+      required: ['id','type','marks','question']
+    }
+  };
+
+  // thinkingConfig is only valid on 2.5 models
+  const is25 = /gemini-2\.5/.test(state.model);
+  const generationConfig = {
+    temperature: 0.6,
+    maxOutputTokens: 16384,
+    responseMimeType: 'application/json',
+    responseSchema: responseSchema
+  };
+  if(is25){
+    // 2.5-pro doesn't accept thinkingBudget:0; 2.5-flash/flash-lite do
+    generationConfig.thinkingConfig = { thinkingBudget: 0 };
+  }
+
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig
+    })
+  });
+
+  if(!resp.ok){
+    let detail = '';
+    try{ const j = await resp.json(); detail = j?.error?.message || JSON.stringify(j); }
+    catch(e){ detail = resp.statusText; }
+    throw new Error(`API error (${resp.status}): ${detail}`);
+  }
+
+  const data = await resp.json();
+  const candidate = (data.candidates || [])[0];
+  const finishReason = candidate && candidate.finishReason;
+  const parts = candidate && candidate.content && candidate.content.parts;
+  const text = parts && parts.map(p => p.text || '').join('');
+  if(!text){
+    throw new Error('No text content returned by the API. The response may have been blocked — try again or pick fewer chapters.');
+  }
+  if(finishReason === 'MAX_TOKENS'){
+    throw new Error('Response was cut off (ran out of output tokens). Try again with fewer chapters.');
+  }
+  return text;
+}
+
+function extractJson(text){
+  let cleaned = text.trim();
+  cleaned = cleaned.replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+  const start = cleaned.indexOf('[');
+  const end = cleaned.lastIndexOf(']');
+  if(start === -1 || end === -1) throw new Error('Could not find a JSON array in the response.');
+  const jsonStr = cleaned.slice(start, end+1);
+  try{
+    return JSON.parse(jsonStr);
+  }catch(e){
+    // Repair common slips: trailing commas, control chars
+    const repaired = jsonStr
+      .replace(/,\s*([\]}])/g, '$1')
+      .replace(/[\u0000-\u0009\u000B\u000C\u000E-\u001F]/g, '');
+    try{ return JSON.parse(repaired); }
+    catch(e2){ throw new Error('The paper generator returned malformed JSON. Please try again.'); }
+  }
+}
+
+async function generatePaper(){
+  const subject = $('subjectSelect').value;
+  const chapters = getSelectedChapters();
+  const btn = $('generateBtn');
+  const statusLine = $('statusLine');
+
+  if(!state.apiKey){
+    statusLine.innerHTML = '<span class="error-line">Please enter and save your Gemini API key first.</span>';
+    return;
+  }
+
+  btn.disabled = true;
+  statusLine.innerHTML = '<span class="spinner"></span> Writing your question paper... this can take up to 30 seconds.';
+
+  try{
+    const prompt = buildPrompt(subject, chapters);
+    let raw = await callGemini(prompt);
+    let questions = validateQuestions(extractJson(raw));
+
+    let totalMarks = questions.reduce((s,q)=> s + Number(q.marks||0), 0);
+    if(Math.abs(totalMarks - 30) > 0.01){
+      statusLine.innerHTML = '<span class="spinner"></span> Adjusting marks to total 30, regenerating...';
+      const fixPrompt = prompt + `\n\nIMPORTANT: your previous attempt summed to ${totalMarks} marks, not 30. Recount and make sure marks sum to exactly 30 this time.`;
+      raw = await callGemini(fixPrompt);
+      questions = validateQuestions(extractJson(raw));
+      totalMarks = questions.reduce((s,q)=> s + Number(q.marks||0), 0);
+    }
+
+    if(!questions.length){
+      throw new Error('The generator returned no usable questions. Please try again.');
+    }
+
+    state.questions = questions;
+    state.examSubject = subject;
+    state.examChapters = chapters;
+    state.totalMarks = totalMarks;
+
+    statusLine.textContent = '';
+    startExam();
+  }catch(err){
+    console.error(err);
+    statusLine.innerHTML = `<span class="error-line">${escapeHtml(err.message)}</span>`;
+  }finally{
+    btn.disabled = false;
+  }
+}
+
+/* ---------------------------------------------------------------
+   7. SOUND
+---------------------------------------------------------------- */
+let audioCtx = null;
+function playBeep(freq, duration, delay){
+  delay = delay || 0;
+  setTimeout(()=>{
+    try{
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }catch(e){}
+  }, delay);
+}
+function playQuestionEndSound(){ playBeep(660, 0.25); }
+function playExamEndSound(){
+  playBeep(523,0.3,0); playBeep(659,0.3,300); playBeep(784,0.5,600);
+}
+
+/* ---------------------------------------------------------------
+   8. EXAM SCREEN
+---------------------------------------------------------------- */
+function startExam(){
+  $('setupScreen').classList.add('hidden');
+  $('examScreen').classList.remove('hidden');
+  $('resultsScreen').classList.add('hidden');
+
+  $('examTitle').textContent = `${state.examSubject} — Practice Paper`;
+  $('examMeta').textContent =
+    `Total marks: ${state.totalMarks} · ${state.questions.length} questions · 30 minutes overall`;
+
+  state.overallSeconds = 30*60;
+  state.submitted = false;
+  state.currentActiveIndex = -1;
+  renderQuestions();
+  updateOverallTimerDisplay();
+  clearInterval(state.overallTimerId);
+  state.overallTimerId = setInterval(tickOverall, 1000);
+}
+
+function renderQuestions(){
+  const container = $('questionsContainer');
+  container.innerHTML = '';
+  state.questions.forEach((q, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'qcard';
+    card.id = 'qcard_' + idx;
+
+    const allotted = Math.round(Number(q.marks) * 60);
+    q._allottedSeconds = allotted;
+    q._remaining = allotted;
+    q._started = false;
+    q._locked = false;
+
+    const typeLabel = {
+      mcq:'Multiple choice', truefalse:'True or False', fillblank:'Fill in the blank',
+      short:'Short answer', long:'Long answer'
+    }[q.type] || q.type;
+
+    card.innerHTML = `
+      <div class="q-type-tag">${typeLabel}</div>
+      <div class="q-head">
+        <div class="q-title"><span class="q-num">Q${idx+1}.</span>${escapeHtml(q.question)}</div>
+        <div class="q-marks-tag">${q.marks} mark${q.marks==1?'':'s'}</div>
+      </div>
+      <div class="q-body" id="qbody_${idx}"></div>
+      <div class="q-controls">
+        <button class="start-btn" id="startbtn_${idx}">Start (${formatTime(allotted)})</button>
+        <div class="q-timer" id="qtimer_${idx}">${formatTime(allotted)}</div>
+      </div>
+      <div class="q-note" id="qnote_${idx}"></div>
+    `;
+    container.appendChild(card);
+    renderAnswerInput(q, idx);
+    $('startbtn_'+idx).addEventListener('click', ()=>startQuestion(idx));
+  });
+}
+
+function renderAnswerInput(q, idx){
+  const body = $('qbody_'+idx);
+  if(q.type === 'mcq'){
+    body.innerHTML = (q.options||[]).map((opt,oi)=>`
+      <div class="opt-item">
+        <input type="radio" name="mcq_${idx}" id="mcq_${idx}_${oi}" value="${escapeAttr(opt)}" disabled>
+        <label for="mcq_${idx}_${oi}">${escapeHtml(opt)}</label>
+      </div>`).join('');
+  }else if(q.type === 'truefalse'){
+    body.innerHTML = `
+      <div class="opt-item"><input type="radio" name="tf_${idx}" id="tf_${idx}_t" value="true" disabled><label for="tf_${idx}_t">True</label></div>
+      <div class="opt-item"><input type="radio" name="tf_${idx}" id="tf_${idx}_f" value="false" disabled><label for="tf_${idx}_f">False</label></div>`;
+  }else if(q.type === 'fillblank'){
+    body.innerHTML = `<input type="text" class="q-input" id="fb_${idx}" placeholder="Your answer" disabled>`;
+  }else if(q.type === 'short'){
+    body.innerHTML = `<textarea class="q-input" id="sa_${idx}" placeholder="Write your answer here" disabled></textarea>`;
+  }else if(q.type === 'long'){
+    body.innerHTML = `<textarea class="q-input long" id="la_${idx}" placeholder="Write your answer here" disabled></textarea>`;
+  }
+}
+
+function setInputsEnabled(idx, enabled){
+  const card = $('qcard_'+idx);
+  if(!card) return;
+  card.querySelectorAll('input, textarea').forEach(el=> el.disabled = !enabled);
+}
+
+function startQuestion(idx){
+  if(state.submitted) return;
+  const q = state.questions[idx];
+  if(q._locked) return;
+
+  if(state.currentActiveIndex !== -1 && state.currentActiveIndex !== idx){
+    const prevCard = $('qcard_'+state.currentActiveIndex);
+    if(prevCard) prevCard.classList.remove('active');
+  }
+  clearInterval(state.perQTimerId);
+
+  state.currentActiveIndex = idx;
+  q._started = true;
+  $('qcard_'+idx).classList.add('active');
+  const sb = $('startbtn_'+idx);
+  sb.disabled = true;
+  sb.textContent = 'In progress...';
+  setInputsEnabled(idx, true);
+
+  state.perQTimerId = setInterval(()=>tickQuestion(idx), 1000);
+}
+
+function tickQuestion(idx){
+  const q = state.questions[idx];
+  q._remaining -= 1;
+  const timerEl = $('qtimer_'+idx);
+  if(timerEl) timerEl.textContent = formatTime(q._remaining);
+  if(q._remaining <= 10 && timerEl) timerEl.classList.add('warn');
+
+  if(q._remaining <= 0){
+    clearInterval(state.perQTimerId);
+    lockQuestion(idx);
+    playQuestionEndSound();
+  }
+}
+
+function lockQuestion(idx){
+  const q = state.questions[idx];
+  q._locked = true;
+  setInputsEnabled(idx, false);
+  $('qcard_'+idx).classList.add('locked');
+  $('qcard_'+idx).classList.remove('active');
+  $('startbtn_'+idx).textContent = 'Time up';
+  $('qnote_'+idx).textContent = "Time's up for this question — move to the next one.";
+  if(state.currentActiveIndex === idx) state.currentActiveIndex = -1;
+}
+
+function updateOverallTimerDisplay(){
+  const el = $('overallTimer');
+  el.textContent = '⏱ ' + formatTime(state.overallSeconds);
+  el.classList.toggle('low', state.overallSeconds <= 60);
+}
+
+function tickOverall(){
+  state.overallSeconds -= 1;
+  updateOverallTimerDisplay();
+  if(state.overallSeconds <= 0){
+    clearInterval(state.overallTimerId);
+    clearInterval(state.perQTimerId);
+    playExamEndSound();
+    submitPaper(true);
+  }
+}
+
+/* ---------------------------------------------------------------
+   9. SUBMISSION + GRADING
+---------------------------------------------------------------- */
+function collectAnswer(q, idx){
+  if(q.type === 'mcq'){
+    const sel = document.querySelector(`input[name="mcq_${idx}"]:checked`);
+    return sel ? sel.value : null;
+  }
+  if(q.type === 'truefalse'){
+    const sel = document.querySelector(`input[name="tf_${idx}"]:checked`);
+    return sel ? (sel.value === 'true') : null;
+  }
+  if(q.type === 'fillblank'){
+    const el = $('fb_'+idx);
+    return el ? el.value.trim() : '';
+  }
+  if(q.type === 'short'){
+    const el = $('sa_'+idx);
+    return el ? el.value.trim() : '';
+  }
+  if(q.type === 'long'){
+    const el = $('la_'+idx);
+    return el ? el.value.trim() : '';
+  }
+  return null;
+}
+
+function submitPaper(auto){
+  if(state.submitted) return;
+  state.submitted = true;
+  clearInterval(state.overallTimerId);
+  clearInterval(state.perQTimerId);
+
+  state.questions.forEach((q, idx)=>{
+    q._userAnswer = collectAnswer(q, idx);
+    setInputsEnabled(idx, false);
+  });
+
+  renderResults(auto);
+}
+
+function toBool(v){
+  if(typeof v === 'boolean') return v;
+  return String(v).trim().toLowerCase() === 'true';
+}
+
+function gradeAuto(q){
+  if(q.type === 'mcq'){
+    if(q._userAnswer == null) return false;
+    return normalizeAnswer(q._userAnswer) === normalizeAnswer(q.answer);
+  }
+  if(q.type === 'truefalse'){
+    return q._userAnswer !== null && q._userAnswer === toBool(q.answer);
+  }
+  if(q.type === 'fillblank'){
+    const given = normalizeAnswer(q._userAnswer);
+    if(!given) return false;
+    const accepted = [q.answer, ...(q.acceptableAnswers||[])]
+      .filter(Boolean).map(normalizeAnswer);
+    return accepted.includes(given);
+  }
+  return null;
+}
+
+function renderResults(auto){
+  $('examScreen').classList.add('hidden');
+  $('resultsScreen').classList.remove('hidden');
+  const container = $('resultsContainer');
+  container.innerHTML = '';
+
+  let autoScore = 0;
+  let pendingMarks = 0;
+
+  state.questions.forEach((q, idx)=>{
+    const isAuto = ['mcq','truefalse','fillblank'].includes(q.type);
+    let correct = null;
+    if(isAuto){
+      correct = gradeAuto(q);
+      if(correct) autoScore += Number(q.marks);
+    }else{
+      pendingMarks += Number(q.marks);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'result-card ' + (isAuto ? (correct ? 'correct' : 'wrong') : 'pending');
+
+    let bodyHtml = '';
+    const userDisplay = formatUserAnswer(q);
+
+    if(isAuto){
+      bodyHtml += `<div class="answer-line your-answer">Your answer: ${userDisplay || '(no answer given)'}</div>`;
+      bodyHtml += `<div class="answer-line"><b>Correct answer:</b> ${formatCorrectAnswer(q)}</div>`;
+      if(q.explanation) bodyHtml += `<div class="answer-line">${escapeHtml(q.explanation)}</div>`;
+      bodyHtml += `<div class="answer-line"><b>${correct ? '✔ Correct' : '✘ Incorrect'}</b> — ${correct ? q.marks : 0} / ${q.marks} marks</div>`;
+    }else{
+      bodyHtml += `<div class="answer-line your-answer">Your answer: ${userDisplay || '(no answer given)'}</div>`;
+      bodyHtml += `<div class="answer-line"><b>Model answer:</b> ${escapeHtml(q.modelAnswer||'')}</div>`;
+      if(q.keyPoints && q.keyPoints.length){
+        bodyHtml += `<div class="answer-line"><b>Key points expected:</b></div><ul class="key-points">` +
+          q.keyPoints.map(p=>`<li>${escapeHtml(p)}</li>`).join('') + `</ul>`;
+      }
+      bodyHtml += `<div class="answer-line">Compare your answer above, then mark yourself honestly:</div>
+        <div class="self-grade" data-idx="${idx}" data-marks="${q.marks}">
+          <button data-frac="1">Full marks (${q.marks})</button>
+          <button data-frac="0.5">Half marks (${Math.round(q.marks/2)})</button>
+          <button data-frac="0">No marks (0)</button>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="q-type-tag">${({mcq:'Multiple choice',truefalse:'True or False',fillblank:'Fill in the blank',short:'Short answer',long:'Long answer'})[q.type]}</div>
+      <div class="q-head">
+        <div class="q-title"><span class="q-num">Q${idx+1}.</span>${escapeHtml(q.question)}</div>
+        <div class="q-marks-tag">${q.marks} mark${q.marks==1?'':'s'}</div>
+      </div>
+      ${bodyHtml}
+    `;
+    container.appendChild(card);
+  });
+
+  container.querySelectorAll('.self-grade').forEach(row=>{
+    row.querySelectorAll('button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        row.querySelectorAll('button').forEach(b=>b.classList.remove('chosen'));
+        btn.classList.add('chosen');
+        updateFinalScore();
       });
+    });
+  });
 
-      // ---------- extra: if user changes answer after checking, remove old highlights? ----------
-      // We'll keep it simple: they can press "Check answers" again.
-      // But to avoid confusion, when a radio is changed, we remove all highlights 
-      // (so stale correct/wrong from previous check disappear)
-      document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', () => {
-          // remove visual feedback from all options
-          document.querySelectorAll('.option').forEach(opt => {
-            opt.classList.remove('correct', 'wrong');
-          });
-          // hide score banner when user changes an answer
-          scoreDisplay.classList.add('hidden');
-        });
-      });
+  $('scoreBig').textContent = `${autoScore} / ${state.totalMarks}`;
+  $('scoreNote').textContent = auto
+    ? 'Time ran out — paper auto-submitted. Mark your short/long answers below to see your final score.'
+    : 'Mark your short/long answers below to see your final score.';
 
-    })();
-  </script>
+  state._autoScoreBase = autoScore;
+  state._pendingMax = pendingMarks;
+}
+
+function updateFinalScore(){
+  let total = state._autoScoreBase;
+  document.querySelectorAll('.self-grade').forEach(row=>{
+    const chosen = row.querySelector('button.chosen');
+    const marks = Number(row.dataset.marks);
+    if(chosen){
+      total += Math.round(marks * Number(chosen.dataset.frac));
+    }
+  });
+  $('scoreBig').textContent = `${total} / ${state.totalMarks}`;
+}
+
+function formatUserAnswer(q){
+  if(q._userAnswer === null || q._userAnswer === undefined || q._userAnswer === '') return '';
+  if(q.type === 'truefalse') return q._userAnswer ? 'True' : 'False';
+  return escapeHtml(String(q._userAnswer));
+}
+function formatCorrectAnswer(q){
+  if(q.type === 'truefalse') return toBool(q.answer) ? 'True' : 'False';
+  return escapeHtml(String(q.answer));
+}
+
+/* ---------------------------------------------------------------
+   10. WIRE UP
+---------------------------------------------------------------- */
+function buildSpiral(){
+  document.querySelectorAll('.spiral').forEach(sp=>{
+    sp.innerHTML = '';
+    for(let i=0;i<10;i++){
+      const dot = document.createElement('span');
+      sp.appendChild(dot);
+    }
+  });
+}
+
+function init(){
+  populateSubjects();
+  renderChapters();
+  buildSpiral();
+  loadSavedKey();
+
+  $('saveKeyBtn').addEventListener('click', saveKey);
+  $('modelSelect').addEventListener('change', saveKey);
+  $('forgetKeyLink').addEventListener('click', forgetKey);
+  $('generateBtn').addEventListener('click', generatePaper);
+  $('submitBtn').addEventListener('click', ()=>submitPaper(false));
+  $('newPaperBtn').addEventListener('click', ()=>{
+    $('resultsScreen').classList.add('hidden');
+    $('setupScreen').classList.remove('hidden');
+    $('statusLine').textContent = '';
+  });
+  $('selectAllBtn').addEventListener('click', ()=>{
+    if(SUBJECTS[$('subjectSelect').value]?.freeText) return;
+    document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(b=>b.checked = true);
+  });
+  $('clearAllBtn').addEventListener('click', ()=>{
+    if(SUBJECTS[$('subjectSelect').value]?.freeText) return;
+    document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(b=>b.checked = false);
+  });
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', init);
+}else{
+  init();
+}
+
+})();
+</script>
 </body>
 </html>
