@@ -604,7 +604,7 @@ Return ONLY a valid JSON array (no markdown code fences, no commentary, no trail
 
 MCQ: {"id":1,"type":"mcq","marks":1,"question":"...","options":["...","...","...","..."],"answer":"exact text of correct option","explanation":"one short sentence"}
 
-True/False: {"id":2,"type":"truefalse","marks":1,"question":"...","answer":true,"explanation":"one short sentence"}
+True/False: {"id":2,"type":"truefalse","marks":1,"question":"...","answer":"true","explanation":"one short sentence"} (answer must be the exact lowercase string "true" or "false")
 
 Fill in the blank: {"id":3,"type":"fillblank","marks":1,"question":"... ____ ...","answer":"expected word or phrase","acceptableAnswers":["alternate1","alternate2"],"explanation":"one short sentence"}
 
@@ -617,12 +617,38 @@ The "marks" values across ALL questions in the array MUST sum to exactly 30. Dou
 
 async function callClaude(prompt){
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.model)}:generateContent?key=${encodeURIComponent(state.apiKey)}`;
+  const responseSchema = {
+    type: 'ARRAY',
+    items: {
+      type: 'OBJECT',
+      properties: {
+        id: { type: 'INTEGER' },
+        type: { type: 'STRING', enum: ['mcq','truefalse','fillblank','short','long'] },
+        marks: { type: 'INTEGER' },
+        question: { type: 'STRING' },
+        options: { type: 'ARRAY', items: { type: 'STRING' } },
+        answer: { type: 'STRING' },
+        acceptableAnswers: { type: 'ARRAY', items: { type: 'STRING' } },
+        explanation: { type: 'STRING' },
+        modelAnswer: { type: 'STRING' },
+        keyPoints: { type: 'ARRAY', items: { type: 'STRING' } }
+      },
+      required: ['id','type','marks','question']
+    }
+  };
+
   const resp = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.7, maxOutputTokens: 4000 }
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 8192,
+        responseMimeType: 'application/json',
+        responseSchema: responseSchema,
+        thinkingConfig: { thinkingLevel: 'low' }
+      }
     })
   });
 
@@ -635,9 +661,15 @@ async function callClaude(prompt){
 
   const data = await resp.json();
   const candidate = (data.candidates || [])[0];
+  const finishReason = candidate && candidate.finishReason;
   const parts = candidate && candidate.content && candidate.content.parts;
   const text = parts && parts.map(p => p.text || '').join('');
-  if(!text) throw new Error('No text content returned by the API. The response may have been blocked — try again or rephrase the chapters.');
+  if(!text){
+    throw new Error('No text content returned by the API. The response may have been blocked — try again or rephrase the chapters.');
+  }
+  if(finishReason === 'MAX_TOKENS'){
+    throw new Error('The response was cut off before it finished (ran out of output tokens). Try again, or pick fewer chapters to keep the paper shorter.');
+  }
   return text;
 }
 
@@ -647,8 +679,20 @@ function extractJson(text){
   const start = cleaned.indexOf('[');
   const end = cleaned.lastIndexOf(']');
   if(start === -1 || end === -1) throw new Error('Could not find a JSON array in the response.');
-  const jsonStr = cleaned.slice(start, end+1);
-  return JSON.parse(jsonStr);
+  let jsonStr = cleaned.slice(start, end+1);
+  try{
+    return JSON.parse(jsonStr);
+  }catch(e){
+    // Common model slip-ups: trailing commas before ] or }, stray control characters.
+    const repaired = jsonStr
+      .replace(/,\s*([\]}])/g, '$1')
+      .replace(/[\u0000-\u0009\u000B\u000C\u000E-\u001F]/g, '');
+    try{
+      return JSON.parse(repaired);
+    }catch(e2){
+      throw new Error('The paper generator returned malformed JSON (' + e.message + '). Please try generating again.');
+    }
+  }
 }
 
 async function generatePaper(){
@@ -921,12 +965,17 @@ function submitPaper(auto){
   renderResults(auto);
 }
 
+function toBool(v){
+  if(typeof v === 'boolean') return v;
+  return String(v).trim().toLowerCase() === 'true';
+}
+
 function gradeAuto(q){
   if(q.type === 'mcq'){
     return q._userAnswer !== null && q._userAnswer === q.answer;
   }
   if(q.type === 'truefalse'){
-    return q._userAnswer !== null && q._userAnswer === Boolean(q.answer);
+    return q._userAnswer !== null && q._userAnswer === toBool(q.answer);
   }
   if(q.type === 'fillblank'){
     const given = (q._userAnswer || '').trim().toLowerCase();
@@ -1032,7 +1081,7 @@ function formatUserAnswer(q){
   return escapeHtml(String(q._userAnswer));
 }
 function formatCorrectAnswer(q){
-  if(q.type === 'truefalse') return q.answer ? 'True' : 'False';
+  if(q.type === 'truefalse') return toBool(q.answer) ? 'True' : 'False';
   return escapeHtml(String(q.answer));
 }
 
