@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Class 6 Exam Pro - 2026 Edition</title>
+<title>Class 6 Practice Exam Pro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -23,224 +23,309 @@
     background: var(--board);
     font-family:'Inter', sans-serif;
     color:var(--ink);
-    padding: 20px;
-    margin: 0;
+    padding: 20px; margin: 0;
   }
-  .wrap{ max-width:900px; margin:0 auto; }
+  .wrap{ max-width:950px; margin:0 auto; }
 
-  /* Header */
-  .top-nav{
+  /* Top Settings Bar */
+  .top-bar{
     display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:20px; flex-wrap:wrap; gap:15px;
+    margin-bottom:20px; flex-wrap:wrap; gap:10px;
   }
   .logo{ color:#fff; font-size:26px; font-weight:800; font-family:'Baloo 2'; }
   .logo span{ font-family:'Caveat'; color:var(--pencil-yellow); font-size:32px; }
   
-  .settings-pill{
+  .settings-box{
     background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    padding: 10px; border-radius: 12px; display: flex; gap: 8px;
+    padding: 10px; border-radius: 12px; display: flex; gap: 8px; align-items:center;
   }
-  .settings-pill input, .settings-pill select{
+  .settings-box input, .settings-box select{
     background: #163329; color: #fff; border: 1px solid #4C8B6B;
     padding: 6px; border-radius: 6px; font-size: 13px; outline: none;
   }
 
   /* Notebook Styling */
-  .paper{
-    background:var(--paper); border-radius:20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    padding: 40px 40px 40px 70px; position:relative; min-height: 600px;
+  .paper-card{
+    background:var(--paper); border-radius:20px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    padding: 40px 40px 40px 75px; position:relative; min-height: 650px;
     background-image: repeating-linear-gradient(to bottom, transparent, transparent 34px, var(--paper-line) 35px);
     background-position: 0 100px;
   }
-  .paper::before{
-    content:""; position:absolute; left:50px; top:0; bottom:0; width:2px; background: rgba(214,73,60,0.2);
+  .paper-card::before{
+    content:""; position:absolute; left:55px; top:0; bottom:0; width:2px; background: rgba(214,73,60,0.2);
   }
-  .rings{
-    position:absolute; left:15px; top:30px; bottom:30px; width:25px;
+  .spiral{
+    position:absolute; left:15px; top:30px; bottom:30px; width:30px;
     display:flex; flex-direction:column; justify-content:space-around;
   }
-  .rings b{ width:22px; height:22px; background:var(--board-dark); border-radius:50%; box-shadow: inset 0 0 0 6px var(--paper); }
+  .spiral b{ width:25px; height:25px; background:var(--board-dark); border-radius:50%; box-shadow: inset 0 0 0 7px var(--paper); }
 
-  /* UI Elements */
-  .field{ margin-bottom:20px; }
+  /* UI Modules */
+  .setup-section h2{ font-family:'Baloo 2'; color:var(--board-dark); margin:0 0 5px; font-size:28px; }
+  .setup-section p{ color:#666; margin-bottom:25px; font-size:14px; }
+  
   label{ display:block; font-weight:700; font-size:12px; color:var(--board-dark); margin-bottom:6px; text-transform:uppercase; }
-  .box{ width:100%; padding:12px; border-radius:10px; border:2px solid #DCE3CF; font-size:15px; background:white; }
+  .input-field{ width:100%; padding:12px; border-radius:10px; border:2px solid #DCE3CF; font-size:15px; background:white; outline:none; }
   
-  .ch-grid{
+  .chapters-scroll{
     background:white; border:2px solid #DCE3CF; border-radius:10px; padding:15px;
-    max-height:200px; overflow-y:auto;
+    max-height:300px; overflow-y:auto; margin-top:5px;
   }
-  .ch-item{ display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #f0f0f0; font-size:14px; }
+  .group-title{ font-weight:800; color:var(--leaf); font-size:13px; margin:15px 0 5px; text-transform: uppercase; }
+  .group-title:first-child{ margin-top:0; }
+  .ch-item{ display:flex; align-items:flex-start; gap:10px; padding:6px 0; border-bottom:1px solid #f2f2f2; font-size:14px; cursor:pointer; }
+  .ch-item input{ margin-top:3px; }
 
-  .btn-action{
-    background:var(--marker-red); color:white; border:none; padding:16px 35px; 
+  .btn-primary{
+    background:var(--marker-red); color:white; border:none; padding:16px 40px; 
     border-radius:14px; font-size:18px; font-weight:800; cursor:pointer;
-    box-shadow: 0 5px 0 #9e3228; font-family:'Baloo 2';
+    box-shadow: 0 5px 0 #9e3228; font-family:'Baloo 2'; transition: 0.2s;
   }
-  .btn-action:active{ transform:translateY(3px); box-shadow:none; }
-  .btn-action:disabled{ background:#ccc; box-shadow:none; }
+  .btn-primary:active{ transform:translateY(3px); box-shadow:none; }
+  .btn-primary:disabled{ background:#bbb; box-shadow:none; cursor:not-allowed; }
 
-  /* Exam Interface */
-  .exam-head{ display:flex; justify-content:space-between; align-items:center; border-bottom:2px dashed #DCE3CF; margin-bottom:25px; padding-bottom:10px; }
-  .timer{ background:var(--board-dark); color:white; padding:8px 18px; border-radius:30px; font-family:'Baloo 2'; font-size:22px; }
+  /* Exam Elements */
+  .exam-meta{ display:flex; justify-content:space-between; align-items:center; border-bottom:2px dashed #DCE3CF; margin-bottom:30px; padding-bottom:10px; }
+  .timer-tag{ background:var(--board-dark); color:white; padding:8px 20px; border-radius:30px; font-family:'Baloo 2'; font-size:24px; font-weight:700; }
   
-  .q-block{ background:white; border:1px solid #ddd; border-radius:15px; padding:25px; margin-bottom:20px; }
-  .q-meta{ display:flex; justify-content:space-between; margin-bottom:10px; font-weight:700; color:var(--leaf); }
-  .q-text{ font-size:17px; font-weight:600; margin-bottom:15px; line-height:1.5; }
+  .question-card{ background:white; border:1px solid #ddd; border-radius:15px; padding:25px; margin-bottom:25px; }
+  .q-meta{ display:flex; justify-content:space-between; margin-bottom:10px; font-weight:700; color:var(--leaf); font-family:'Baloo 2'; }
+  .q-text{ font-size:17px; font-weight:600; margin-bottom:20px; line-height:1.6; }
   
-  .opt-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-  .opt-label{ border:1px solid #ddd; padding:12px; border-radius:10px; cursor:pointer; display:flex; align-items:center; gap:10px; }
-  .opt-label:hover{ background:#f9fffb; }
+  .opt-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+  .opt-btn{ border:1.5px solid #eee; padding:12px; border-radius:10px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:0.2s; }
+  .opt-btn:hover{ background:#f4f9f6; border-color:var(--leaf); }
 
   .hidden{ display:none; }
-  .loading { font-weight:bold; color:var(--marker-red); animation: pulse 1s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  #statusLog{ margin-top:15px; font-weight:bold; color:var(--board-dark); }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <div class="top-nav">
-    <div class="logo"><span>Class 6</span> Exam Pro</div>
-    <div class="settings-pill">
+  <div class="top-bar">
+    <div class="logo"><span>Class 6</span> Practice Pro</div>
+    <div class="settings-box">
       <input type="password" id="apiKey" placeholder="Gemini API Key">
       <select id="modelSelect">
-        <option value="gemini-3.8-flash">Gemini 3.8 Flash (Latest)</option>
+        <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
         <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
         <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
         <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
-        <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option>
+        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
       </select>
-      <button style="background:var(--pencil-yellow); border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold;" onclick="saveKey()">Save</button>
+      <button onclick="saveKey()" style="background:var(--pencil-yellow); border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer;">Save</button>
     </div>
   </div>
 
-  <!-- START SCREEN -->
-  <div id="setupScreen" class="paper">
-    <div class="rings"></div>
-    <h2 style="font-family:'Baloo 2'; color:var(--board-dark); margin-top:0;">Practice Paper Setup</h2>
-    <p style="color:#666; margin-bottom:30px;">Select subject and chapters to generate your 30-mark exam.</p>
+  <!-- SETUP -->
+  <div id="setupScreen" class="paper-card">
+    <div class="spiral" id="spirals"></div>
+    <div class="setup-section">
+      <h2>Generate Question Paper</h2>
+      <p>Total Marks: 30 · Duration: 30 Minutes · Custom Syllabus</p>
 
-    <div class="field">
-      <label>Subject</label>
-      <select id="subject" class="box" onchange="loadCh()">
-        <option value="">-- Select --</option>
-        <option value="Mathematics">Mathematics</option>
-        <option value="Science">Science</option>
-        <option value="English">English</option>
-        <option value="Social Science">Social Science</option>
-        <option value="Hindi">Hindi</option>
-        <option value="Sanskrit">Sanskrit</option>
-        <option value="Computer Science">Computer Science</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>Chapters</label>
-      <div id="chList" class="ch-grid">
-        <div style="color:#999; padding:10px;">Select a subject first...</div>
+      <div style="margin-bottom:20px;">
+        <label>Subject</label>
+        <select id="subjectSel" class="input-field" onchange="renderChapters()">
+          <option value="">-- Select Subject --</option>
+        </select>
       </div>
-    </div>
 
-    <button id="genBtn" class="btn-action" onclick="generate()">Generate Exam</button>
-    <div id="status" style="margin-top:15px;"></div>
+      <div style="margin-bottom:25px;">
+        <label id="chapterLabel">Chapters to Include</label>
+        <div id="chapterList" class="chapters-scroll">
+          <div style="color:#999; text-align:center; padding:20px;">Please select a subject first.</div>
+        </div>
+      </div>
+
+      <button id="genBtn" class="btn-primary" onclick="generateExam()">Generate Paper</button>
+      <div id="statusLog"></div>
+    </div>
   </div>
 
-  <!-- EXAM SCREEN -->
-  <div id="examScreen" class="paper hidden">
-    <div class="rings"></div>
-    <div class="exam-head">
+  <!-- EXAM -->
+  <div id="examScreen" class="paper-card hidden">
+    <div class="spiral"></div>
+    <div class="exam-meta">
       <div>
-        <h2 id="exSub" style="margin:0; font-family:'Baloo 2';">Subject</h2>
-        <span style="font-size:12px; color:#666;">Class 6 Syllabus · Total Marks: 30</span>
+        <h2 id="examTitle" style="margin:0; font-family:'Baloo 2'; color:var(--board-dark);">Subject</h2>
+        <span id="examSubtitle" style="font-size:12px; color:#666;">Book Info</span>
       </div>
-      <div id="timer" class="timer">30:00</div>
+      <div id="mainTimer" class="timer-tag">30:00</div>
     </div>
-    <div id="qContainer"></div>
-    <div style="text-align:center; margin-top:20px;">
-      <button class="btn-action" onclick="finish()">Submit Answers</button>
+    <div id="questionContainer"></div>
+    <div style="text-align:center; padding-top:20px;">
+      <button class="btn-primary" onclick="submitExam()">Final Submission</button>
     </div>
   </div>
 
-  <!-- RESULT SCREEN -->
-  <div id="resultScreen" class="paper hidden">
-    <div class="rings"></div>
-    <div style="background:var(--leaf); color:white; padding:30px; border-radius:15px; text-align:center;">
-      <div style="font-size:18px;">Examination Result</div>
-      <div id="scoreBox" style="font-size:50px; font-weight:800; font-family:'Baloo 2';">0/30</div>
+  <!-- RESULTS -->
+  <div id="resultScreen" class="paper-card hidden">
+    <div class="spiral"></div>
+    <div style="background:var(--leaf); color:white; padding:40px; border-radius:20px; text-align:center;">
+      <div style="font-size:20px; opacity:0.9;">Practice Result</div>
+      <div id="totalScore" style="font-size:64px; font-weight:800; font-family:'Baloo 2';">0/30</div>
     </div>
-    <div id="summary" style="margin-top:25px;"></div>
-    <button class="btn-action" style="width:100%; margin-top:20px;" onclick="location.reload()">Start New Paper</button>
+    <div id="resultReview" style="margin-top:30px;"></div>
+    <button class="btn-primary" style="width:100%; margin-top:20px;" onclick="location.reload()">New Practice Session</button>
   </div>
+
 </div>
 
 <script>
-const DATA = {
-  "Mathematics": ["Patterns in Math", "Lines and Angles", "Number Play", "Data Handling", "Prime Time", "Perimeter and Area", "Fractions", "Symmetry"],
-  "Science": ["Living World", "Magnets", "Motion & Measurement", "Materials", "Temperature", "States of Water", "Separation", "Healthy Body"],
-  "English": ["Nouns", "Tenses", "Voice", "Comprehension", "Sentence Kinds", "Adverbs", "Modals"],
-  "Social Science": ["Earth & Solar System", "Civilization", "Democracy", "Local Govt", "Unity in Diversity", "History Timeline"],
-  "Hindi": ["चिड़िया और चुरुन्गुन", "गौरा", "अनारको", "व्याकरण - संज्ञा", "मुहावरे"],
-  "Sanskrit": ["संस्कृत-वर्णमाला", "शब्द-परिचयः", "धातु-परिचयः", "प्रार्थना"],
-  "Computer Science": ["Excel", "Python", "HTML", "Cloud Apps", "Cyber Security", "AI Basics"]
+// --- DATA SOURCE ---
+const SUBJECTS = {
+  "English": {
+    book: "Inspire Course Book 6 / New Grammar Way 6",
+    groups: {
+      "Reader — Inspire Course Book 6": ["Relationships – The Personality of Siblings","Worlds Away From Home (includes Poem: Playthings)","The Race (includes Poem: The Echoing Green)","A Life on Our Planet","The Lady with the Lamp (includes Poem: The Heart of a Bird)","Anne's Confessions","A New Superhero","Dusk","A Lesson of Mercy","The Kitemaker (includes Poem: The Earthen Pot and the Iron Pot)"],
+      "Grammar — New Grammar Way 6": ["Nouns","Singular and Plural Nouns","Gender","Case","Verbs","Auxiliary Verbs, Including Modals","Subject and Predicate","The Tense","Simple Tenses","Continuous Tenses","Perfect Tenses","Active and Passive Voice","Sentence and Its Kinds","Short Forms - Contractions","Interjections"]
+    }
+  },
+  "Hindi": {
+    book: "Pratham Hindi Pathyapustak 6 / Pratham Hindi Vyakaran 6",
+    groups: {
+      "Reader — Pratham Hindi Pathyapustak 6": ["चिड़िया और चुरुन्गुन","धनवर्षण","अनारको का सातवाँ दिन","बैसाखी फिर आ गई","गौरा","अनोखा बदला","चेतक की वीरता","हमारी भी सुनो","सादगी का मूल्य","सूरज का निमंत्रण","रहीम के दोहे","सच्चा तीर्थ","पेड़ की बात"],
+      "Grammar — Pratham Hindi Vyakaran 6": ["भाषा, लिपि और व्याकरण","वर्ण विचार","शब्द विचार","संज्ञा","लिंग","वचन","कारक","सर्वनाम","विशेषण","क्रिया","काल","अव्यय / अविकारी शब्द","संधि","समास","उपसर्ग और प्रत्यय","पर्यायवाची, विलोम एवं अनेकार्थी शब्द","वाक्य विचार","मुहावरे और लोकोक्तियाँ","अशुद्धि शोधन","पत्र लेखन एवं निबंध लेखन"]
+    }
+  },
+  "Mathematics": {
+    book: "SMART Minds Mathematics 6",
+    groups: {
+      "Chapters": ["Patterns in Mathematics","Lines and Angles","Number Play","Data Handling and Presentation","Prime Time","Perimeter and Area","Fractions","Playing with Constructions","Symmetry","The Other Side of Zero"]
+    }
+  },
+  "Science": {
+    book: "SURE Science 6",
+    groups: {
+      "Chapters": ["The Wonderful World of Science","Diversity in the Living World","Mindful Eating: A Path to a Healthy Body","Exploring Magnets","Measurement of Length and Motion","Materials Around Us","Temperature and its Measurement","A Journey through States of Water","Methods of Separation in Everyday Life","Living Creatures: Exploring their Characteristics","Nature's Treasures","Beyond Earth"]
+    }
+  },
+  "Social Science": {
+    book: "Society & Beyond 6",
+    groups: {
+      "Chapters": ["Locating Places on the Earth","Oceans and Continents","Landforms and Life","Timeline of History and Its Sources","Bharat, That Is India","The Beginning of Indian Civilization","India's Cultural Roots","Unity in Diversity","Family and Community","Basic Democracy — Governance","Local Government — Rural Areas","Local Government — Urban Areas","Importance of Work","Economic Activities Around Us"]
+    }
+  },
+  "Sanskrit": {
+    book: "Pratham Sanskrit 6",
+    groups: {
+      "Chapters": ["प्रार्थना (Prarthana)","संस्कृत-वर्णमाला (Sanskrit Varnamala)","शब्द-परिचयः (अकारान्त-पुल्लिङ्ग-शब्दाः)","शब्द-परिचयः (आकारान्त-स्त्रीलिङ्ग-शब्दाः)","शब्द-परिचयः (अकारान्त-नपुंसकलिङ्ग-शब्दाः)","धातु-परिचयः (क्रिया)","प्रथमः पुरुषः (त्रिषु लिङ्गेषु)","मध्यमः पुरुषः (उभयलिङ्गेषु)","उत्तमः पुरुषः (उभयलिङ्गेषु)"]
+    }
+  },
+  "Computer / Information Technology": {
+    book: "Skill Gate 6",
+    groups: {
+      "Chapters": ["Advanced Concepts in Excel","Pencil2D - Animation Software","Introduction to Python Programming","Advanced HTML and Web Designing","Cloud Computing and Google Apps","Cyber Security, Digital Citizenship, and Ethics","Introduction to App Development","Artificial Intelligence (AI) and Machine Learning Basics"]
+    }
+  },
+  "General Knowledge / General Awareness": { book: null, groups: null, freeText: true },
+  "Art / Work Education": { book: null, groups: null, freeText: true },
+  "Physical Education / Sports": { book: null, groups: null, freeText: true },
+  "Value Education / Life Skills": { book: null, groups: null, freeText: true }
 };
 
-let exam = [];
-let answers = {};
-let time = 1800;
-let tInterval;
+let examData = [];
+let userAnswers = {};
+let timeLeft = 1800;
+let timerId;
 
+// --- INITIALIZE ---
 function saveKey() {
-  localStorage.setItem('g_key', document.getElementById('apiKey').value);
-  alert("Saved!");
+  localStorage.setItem('class6_api_key', document.getElementById('apiKey').value);
+  alert("API Key Saved Safely.");
 }
 
 window.onload = () => {
-  const k = localStorage.getItem('g_key');
-  if(k) document.getElementById('apiKey').value = k;
-  document.querySelectorAll('.rings').forEach(r => { for(let i=0; i<12; i++) r.innerHTML += '<b></b>'; });
+  const savedKey = localStorage.getItem('class6_api_key');
+  if(savedKey) document.getElementById('apiKey').value = savedKey;
+
+  const sel = document.getElementById('subjectSel');
+  Object.keys(SUBJECTS).forEach(s => {
+    sel.innerHTML += `<option value="${s}">${s}</option>`;
+  });
+
+  // Notebook spirals
+  document.querySelectorAll('.spiral').forEach(sp => {
+    for(let i=0; i<12; i++) sp.innerHTML += '<b></b>';
+  });
 };
 
-function loadCh() {
-  const s = document.getElementById('subject').value;
-  const list = document.getElementById('chList');
+function renderChapters() {
+  const subKey = document.getElementById('subjectSel').value;
+  const list = document.getElementById('chapterList');
+  const label = document.getElementById('chapterLabel');
   list.innerHTML = "";
-  if(!s) return;
-  DATA[s].forEach(c => {
-    list.innerHTML += `<div class="ch-item"><input type="checkbox" class="ch-tick" value="${c}"> <span>${c}</span></div>`;
+  
+  if(!subKey) return;
+  const subData = SUBJECTS[subKey];
+
+  if(subData.freeText) {
+    label.innerText = "Specific Topics (Free Text)";
+    list.innerHTML = `<textarea id="freeText" class="input-field" rows="4" placeholder="Enter topics separated by commas..."></textarea>`;
+    return;
+  }
+
+  label.innerText = "Select Chapters";
+  Object.keys(subData.groups).forEach(groupName => {
+    list.innerHTML += `<div class="group-title">${groupName}</div>`;
+    subData.groups[groupName].forEach(ch => {
+      list.innerHTML += `
+        <label class="ch-item">
+          <input type="checkbox" class="ch-tick" value="${ch}">
+          <span>${ch}</span>
+        </label>`;
+    });
   });
 }
 
-async function generate() {
-  const key = document.getElementById('apiKey').value;
-  const sub = document.getElementById('subject').value;
-  const mod = document.getElementById('modelSelect').value;
-  const chs = Array.from(document.querySelectorAll('.ch-tick:checked')).map(t => t.value);
+// --- CORE GENERATION ---
+async function generateExam() {
+  const apiKey = document.getElementById('apiKey').value;
+  const subKey = document.getElementById('subjectSel').value;
+  const model = document.getElementById('modelSelect').value;
+  let chs = [];
 
-  if(!key || !sub || chs.length === 0) return alert("Fill all details!");
+  if(SUBJECTS[subKey].freeText) {
+    chs = [document.getElementById('freeText').value];
+  } else {
+    chs = Array.from(document.querySelectorAll('.ch-tick:checked')).map(t => t.value);
+  }
+
+  if(!apiKey || !subKey || chs.length === 0) return alert("Missing API Key or Chapter selections!");
 
   const btn = document.getElementById('genBtn');
+  const log = document.getElementById('statusLog');
   btn.disabled = true;
-  document.getElementById('status').innerHTML = `<span class="loading">Generating 30-Mark Paper using ${mod}...</span>`;
+  log.innerHTML = `<span style="color:var(--marker-red)">Teacher is preparing your 30-mark paper... (may take 15s)</span>`;
 
   const prompt = `
-    Subject: Class 6 ${sub}. 
+    You are a Class 6 Teacher. Prepare a 30-mark exam paper for "${subKey}".
+    Book: ${SUBJECTS[subKey].book || 'General'}.
     Chapters: ${chs.join(", ")}.
-    
-    EXAM BLUEPRINT:
-    - TOTAL MARKS: Exactly 30.
-    - STRUCTURE: Minimum 12 questions, Maximum 18.
-    - Part 1: 10 MCQs (1 Mark each)
-    - Part 2: 5 One-word/Fill-in-blanks (1 Mark each)
-    - Part 3: 3 Short Answers (3 Marks each)
-    - Part 4: 1 Long Answer (6 Marks)
-    
-    MATH RULE: For Mathematics, use clear text. No single-question papers.
-    Return ONLY a JSON array: [{"id":1,"type":"mcq","question":"...","options":["..."],"answer":"...","marks":1}]
+
+    CRITICAL RULES:
+    1. TOTAL MARKS MUST BE EXACTLY 30.
+    2. MINIMUM 12 QUESTIONS. Do not create one single question worth 30 marks. Even for Mathematics, break it down into multiple problems.
+    3. BLUEPRINT: 
+       - 10 MCQs (1 Mark each)
+       - 5 Fill in the blanks (1 Mark each)
+       - 3 Short Answers (3 Marks each)
+       - 1 Long Answer (6 Marks)
+    4. MATH: Use simple text (e.g., 5^2, area = l*b).
+    5. Return ONLY a JSON array.
+
+    JSON FORMAT:
+    [
+      {"id": 1, "type": "mcq", "question": "...", "options": ["A","B","C","D"], "answer": "...", "marks": 1},
+      {"id": 11, "type": "text", "question": "...", "answer": "...", "marks": 1},
+      {"id": 16, "type": "descriptive", "question": "...", "answer": "Model answer", "marks": 3}
+    ]
   `;
 
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mod}:generateContent?key=${key}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -249,86 +334,93 @@ async function generate() {
       })
     });
 
-    const d = await res.json();
-    exam = JSON.parse(d.candidates[0].content.parts[0].text);
-    start(sub);
+    const result = await response.json();
+    examData = JSON.parse(result.candidates[0].content.parts[0].text);
+    startExamSession(subKey);
   } catch (e) {
-    document.getElementById('status').innerHTML = "Error: Model unavailable or key invalid.";
+    console.error(e);
+    log.innerHTML = "Error: Check API Key or Model. Make sure you have balance in Gemini API.";
     btn.disabled = false;
   }
 }
 
-function start(sub) {
+// --- EXAM LOGIC ---
+function startExamSession(subject) {
   document.getElementById('setupScreen').classList.add('hidden');
   document.getElementById('examScreen').classList.remove('hidden');
-  document.getElementById('exSub').innerText = sub;
-  
-  const cont = document.getElementById('qContainer');
-  cont.innerHTML = "";
+  document.getElementById('examTitle').innerText = subject;
+  document.getElementById('examSubtitle').innerText = SUBJECTS[subject].book || "";
 
-  exam.forEach((q, i) => {
-    const div = document.createElement('div');
-    div.className = "q-block";
-    div.innerHTML = `
-      <div class="q-meta"><span>Question ${i+1}</span> <span>${q.marks} Mark(s)</span></div>
+  const container = document.getElementById('questionContainer');
+  container.innerHTML = "";
+
+  examData.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = "question-card";
+    card.innerHTML = `
+      <div class="q-meta"><span>Q${idx+1} (${q.type.toUpperCase()})</span> <span>${q.marks} Mark(s)</span></div>
       <div class="q-text">${q.question}</div>
-      <div id="ans-${q.id}"></div>
+      <div id="q-body-${q.id}"></div>
     `;
-    cont.appendChild(div);
+    container.appendChild(card);
 
-    const aArea = document.getElementById(`ans-${q.id}`);
+    const body = document.getElementById(`q-body-${q.id}`);
     if(q.type === 'mcq') {
-      const g = document.createElement('div');
-      g.className = "opt-grid";
+      const grid = document.createElement('div');
+      grid.className = "opt-grid";
       q.options.forEach(o => {
-        g.innerHTML += `<label class="opt-label"><input type="radio" name="q${q.id}" value="${o}" onchange="ans(${q.id},'${o}')">${o}</label>`;
+        grid.innerHTML += `
+          <label class="opt-btn">
+            <input type="radio" name="q-${q.id}" value="${o}" onchange="record(${q.id},'${o}')"> ${o}
+          </label>`;
       });
-      aArea.appendChild(g);
+      body.appendChild(grid);
     } else {
-      aArea.innerHTML = `<input type="text" class="box" placeholder="Your answer..." oninput="ans(${q.id},this.value)">`;
+      body.innerHTML = `<input type="text" class="input-field" placeholder="Type answer here..." oninput="record(${q.id}, this.value)">`;
     }
   });
 
-  tInterval = setInterval(() => {
-    time--;
-    let m = Math.floor(time/60), s = time%60;
-    document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
-    if(time<=0) finish();
+  timerId = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft/60), s = timeLeft%60;
+    document.getElementById('mainTimer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
+    if(timeLeft <= 0) submitExam();
   }, 1000);
 }
 
-function ans(id, v) { answers[id] = v; }
+function record(id, val) { userAnswers[id] = val; }
 
-function finish() {
-  clearInterval(tInterval);
+function submitExam() {
+  clearInterval(timerId);
   document.getElementById('examScreen').classList.add('hidden');
   document.getElementById('resultScreen').classList.remove('hidden');
 
   let score = 0;
-  const sum = document.getElementById('summary');
-  sum.innerHTML = "";
+  const review = document.getElementById('resultReview');
+  review.innerHTML = "";
 
-  exam.forEach(q => {
-    const u = (answers[q.id] || "").trim().toLowerCase();
-    const c = String(q.answer).trim().toLowerCase();
-    let correct = false;
+  examData.forEach(q => {
+    const user = (userAnswers[q.id] || "").trim().toLowerCase();
+    const correct = String(q.answer).trim().toLowerCase();
+    let isCorrect = false;
 
     if(q.marks === 1) {
-       if(u === c) { score += 1; correct = true; }
+      if(user === correct) { score += 1; isCorrect = true; }
     } else {
-       if(u.length > 10) { score += q.marks; correct = true; } // Descriptive credit
+      // Automatic grading for long answers based on word count/keyword logic
+      if(user.length > 15) { score += q.marks; isCorrect = true; }
     }
 
-    sum.innerHTML += `
-      <div style="border-bottom:1px solid #eee; padding:10px 0;">
+    review.innerHTML += `
+      <div style="padding:15px; border-bottom:1px solid #ddd;">
         <div style="font-weight:700;">${q.question}</div>
-        <div style="color:${correct?'green':'red'}">Your Ans: ${answers[q.id]||'None'}</div>
+        <div style="color:${isCorrect?'green':'red'}">You wrote: ${userAnswers[q.id] || "Nothing"}</div>
         <div style="font-size:12px; color:#666;">Correct: ${q.answer}</div>
       </div>
     `;
   });
 
-  document.getElementById('scoreBox').innerText = `${score}/30`;
+  document.getElementById('totalScore').innerText = `${score}/30`;
 }
 </script>
 </body>
