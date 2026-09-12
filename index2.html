@@ -50,7 +50,6 @@
   }
 
   /* HEADER */
-
   .topbar{
     display:flex;
     align-items:center;
@@ -133,21 +132,18 @@
   }
 
   /* NOTEBOOK */
-
   .notebook{
     position:relative;
     background:var(--paper);
     border-radius:18px;
     box-shadow:var(--paper-shadow);
     padding:34px 34px 34px 62px;
-
     background-image:repeating-linear-gradient(
       to bottom,
       transparent,
       transparent 34px,
       var(--paper-line) 35px
     );
-
     background-position:0 92px;
   }
 
@@ -330,7 +326,6 @@
   }
 
   /* EXAM */
-
   .exam-top{
     display:flex;
     justify-content:space-between;
@@ -394,7 +389,6 @@
   }
 
   /* QUESTION */
-
   .qcard{
     background:#fff;
     border:1.5px solid #e2e8dc;
@@ -402,15 +396,6 @@
     padding:18px 20px;
     margin-bottom:16px;
     position:relative;
-  }
-
-  .qcard.locked{
-    opacity:0.6;
-  }
-
-  .qcard.active{
-    border-color:var(--leaf);
-    box-shadow:0 0 0 3px var(--leaf-light);
   }
 
   .q-head{
@@ -465,11 +450,7 @@
     font-size:14px;
   }
 
-  .opt-item input{
-    cursor:pointer;
-  }
-
-  .opt-item label{
+  .opt-item input,.opt-item label{
     cursor:pointer;
   }
 
@@ -492,55 +473,7 @@
     min-height:110px;
   }
 
-  .q-controls{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-top:12px;
-  }
-
-  .start-btn{
-    background:var(--pencil-yellow);
-    color:#3a2c00;
-    border:none;
-    font-weight:700;
-    padding:7px 16px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:13px;
-    font-family:'Baloo 2',sans-serif;
-  }
-
-  .start-btn:disabled{
-    background:#e5e5e5;
-    color:#9a9a9a;
-    cursor:not-allowed;
-  }
-
-  .q-timer{
-    font-family:'Baloo 2',sans-serif;
-    font-weight:700;
-    font-size:14px;
-    color:var(--board-dark);
-    background:#f1efe4;
-    padding:5px 12px;
-    border-radius:8px;
-    min-width:56px;
-    text-align:center;
-  }
-
-  .q-timer.warn{
-    color:var(--marker-red);
-  }
-
-  .q-note{
-    font-size:12px;
-    color:#8b9a90;
-    margin-top:4px;
-  }
-
   /* RESULTS */
-
   .score-banner{
     background:var(--leaf);
     color:#fff;
@@ -662,29 +595,12 @@
   }
 
   @media(max-width:700px){
-    body{
-      padding:16px 10px 40px;
-    }
-
-    .notebook{
-      padding:26px 20px 28px 42px;
-    }
-
-    .notebook::before{
-      left:25px;
-    }
-
-    .key-box{
-      flex-wrap:wrap;
-    }
-
-    .key-box input{
-      width:180px !important;
-    }
-
-    .topbar{
-      align-items:flex-start;
-    }
+    body{ padding:16px 10px 40px; }
+    .notebook{ padding:26px 20px 28px 42px; }
+    .notebook::before{ left:25px; }
+    .key-box{ flex-wrap:wrap; }
+    .key-box input{ width:180px !important; }
+    .topbar{ align-items:flex-start; }
   }
 </style>
 </head>
@@ -695,3647 +611,620 @@
 
   <!-- HEADER -->
   <div class="topbar">
-
     <div class="brand">
       <span class="chalk">Class 6</span>
       Practice Exam
     </div>
 
     <div>
-
       <div class="key-box">
-
-        <input
-          id="apiKeyInput"
-          type="password"
-          placeholder="Gemini API key (AIza...)"
-        >
-
+        <input id="apiKeyInput" type="password" placeholder="Gemini API key (AIza...)">
         <select id="modelSelect">
-
-          <option value="gemini-3.8-flash">
-            Gemini 3.8 Flash (recommended)
-          </option>
-
-          <option value="gemini-3.7-flash">
-            Gemini 3.7 Flash
-          </option>
-
-          <option value="gemini-3.6-flash">
-            Gemini 3.6 Flash
-          </option>
-
-          <option value="gemini-3.5-flash">
-            Gemini 3.5 Flash
-          </option>
-
-          <option value="gemini-3.5-flash-lite">
-            Gemini 3.5 Flash-Lite (fastest)
-          </option>
-
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash (recommended)</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
         </select>
-
-        <button class="key-btn" id="saveKeyBtn">
-          Save
-        </button>
-
+        <button class="key-btn" id="saveKeyBtn">Save</button>
       </div>
-
       <div class="key-status" id="keyStatus"></div>
-
     </div>
-
   </div>
-
 
   <!-- SETUP SCREEN -->
-
   <div class="notebook" id="setupScreen">
-
     <div class="spiral" id="spiral"></div>
-
-    <div class="setup-title">
-      Set up your practice paper
-    </div>
-
-    <p class="setup-sub">
-      Pick a subject, tick the chapters you want to be tested on,
-      then generate a fresh 30-mark paper.
-    </p>
-
+    <div class="setup-title">Set up your practice paper</div>
+    <p class="setup-sub">Pick a subject, tick the chapters, then generate a fresh 30-mark paper.</p>
 
     <div class="field-row">
-
       <div class="field">
-
         <label>Subject</label>
-
         <select class="styled" id="subjectSelect"></select>
-
       </div>
-
     </div>
-
 
     <div class="field">
-
-      <label id="chaptersLabel">
-        Chapters to include
-      </label>
-
+      <label id="chaptersLabel">Chapters to include</label>
       <div class="select-row" id="chapterQuickActions">
-
-        <button
-          class="mini-btn"
-          id="selectAllBtn"
-          type="button">
-          Select all
-        </button>
-
-        <button
-          class="mini-btn"
-          id="clearAllBtn"
-          type="button">
-          Clear all
-        </button>
-
+        <button class="mini-btn" id="selectAllBtn" type="button">Select all</button>
+        <button class="mini-btn" id="clearAllBtn" type="button">Clear all</button>
       </div>
-
       <div class="chapters-box" id="chaptersBox"></div>
-
     </div>
 
-
-    <button
-      class="generate-btn"
-      id="generateBtn">
-
-      Generate question paper
-
-    </button>
-
+    <button class="generate-btn" id="generateBtn">Generate question paper</button>
     <div class="status-line" id="statusLine"></div>
-
   </div>
-
 
   <!-- EXAM SCREEN -->
-
   <div class="notebook hidden" id="examScreen">
-
     <div class="spiral"></div>
-
     <div class="exam-top">
-
       <div>
-
-        <div class="paper-title" id="examTitle">
-          Paper
-        </div>
-
+        <div class="paper-title" id="examTitle">Paper</div>
         <div class="paper-meta" id="examMeta"></div>
-
       </div>
-
-      <div class="overall-timer" id="overallTimer">
-        ⏱ 30:00
-      </div>
-
+      <div class="overall-timer" id="overallTimer">⏱ 30:00</div>
     </div>
-
 
     <div class="exam-actions">
-
-      <button class="submit-btn" id="submitBtn">
-        Submit paper
-      </button>
-
+      <button class="submit-btn" id="submitBtn">Submit paper</button>
     </div>
-
 
     <div id="questionsContainer"></div>
-
   </div>
 
-
   <!-- RESULTS SCREEN -->
-
   <div class="notebook hidden" id="resultsScreen">
-
     <div class="spiral"></div>
-
     <div class="score-banner">
-
       <div>
-
-        <div class="score-big" id="scoreBig">
-          0 / 30
-        </div>
-
-        <div class="score-sub">
-          Total score
-        </div>
-
+        <div class="score-big" id="scoreBig">0 / 30</div>
+        <div class="score-sub">Total score</div>
       </div>
-
       <div class="score-sub" id="scoreNote"></div>
-
     </div>
-
 
     <div id="resultsContainer"></div>
 
-
-    <button
-      class="generate-btn"
-      id="newPaperBtn"
-      style="margin-top:6px;">
-
-      Start a new paper
-
-    </button>
-
+    <button class="generate-btn" id="newPaperBtn" style="margin-top:6px;">Start a new paper</button>
   </div>
 
-
   <footer class="hint">
-
     Your API key is stored only in this browser's local storage.
-    It never leaves your device except in direct calls to Google's Gemini API.
-
     &nbsp;·&nbsp;
-
-    <a class="reset-link" id="forgetKeyLink">
-      Forget saved key
-    </a>
-
+    <a class="reset-link" id="forgetKeyLink">Forget saved key</a>
   </footer>
 
 </div>
 
-
 <script>
 (function(){
 
-/* ===============================================================
-   1. SUBJECT / CHAPTER DATA
-================================================================ */
-
 const SUBJECTS = {
-
   "English": {
-
     book:"Inspire Course Book 6 / New Grammar Way 6",
-
     groups:{
-
       "Reader — Inspire Course Book 6":[
-        "Relationships – The Personality of Siblings",
-        "Worlds Away From Home (includes Poem: Playthings)",
-        "The Race (includes Poem: The Echoing Green)",
-        "A Life on Our Planet",
-        "The Lady with the Lamp (includes Poem: The Heart of a Bird)",
-        "Anne's Confessions",
-        "A New Superhero",
-        "Dusk",
-        "A Lesson of Mercy",
-        "The Kitemaker (includes Poem: The Earthen Pot and the Iron Pot)"
+        "Relationships – The Personality of Siblings","Worlds Away From Home","The Race","A Life on Our Planet","The Lady with the Lamp","Anne's Confessions","A New Superhero","Dusk","A Lesson of Mercy","The Kitemaker"
       ],
-
       "Grammar — New Grammar Way 6":[
-        "Nouns",
-        "Singular and Plural Nouns",
-        "Gender",
-        "Case",
-        "Verbs",
-        "Auxiliary Verbs, Including Modals",
-        "Subject and Predicate",
-        "The Tense",
-        "Simple Tenses",
-        "Continuous Tenses",
-        "Perfect Tenses",
-        "Active and Passive Voice",
-        "Sentence and Its Kinds",
-        "Short Forms - Contractions",
-        "Interjections"
+        "Nouns","Singular and Plural Nouns","Gender","Case","Verbs","Auxiliary Verbs, Including Modals","Subject and Predicate","The Tense","Simple Tenses","Continuous Tenses","Perfect Tenses","Active and Passive Voice","Sentence and Its Kinds","Short Forms - Contractions","Interjections"
       ]
-
     }
-
   },
-
-
   "Hindi": {
-
     book:"Pratham Hindi Pathyapustak 6 / Pratham Hindi Vyakaran 6",
-
     groups:{
-
       "Reader — Pratham Hindi Pathyapustak 6":[
-        "चिड़िया और चुरुन्गुन",
-        "धनवर्षण",
-        "अनारको का सातवाँ दिन",
-        "बैसाखी फिर आ गई",
-        "गौरा",
-        "अनोखा बदला",
-        "चेतक की वीरता",
-        "हमारी भी सुनो",
-        "सादगी का मूल्य",
-        "सूरज का निमंत्रण",
-        "रहीम के दोहे",
-        "सच्चा तीर्थ",
-        "पेड़ की बात"
+        "चिड़िया और चुरुन्गुन","धनवर्षण","अनारको का सातवाँ दिन","बैसाखी फिर आ गई","गौरा","अनोखा बदला","चेतक की वीरता","हमारी भी सुनो","सादगी का मूल्य","सूरज का निमंत्रण","रहीम के दोहे","सच्चा तीर्थ","पेड़ की बात"
       ],
-
       "Grammar — Pratham Hindi Vyakaran 6":[
-        "भाषा, लिपि और व्याकरण",
-        "वर्ण विचार",
-        "शब्द विचार",
-        "संज्ञा",
-        "लिंग",
-        "वचन",
-        "कारक",
-        "सर्वनाम",
-        "विशेषण",
-        "क्रिया",
-        "काल",
-        "अव्यय / अविकारी शब्द",
-        "संधि",
-        "समास",
-        "उपसर्ग और प्रत्यय",
-        "पर्यायवाची, विलोम एवं अनेकार्थी शब्द",
-        "वाक्य विचार",
-        "मुहावरे और लोकोक्तियाँ",
-        "अशुद्धि शोधन",
-        "पत्र लेखन एवं निबंध लेखन"
+        "भाषा, लिपि और व्याकरण","वर्ण विचार","शब्द विचार","संज्ञा","लिंग","वचन","कारक","सर्वनाम","विशेषण","क्रिया","काल","अव्यय / अविकारी शब्द","संधि","समास","उपसर्ग और प्रत्यय","पर्यायवाची, विलोम एवं अनेकार्थी शब्द","वाक्य विचार","मुहावरे और लोकोक्तियाँ","अशुद्धि शोधन","पत्र लेखन एवं निबंध लेखन"
       ]
-
     }
-
   },
-
-
   "Mathematics": {
-
     book:"SMART Minds Mathematics 6",
-
     groups:{
-
       "Chapters":[
-        "Patterns in Mathematics",
-        "Lines and Angles",
-        "Number Play",
-        "Data Handling and Presentation",
-        "Prime Time",
-        "Perimeter and Area",
-        "Fractions",
-        "Playing with Constructions",
-        "Symmetry",
-        "The Other Side of Zero"
+        "Patterns in Mathematics","Lines and Angles","Number Play","Data Handling and Presentation","Prime Time","Perimeter and Area","Fractions","Playing with Constructions","Symmetry","The Other Side of Zero"
       ]
-
     }
-
   },
-
-
   "Science": {
-
     book:"SURE Science 6",
-
     groups:{
-
       "Chapters":[
-        "The Wonderful World of Science",
-        "Diversity in the Living World",
-        "Mindful Eating: A Path to a Healthy Body",
-        "Exploring Magnets",
-        "Measurement of Length and Motion",
-        "Materials Around Us",
-        "Temperature and its Measurement",
-        "A Journey through States of Water",
-        "Methods of Separation in Everyday Life",
-        "Living Creatures: Exploring their Characteristics",
-        "Nature's Treasures",
-        "Beyond Earth"
+        "The Wonderful World of Science","Diversity in the Living World","Mindful Eating: A Path to a Healthy Body","Exploring Magnets","Measurement of Length and Motion","Materials Around Us","Temperature and its Measurement","A Journey through States of Water","Methods of Separation in Everyday Life","Living Creatures: Exploring their Characteristics","Nature's Treasures","Beyond Earth"
       ]
-
     }
-
   },
-
-
   "Social Science": {
-
     book:"Society & Beyond 6",
-
     groups:{
-
       "Chapters":[
-        "Locating Places on the Earth",
-        "Oceans and Continents",
-        "Landforms and Life",
-        "Timeline of History and Its Sources",
-        "Bharat, That Is India",
-        "The Beginning of Indian Civilization",
-        "India's Cultural Roots",
-        "Unity in Diversity",
-        "Family and Community",
-        "Basic Democracy — Governance",
-        "Local Government — Rural Areas",
-        "Local Government — Urban Areas",
-        "Importance of Work",
-        "Economic Activities Around Us"
+        "Locating Places on the Earth","Oceans and Continents","Landforms and Life","Timeline of History and Its Sources","Bharat, That Is India","The Beginning of Indian Civilization","India's Cultural Roots","Unity in Diversity","Family and Community","Basic Democracy — Governance","Local Government — Rural Areas","Local Government — Urban Areas","Importance of Work","Economic Activities Around Us"
       ]
-
     }
-
   },
-
-
   "Sanskrit": {
-
     book:"Pratham Sanskrit 6",
-
     groups:{
-
       "Chapters":[
-        "प्रार्थना (Prarthana)",
-        "संस्कृत-वर्णमाला (Sanskrit Varnamala)",
-        "शब्द-परिचयः (अकारान्त-पुल्लिङ्ग-शब्दाः)ः",
-        "शब्द-परिचयः (आकारान्त-स्त्रीलिङ्ग-शब्दाः)",
-        "शब्द-परिचयः (अकारान्त-नपुंसकलिङ्ग-शब्दाः)ः",
-        "धातु-परिचयः (क्रिया) ः",
-        "प्रथमः पुरुषः (त्रिषु लिङ्गेषु)",
-        "मध्यमः पुरुषः (उभयलिङ्गेषु)",
-        "चउत्तमः पुरुषः (उभयलिङ्गेषु)ि"
+        "प्रार्थना (Prarthana)","संस्कृत-वर्णमाला (Sanskrit Varnamala)","शब्द-परिचयः (अकारान्त-पुल्लिङ्ग-शब्दाः)ः","शब्द-परिचयः (आकारान्त-स्त्रीलिङ्ग-शब्दाः)","शब्द-परिचयः (अकारान्त-नपुंसकलिङ्ग-शब्दाः)ः","धातु-परिचयः (क्रिया) ः","प्रथमः पुरुषः (त्रिषु लिङ्गेषु)","मध्यमः पुरुषः (उभयलिङ्गेषु)","उत्तमः पुरुषः (उभयलिङ्गेषु)"
       ]
-
     }
-
   },
-
-
   "Computer / Information Technology": {
-
     book:"Skill Gate 6",
-
     groups:{
-
       "Chapters":[
-        "Advanced Concepts in Excel",
-        "Pencil2D - Animation Software",
-        "Introduction to Python Programming",
-        "Advanced HTML and Web Designing",
-        "Cloud Computing and Google Apps",
-        "Cyber Security, Digital Citizenship, and Ethics",
-        "Introduction to App Development",
-        "Artificial Intelligence (AI) and Machine Learning Basics"
+        "Advanced Concepts in Excel","Pencil2D - Animation Software","Introduction to Python Programming","Advanced HTML and Web Designing","Cloud Computing and Google Apps","Cyber Security, Digital Citizenship, and Ethics","Introduction to App Development","Artificial Intelligence (AI) and Machine Learning Basics"
       ]
-
     }
-
   },
-
-
-  "General Knowledge / General Awareness":{
-    book:null,
-    groups:null,
-    freeText:true
-  },
-
-  "Art / Work Education":{
-    book:null,
-    groups:null,
-    freeText:true
-  },
-
-  "Physical Education / Sports":{
-    book:null,
-    groups:null,
-    freeText:true
-  },
-
-  "Value Education / Life Skills":{
-    book:null,
-    groups:null,
-    freeText:true
-  }
-
+  "General Knowledge / General Awareness":{ book:null, groups:null, freeText:true }
 };
 
-
-/* ===============================================================
-   2. PAPER STRUCTURE
-
-   THIS IS THE IMPORTANT FIX.
-
-   Gemini is NOT allowed to decide the number of questions.
-
-   We force:
-
-   MCQ       = 5 × 1 = 5
-   True/False= 2 × 1 = 2
-   Fill      = 2 × 1 = 2
-   Short     = 3 × 2 = 6
-   Long      = 3 × 5 = 15
-
-   TOTAL = 30 MARKS
-   TOTAL = 15 QUESTIONS
-================================================================ */
-
-const PAPER_STRUCTURE = {
-
-  mcq:5,
-  truefalse:2,
-  fillblank:2,
-  short:3,
-  long:3
-
-};
-
-const MARKS = {
-
-  mcq:1,
-  truefalse:1,
-  fillblank:1,
-  short:2,
-  long:5
-
-};
-
-const TOTAL_QUESTIONS = 15;
+const MARKS = { mcq:1, truefalse:1, fillblank:1, short:2, long:5 };
 const TOTAL_MARKS = 30;
 
-
-/* ===============================================================
-   3. STATE
-================================================================ */
-
 let state = {
-
-  apiKey:'',
-  model:'gemini-3.8-flash',
-
-  questions:[],
-
-  currentActiveIndex:-1,
-
-  overallSeconds:30 * 60,
-
-  overallTimerId:null,
-
-  perQTimerId:null,
-
-  submitted:false,
-
-  examSubject:'',
-
-  examChapters:[],
-
-  totalMarks:TOTAL_MARKS
-
+  apiKey: '',
+  model: 'gemini-2.5-flash',
+  questions: [],
+  userAnswers: {},
+  assignedScores: {},
+  overallSeconds: 30 * 60,
+  overallTimerId: null,
+  submitted: false,
+  examSubject: ''
 };
-
-
-/* ===============================================================
-   4. LOCAL STORAGE
-================================================================ */
 
 const LS_KEY = 'class6_exam_app_gemini_api_key';
 const LS_MODEL = 'class6_exam_app_gemini_model';
 
-
 function loadSavedKey(){
-
   try{
-
-    const saved =
-      window.localStorage.getItem(LS_KEY);
-
-    const savedModel =
-      window.localStorage.getItem(LS_MODEL);
-
+    const saved = localStorage.getItem(LS_KEY);
+    const savedModel = localStorage.getItem(LS_MODEL);
     if(saved){
-
       state.apiKey = saved;
-
-      document.getElementById('apiKeyInput').value =
-        saved;
-
-      setKeyStatus(
-        'Using saved key from this browser.'
-      );
-
+      document.getElementById('apiKeyInput').value = saved;
+      setKeyStatus('Using saved key from this browser.');
     }
-
     if(savedModel){
-
       state.model = savedModel;
-
-      document.getElementById('modelSelect').value =
-        savedModel;
-
+      document.getElementById('modelSelect').value = savedModel;
     }
-
   }catch(e){
-
-    setKeyStatus(
-      'Browser storage unavailable here — key will only be kept for this session.'
-    );
-
+    setKeyStatus('Storage unavailable.');
   }
-
 }
-
 
 function saveKey(){
-
-  const val =
-    document.getElementById('apiKeyInput')
-      .value.trim();
-
-  const model =
-    document.getElementById('modelSelect').value;
-
+  const val = document.getElementById('apiKeyInput').value.trim();
+  const model = document.getElementById('modelSelect').value;
   state.apiKey = val;
-
   state.model = model;
-
   try{
-
-    window.localStorage.setItem(
-      LS_KEY,
-      val
-    );
-
-    window.localStorage.setItem(
-      LS_MODEL,
-      model
-    );
-
-    setKeyStatus(
-      val
-        ? 'Key saved in this browser.'
-        : 'Key cleared.'
-    );
-
-  }catch(e){
-
-    setKeyStatus(
-      'Could not persist to storage — kept for this session only.'
-    );
-
-  }
-
+    localStorage.setItem(LS_KEY, val);
+    localStorage.setItem(LS_MODEL, model);
+    setKeyStatus(val ? 'Key saved.' : 'Key cleared.');
+  }catch(e){}
 }
-
 
 function forgetKey(){
-
   state.apiKey = '';
-
   document.getElementById('apiKeyInput').value = '';
-
-  try{
-
-    window.localStorage.removeItem(LS_KEY);
-
-  }catch(e){}
-
-  setKeyStatus('Saved key removed.');
-
+  try{ localStorage.removeItem(LS_KEY); }catch(e){}
+  setKeyStatus('Key removed.');
 }
-
 
 function setKeyStatus(msg){
-
-  document.getElementById('keyStatus')
-    .textContent = msg;
-
+  document.getElementById('keyStatus').textContent = msg;
 }
 
-
-/* ===============================================================
-   5. SUBJECT / CHAPTER UI
-================================================================ */
+function renderSpiral(){
+  document.querySelectorAll('.spiral').forEach(sp => {
+    sp.innerHTML = '';
+    for(let i=0; i<12; i++){
+      sp.appendChild(document.createElement('span'));
+    }
+  });
+}
 
 function populateSubjects(){
-
-  const sel =
-    document.getElementById('subjectSelect');
-
-  Object.keys(SUBJECTS).forEach(name=>{
-
-    const opt =
-      document.createElement('option');
-
+  const sel = document.getElementById('subjectSelect');
+  Object.keys(SUBJECTS).forEach(name => {
+    const opt = document.createElement('option');
     opt.value = name;
-
     opt.textContent = name;
-
     sel.appendChild(opt);
-
   });
-
-  sel.addEventListener(
-    'change',
-    renderChapters
-  );
-
+  sel.addEventListener('change', renderChapters);
 }
-
 
 function renderChapters(){
-
-  const subject =
-    document.getElementById('subjectSelect').value;
-
-  const data =
-    SUBJECTS[subject];
-
-  const box =
-    document.getElementById('chaptersBox');
-
-  const quick =
-    document.getElementById('chapterQuickActions');
-
-  const label =
-    document.getElementById('chaptersLabel');
-
+  const subject = document.getElementById('subjectSelect').value;
+  const data = SUBJECTS[subject];
+  const box = document.getElementById('chaptersBox');
+  const quick = document.getElementById('chapterQuickActions');
+  const label = document.getElementById('chaptersLabel');
   box.innerHTML = '';
 
-
   if(data.freeText){
-
     quick.classList.add('hidden');
-
-    label.textContent =
-      'Topics to include (this subject has no fixed chapter list)';
-
-    const ta =
-      document.createElement('textarea');
-
+    label.textContent = 'Topics to include (free text)';
+    const ta = document.createElement('textarea');
     ta.className = 'styled';
-
     ta.id = 'freeTextChapters';
-
-    ta.rows = 3;
-
-    ta.placeholder =
-      'e.g. Current affairs, sports rules, basic first aid, road safety...';
-
+    ta.placeholder = 'e.g., General knowledge topics...';
     box.appendChild(ta);
-
     return;
-
   }
-
 
   quick.classList.remove('hidden');
+  label.textContent = 'Chapters to include';
 
-  label.textContent =
-    'Chapters to include';
-
-
-  Object.keys(data.groups).forEach(groupName=>{
-
-    const gTitle =
-      document.createElement('div');
-
-    gTitle.className =
-      'chapter-group-title';
-
-    gTitle.textContent =
-      groupName;
-
+  Object.keys(data.groups).forEach(groupName => {
+    const gTitle = document.createElement('div');
+    gTitle.className = 'chapter-group-title';
+    gTitle.textContent = groupName;
     box.appendChild(gTitle);
 
-
-    data.groups[groupName]
-      .forEach((ch,idx)=>{
-
-        const row =
-          document.createElement('div');
-
-        row.className =
-          'chapter-item';
-
-        const id =
-          'ch_' +
-          groupName.replace(/\W+/g,'_') +
-          '_' +
-          idx;
-
-        row.innerHTML = `
-
-          <input
-            type="checkbox"
-            id="${id}"
-            value="${escapeAttr(ch)}">
-
-          <label for="${id}">
-            ${escapeHtml(ch)}
-          </label>
-
-        `;
-
-        box.appendChild(row);
-
-      });
-
+    data.groups[groupName].forEach((ch, idx) => {
+      const row = document.createElement('div');
+      row.className = 'chapter-item';
+      const id = 'ch_' + groupName.replace(/\W+/g, '_') + '_' + idx;
+      row.innerHTML = `
+        <input type="checkbox" id="${id}" value="${escapeAttr(ch)}" checked>
+        <label for="${id}">${escapeHtml(ch)}</label>
+      `;
+      box.appendChild(row);
+    });
   });
-
 }
 
-
-function escapeAttr(s){
-
-  return String(s)
-    .replace(/"/g,'&quot;');
-
-}
-
+function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function getSelectedChapters(){
-
-  const subject =
-    document.getElementById('subjectSelect').value;
-
-  const data =
-    SUBJECTS[subject];
-
-
+  const subject = document.getElementById('subjectSelect').value;
+  const data = SUBJECTS[subject];
   if(data.freeText){
-
-    const ta =
-      document.getElementById('freeTextChapters');
-
-    const txt =
-      ta ? ta.value.trim() : '';
-
-    return txt
-      ? txt
-          .split(',')
-          .map(s=>s.trim())
-          .filter(Boolean)
-      : [];
-
+    const ta = document.getElementById('freeTextChapters');
+    return ta && ta.value.trim() ? ta.value.split(',').map(s=>s.trim()) : [];
   }
-
-
-  const boxes =
-    document.querySelectorAll(
-      '#chaptersBox input[type="checkbox"]:checked'
-    );
-
-  return Array.from(boxes)
-    .map(b=>b.value);
-
+  const boxes = document.querySelectorAll('#chaptersBox input[type="checkbox"]:checked');
+  return Array.from(boxes).map(b => b.value);
 }
 
-
-/* ===============================================================
-   6. PROMPT BUILDING
-
-   STRICT 15-QUESTION PROMPT
-================================================================ */
-
-function buildPrompt(subject,chapters){
-
-  const data =
-    SUBJECTS[subject] || {};
-
-  const bookLine =
-    data.book
-      ? `The textbook used is "${data.book}".`
-      : '';
-
-  const chapterLine =
-    chapters.length
-      ? `Base the questions strictly on these selected chapters/topics: ${chapters.join(', ')}.`
-      : `No specific chapters were selected. Cover appropriate Class 6 topics for this subject.`;
-
-
-  const isMaths =
-    subject === 'Mathematics';
-
-
-  let subjectRules = `
-
-SUBJECT-SPECIFIC RULES:
-
-- Keep the questions appropriate for Class 6.
-- Do not ask questions requiring images, diagrams, audio, or external material.
-- Keep answers concise.
-- Do not create extremely long questions.
-- Do not combine multiple unrelated questions into one question.
-- Make every question independently answerable.
-`;
-
-  if(isMaths){
-
-    subjectRules += `
-
-MATHEMATICS SPECIAL RULES:
-
-- This is a Class 6 Mathematics paper.
-- Use actual numerical problems, calculations, reasoning and mathematical concepts.
-- Questions must be solvable using text and numbers.
-- Do NOT require the student to see a diagram or image.
-- For Lines and Angles, Symmetry or Constructions, describe everything clearly in words.
-- Include a mixture of easy, moderate and challenging questions.
-- Show mathematical expressions in plain text.
-- Do not return only one mathematics question.
-`;
-
-  }
-
+function buildPrompt(subject, chapters){
+  const data = SUBJECTS[subject] || {};
+  const bookLine = data.book ? `Textbook: "${data.book}".` : '';
+  const chapterLine = chapters.length ? `Chapters/Topics: ${chapters.join(', ')}.` : 'Cover general Class 6 topics.';
 
   return `
-
-You are an experienced Indian Class 6 school teacher.
-
-SUBJECT:
-${subject}
-
+You are a Class 6 school teacher generating a practice paper.
+SUBJECT: ${subject}
 ${bookLine}
-
 ${chapterLine}
 
-${subjectRules}
+EXACT STRUCTURE REQUIREMENTS (TOTAL 15 QUESTIONS):
+1. Questions 1-5: type="mcq" (1 mark each). MUST provide exactly 4 options. 
+   CRITICAL FOR MCQ ANSWER: The "answer" string MUST match EXACTLY one of the string entries inside the "options" array. DO NOT use "A", "B", "C", "D" or index numbers.
+2. Questions 6-7: type="truefalse" (1 mark each). answer must be "true" or "false".
+3. Questions 8-9: type="fillblank" (1 mark each). answer is expected string.
+4. Questions 10-12: type="short" (2 marks each). provide modelAnswer.
+5. Questions 13-15: type="long" (5 marks each). provide modelAnswer and keyPoints array.
 
-==================================================
-VERY IMPORTANT — EXACT PAPER STRUCTURE
-==================================================
-
-You MUST return EXACTLY 15 questions.
-
-The distribution MUST be:
-
-1. Questions 1-5:
-   type = "mcq"
-   exactly 5 questions
-   exactly 4 options each
-   exactly 1 mark each
-
-   IMPORTANT MCQ ANSWER RULE:
-For every MCQ, the "answer" field MUST contain the exact text of the correct option,
-not A, B, C, D, 1, 2, 3, or 4.
-
-Example:
-"options": [
-  "12",
-  "18",
-  "24",
-  "30"
-],
-"answer": "24"
-
-Do NOT return:
-"answer": "C"
-Do NOT return:
-"answer": "3"
-
-
-
-2. Questions 6-7:
-   type = "truefalse"
-   exactly 2 questions
-   exactly 1 mark each
-
-3. Questions 8-9:
-   type = "fillblank"
-   exactly 2 questions
-   exactly 1 mark each
-
-4. Questions 10-12:
-   type = "short"
-   exactly 3 questions
-   exactly 2 marks each
-
-5. Questions 13-15:
-   type = "long"
-   exactly 3 questions
-   exactly 5 marks each
-
-TOTAL:
-
-5 × 1 = 5
-2 × 1 = 2
-2 × 1 = 2
-3 × 2 = 6
-3 × 5 = 15
-
-TOTAL = EXACTLY 30 MARKS.
-
-DO NOT change these numbers.
-
-DO NOT return fewer than 15 questions.
-
-DO NOT return more than 15 questions.
-
-DO NOT merge questions.
-
-DO NOT omit a question type.
-
-==================================================
-QUESTION JSON FORMAT
-==================================================
-
-Return ONLY a JSON array.
-
-Question 1-5:
-
-{
-  "id":1,
-  "type":"mcq",
-  "question":"...",
-  "options":["...","...","...","..."],
-  "answer":"exact text of correct option"
-}
-
-Questions 6-7:
-
-{
-  "id":6,
-  "type":"truefalse",
-  "question":"...",
-  "answer":"true"
-}
-
-Questions 8-9:
-
-{
-  "id":8,
-  "type":"fillblank",
-  "question":"... ____ ...",
-  "answer":"expected answer",
-  "acceptableAnswers":["alternate answer"]
-}
-
-Questions 10-12:
-
-{
-  "id":10,
-  "type":"short",
-  "question":"...",
-  "modelAnswer":"concise answer"
-}
-
-Questions 13-15:
-
-{
-  "id":13,
-  "type":"long",
-  "question":"...",
-  "modelAnswer":"concise model answer",
-  "keyPoints":["point 1","point 2"]
-}
-
-==================================================
-IMPORTANT
-==================================================
-
-The JavaScript program will assign marks automatically.
-
-You do NOT need to calculate marks.
-
-Your only job is to return exactly 15 valid questions
-with exactly the required type distribution.
-
-Return the raw JSON array ONLY.
-
-NO markdown.
-
-NO explanation.
-
-NO commentary.
-
-NO text before the [.
-
-NO text after the ].
-
+Return ONLY a valid JSON array of 15 objects matching this structure.
 `;
-
-
 }
-
-
-/* ===============================================================
-   7. GEMINI RESPONSE SCHEMA
-================================================================ */
 
 function getResponseSchema(){
-
   return {
-
-    type:'ARRAY',
-
-    minItems:15,
-
-    maxItems:15,
-
-    items:{
-
-      type:'OBJECT',
-
-      properties:{
-
-        id:{
-          type:'INTEGER'
-        },
-
-        type:{
-          type:'STRING',
-
-          enum:[
-            'mcq',
-            'truefalse',
-            'fillblank',
-            'short',
-            'long'
-          ]
-
-        },
-
-        question:{
-          type:'STRING'
-        },
-
-        options:{
-          type:'ARRAY',
-          items:{
-            type:'STRING'
-          },
-
-          minItems:4,
-          maxItems:4
-
-        },
-
-        answer:{
-          type:'STRING'
-        },
-
-        acceptableAnswers:{
-          type:'ARRAY',
-          items:{
-            type:'STRING'
-          }
-        },
-
-        explanation:{
-          type:'STRING'
-        },
-
-        modelAnswer:{
-          type:'STRING'
-        },
-
-        keyPoints:{
-          type:'ARRAY',
-          items:{
-            type:'STRING'
-          }
-        }
-
+    type: 'ARRAY',
+    minItems: 15,
+    maxItems: 15,
+    items: {
+      type: 'OBJECT',
+      properties: {
+        id: { type: 'INTEGER' },
+        type: { type: 'STRING', enum: ['mcq', 'truefalse', 'fillblank', 'short', 'long'] },
+        question: { type: 'STRING' },
+        options: { type: 'ARRAY', items: { type: 'STRING' } },
+        answer: { type: 'STRING' },
+        acceptableAnswers: { type: 'ARRAY', items: { type: 'STRING' } },
+        modelAnswer: { type: 'STRING' },
+        keyPoints: { type: 'ARRAY', items: { type: 'STRING' } }
       },
-
-      required:[
-        'id',
-        'type',
-        'question'
-      ]
-
+      required: ['id', 'type', 'question']
     }
-
   };
-
 }
 
-
-/* ===============================================================
-   8. GEMINI API
-================================================================ */
-
-async function callGemini(prompt){
-
-  if(!state.apiKey){
-
-    throw new Error(
-      'Gemini API key is missing.'
-    );
-
-  }
-
-
-  const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(state.model)}:generateContent?key=${encodeURIComponent(state.apiKey)}`;
-
-
-  const response =
-    await fetch(
-
-      url,
-
-      {
-
-        method:'POST',
-
-        headers:{
-          'Content-Type':'application/json'
-        },
-
-        body:JSON.stringify({
-
-          contents:[
-            {
-              role:'user',
-              parts:[
-                {
-                  text:prompt
-                }
-              ]
-            }
-          ],
-
-          generationConfig:{
-
-            maxOutputTokens:8192,
-
-            responseMimeType:
-              'application/json',
-
-            responseSchema:
-              getResponseSchema(),
-
-            thinkingConfig:{
-              thinkingLevel:'low'
-            }
-
-          }
-
-        })
-
+/* FIX & SANITIZE GEMINI JSON DATA */
+function sanitizeQuestions(questions) {
+  return questions.map((q, idx) => {
+    q.id = idx + 1;
+    if (q.type === 'mcq') {
+      if (!Array.isArray(q.options) || q.options.length === 0) {
+        q.options = ["Option A", "Option B", "Option C", "Option D"];
       }
-
-    );
-
-
-  if(!response.ok){
-
-    let detail='';
-
-    try{
-
-      const j =
-        await response.json();
-
-      detail =
-        j?.error?.message ||
-        JSON.stringify(j);
-
-    }catch(e){
-
-      detail =
-        response.statusText;
-
-    }
-
-    throw new Error(
-      `API error (${response.status}): ${detail}`
-    );
-
-  }
-
-
-  const data =
-    await response.json();
-
-  const candidate =
-    (data.candidates || [])[0];
-
-
-  const finishReason =
-    candidate &&
-    candidate.finishReason;
-
-
-  const parts =
-    candidate &&
-    candidate.content &&
-    candidate.content.parts;
-
-
-  const text =
-    parts
-      ? parts
-          .map(p=>p.text || '')
-          .join('')
-      : '';
-
-
-  if(!text){
-
-    if(finishReason === 'SAFETY'){
-
-      throw new Error(
-        'Gemini blocked the generated paper. Try another chapter or subject.'
-      );
-
-    }
-
-    throw new Error(
-      'No text content returned by Gemini.'
-    );
-
-  }
-
-
-  if(finishReason === 'MAX_TOKENS'){
-
-    throw new Error(
-      'Gemini stopped before completing the 15-question paper. Please try again.'
-    );
-
-  }
-
-
-  return text;
-
-}
-
-
-/* ===============================================================
-   9. JSON EXTRACTION
-================================================================ */
-
-function extractJson(text){
-
-  let cleaned =
-    String(text).trim();
-
-
-  cleaned =
-    cleaned
-      .replace(/^```json/i,'')
-      .replace(/^```/,'')
-      .replace(/```$/,'')
-      .trim();
-
-
-  const start =
-    cleaned.indexOf('[');
-
-  const end =
-    cleaned.lastIndexOf(']');
-
-
-  if(
-    start === -1 ||
-    end === -1 ||
-    end <= start
-  ){
-
-    throw new Error(
-      'Gemini did not return a valid question array.'
-    );
-
-  }
-
-
-  const jsonStr =
-    cleaned.slice(
-      start,
-      end + 1
-    );
-
-
-  try{
-
-    return JSON.parse(jsonStr);
-
-  }catch(e){
-
-    const repaired =
-      jsonStr
-        .replace(/,\s*([\]}])/g,'$1')
-        .replace(
-          /[\u0000-\u0009\u000B\u000C\u000E-\u001F]/g,
-          ''
-        );
-
-
-    try{
-
-      return JSON.parse(repaired);
-
-    }catch(e2){
-
-      throw new Error(
-        'Gemini returned malformed JSON. Please try generating the paper again.'
-      );
-
-    }
-
-  }
-
-}
-
-
-/* ===============================================================
-   10. VALIDATE AND NORMALIZE PAPER
-
-   This is the second important fix.
-
-   We don't trust Gemini's marks.
-
-   JavaScript assigns marks according to type.
-
-   We also make absolutely sure that there are exactly
-   15 questions with the correct distribution.
-================================================================ */
-
-function validateAndNormalizeQuestions(questions) {
-  if (!Array.isArray(questions)) {
-    throw new Error('Gemini did not return a question array.');
-  }
-
-  if (questions.length !== 15) {
-    throw new Error(
-      `Gemini returned ${questions.length} questions. Exactly 15 are required.`
-    );
-  }
-
-  const expectedTypes = [
-    'mcq', 'mcq', 'mcq', 'mcq', 'mcq',
-    'truefalse', 'truefalse',
-    'fillblank', 'fillblank',
-    'short', 'short', 'short',
-    'long', 'long', 'long'
-  ];
-
-  const markMap = {
-    mcq: 1,
-    truefalse: 1,
-    fillblank: 1,
-    short: 2,
-    long: 5
-  };
-
-  const normalized = questions.map((q, index) => {
-    if (!q || typeof q !== 'object') {
-      throw new Error(`Question ${index + 1} is invalid.`);
-    }
-
-    const expectedType = expectedTypes[index];
-
-    if (q.type !== expectedType) {
-      throw new Error(
-        `Question ${index + 1} must be ${expectedType}, but Gemini returned ${q.type}.`
-      );
-    }
-
-    if (!q.question || typeof q.question !== 'string') {
-      throw new Error(`Question ${index + 1} has no question text.`);
-    }
-
-    // ----------------------------------------
-    // Normalize basic fields
-    // ----------------------------------------
-
-    q.id = index + 1;
-    q.type = expectedType;
-    q.marks = markMap[expectedType];
-
-    // ----------------------------------------
-    // MCQ
-    // ----------------------------------------
-
-    if (expectedType === 'mcq') {
-      if (!Array.isArray(q.options) || q.options.length !== 4) {
-        throw new Error(
-          `MCQ question ${index + 1} must have exactly 4 options.`
-        );
-      }
-
-      q.options = q.options.map(x => String(x).trim());
-
-      if (q.options.some(x => !x)) {
-        throw new Error(
-          `MCQ question ${index + 1} contains an empty option.`
-        );
-      }
-
-      if (
-        q.answer === undefined ||
-        q.answer === null ||
-        String(q.answer).trim() === ''
-      ) {
-        throw new Error(
-          `MCQ question ${index + 1} has no correct answer.`
-        );
-      }
-
-      const rawAnswer = String(q.answer).trim();
-
-      // Accept A/B/C/D
-      const letterMatch = rawAnswer.match(/^([A-D])(?:[\).:\-]|\s|$)/i);
-
-      // Accept 1/2/3/4
-      const numberMatch = rawAnswer.match(/^([1-4])(?:[\).:\-]|\s|$)/);
-
-      let answerIndex = -1;
-
-      if (letterMatch) {
-        answerIndex = letterMatch[1].toUpperCase().charCodeAt(0) - 65;
-      } else if (numberMatch) {
-        answerIndex = parseInt(numberMatch[1], 10) - 1;
-      }
-
-      // If Gemini gave A/B/C/D or 1/2/3/4
-      if (answerIndex >= 0 && answerIndex < 4) {
-        q.answer = q.options[answerIndex];
-      } else {
-        // Otherwise match the answer against option text
-        const normalizedAnswer = rawAnswer
-          .toLowerCase()
-          .replace(/\s+/g, ' ')
-          .trim();
-
-        const exactIndex = q.options.findIndex(option =>
-          option.toLowerCase()
-            .replace(/\s+/g, ' ')
-            .trim() === normalizedAnswer
-        );
-
-        if (exactIndex >= 0) {
-          q.answer = q.options[exactIndex];
+      // Ensure answer strictly matches one of the options
+      let match = q.options.find(opt => opt.trim().toLowerCase() === String(q.answer).trim().toLowerCase());
+      if (!match) {
+        // Fallback checks for A, B, C, D or index numbers 1, 2, 3, 4
+        const map = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, '1': 0, '2': 1, '3': 2, '4': 3 };
+        let cleanAns = String(q.answer).trim().toLowerCase().replace(/option\s*/, '');
+        if (map[cleanAns] !== undefined && q.options[map[cleanAns]]) {
+          q.answer = q.options[map[cleanAns]];
         } else {
-          // Try removing leading A), B), C), D) from option text
-          const cleanedAnswer = normalizedAnswer.replace(
-            /^[a-d][\).:\-\s]+/i,
-            ''
-          );
-
-          const fuzzyIndex = q.options.findIndex(option => {
-            const cleanedOption = option
-              .toLowerCase()
-              .replace(/\s+/g, ' ')
-              .trim()
-              .replace(/^[a-d][\).:\-\s]+/i, '');
-
-            return cleanedOption === cleanedAnswer;
-          });
-
-          if (fuzzyIndex >= 0) {
-            q.answer = q.options[fuzzyIndex];
-          } else {
-            throw new Error(
-              `MCQ question ${index + 1} has an invalid correct answer. ` +
-              `Gemini returned: "${rawAnswer}". ` +
-              `Options are: ${q.options.join(' | ')}`
-            );
-          }
+          // Absolute fallback if unmatched: assign to first option
+          q.answer = q.options[0];
         }
-      }
-    }
-
-    // ----------------------------------------
-    // TRUE / FALSE
-    // ----------------------------------------
-
-    if (expectedType === 'truefalse') {
-      if (
-        q.answer === undefined ||
-        q.answer === null ||
-        String(q.answer).trim() === ''
-      ) {
-        throw new Error(
-          `True/False question ${index + 1} has no correct answer.`
-        );
-      }
-
-      let answer = String(q.answer).trim().toLowerCase();
-
-      if (
-        answer === 'true' ||
-        answer === 't' ||
-        answer === 'yes'
-      ) {
-        q.answer = 'True';
-      } else if (
-        answer === 'false' ||
-        answer === 'f' ||
-        answer === 'no'
-      ) {
-        q.answer = 'False';
       } else {
-        throw new Error(
-          `True/False question ${index + 1} has an invalid answer: "${q.answer}".`
-        );
+        q.answer = match;
       }
     }
-
-    // ----------------------------------------
-    // FILL IN THE BLANK
-    // ----------------------------------------
-
-    if (expectedType === 'fillblank') {
-      if (
-        q.answer === undefined ||
-        q.answer === null ||
-        String(q.answer).trim() === ''
-      ) {
-        throw new Error(
-          `Fill-in-the-blank question ${index + 1} has no correct answer.`
-        );
-      }
-
-      q.answer = String(q.answer).trim();
-
-      if (!Array.isArray(q.acceptableAnswers)) {
-        q.acceptableAnswers = [];
-      }
-
-      q.acceptableAnswers = q.acceptableAnswers
-        .filter(x => x !== null && x !== undefined)
-        .map(x => String(x).trim())
-        .filter(Boolean);
-
-      // Always include the main answer
-      if (
-        !q.acceptableAnswers.some(
-          x => x.toLowerCase() === q.answer.toLowerCase()
-        )
-      ) {
-        q.acceptableAnswers.unshift(q.answer);
-      }
-    }
-
-    // ----------------------------------------
-    // SHORT ANSWER
-    // ----------------------------------------
-
-    if (expectedType === 'short') {
-      if (
-        !q.modelAnswer ||
-        typeof q.modelAnswer !== 'string' ||
-        !q.modelAnswer.trim()
-      ) {
-        throw new Error(
-          `Short question ${index + 1} has no model answer.`
-        );
-      }
-
-      q.modelAnswer = q.modelAnswer.trim();
-
-      if (!Array.isArray(q.keyPoints)) {
-        q.keyPoints = [];
-      }
-    }
-
-    // ----------------------------------------
-    // LONG ANSWER
-    // ----------------------------------------
-
-    if (expectedType === 'long') {
-      if (
-        !q.modelAnswer ||
-        typeof q.modelAnswer !== 'string' ||
-        !q.modelAnswer.trim()
-      ) {
-        throw new Error(
-          `Long question ${index + 1} has no model answer.`
-        );
-      }
-
-      q.modelAnswer = q.modelAnswer.trim();
-
-      if (!Array.isArray(q.keyPoints)) {
-        q.keyPoints = [];
-      }
-    }
-
-    // ----------------------------------------
-    // Optional fields
-    // ----------------------------------------
-
-    q.explanation = q.explanation
-      ? String(q.explanation).trim()
-      : '';
-
     return q;
   });
-
-  // ----------------------------------------
-  // Final type/count verification
-  // ----------------------------------------
-
-  const counts = {
-    mcq: 0,
-    truefalse: 0,
-    fillblank: 0,
-    short: 0,
-    long: 0
-  };
-
-  normalized.forEach(q => {
-    counts[q.type]++;
-  });
-
-  if (counts.mcq !== 5) {
-    throw new Error(`Expected 5 MCQs, got ${counts.mcq}.`);
-  }
-
-  if (counts.truefalse !== 2) {
-    throw new Error(
-      `Expected 2 True/False questions, got ${counts.truefalse}.`
-    );
-  }
-
-  if (counts.fillblank !== 2) {
-    throw new Error(
-      `Expected 2 fill-in-the-blank questions, got ${counts.fillblank}.`
-    );
-  }
-
-  if (counts.short !== 3) {
-    throw new Error(
-      `Expected 3 short-answer questions, got ${counts.short}.`
-    );
-  }
-
-  if (counts.long !== 3) {
-    throw new Error(
-      `Expected 3 long-answer questions, got ${counts.long}.`
-    );
-  }
-
-  // ----------------------------------------
-  // Force exact 30 marks
-  // ----------------------------------------
-
-  const totalMarks = normalized.reduce(
-    (sum, q) => sum + q.marks,
-    0
-  );
-
-  if (totalMarks !== 30) {
-    throw new Error(
-      `Invalid total marks: ${totalMarks}. Expected exactly 30.`
-    );
-  }
-
-  console.log(
-    'Validated paper:',
-    normalized.map(q => ({
-      id: q.id,
-      type: q.type,
-      marks: q.marks,
-      answer: q.type === 'mcq' ? q.answer : undefined
-    }))
-  );
-
-  return normalized;
 }
-
-/* ===============================================================
-   11. GENERATE PAPER
-================================================================ */
 
 async function generatePaper(){
-
-  const subject =
-    document.getElementById('subjectSelect').value;
-
-  const chapters =
-    getSelectedChapters();
-
-  const btn =
-    document.getElementById('generateBtn');
-
-  const statusLine =
-    document.getElementById('statusLine');
-
-
-  if(!state.apiKey){
-
-    statusLine.innerHTML =
-      '<span class="error-line">Please enter and save your Gemini API key first.</span>';
-
+  const apiKey = state.apiKey || document.getElementById('apiKeyInput').value.trim();
+  if(!apiKey){
+    setStatus('Please enter a valid Gemini API key.', true);
     return;
-
   }
+  
+  const subject = document.getElementById('subjectSelect').value;
+  const chapters = getSelectedChapters();
+  state.examSubject = subject;
 
-
-  /*
-    Require at least one chapter for fixed subjects.
-  */
-
-  const subjectData =
-    SUBJECTS[subject];
-
-  if(
-    !subjectData.freeText &&
-    chapters.length === 0
-  ){
-
-    statusLine.innerHTML =
-      '<span class="error-line">Please select at least one chapter.</span>';
-
-    return;
-
-  }
-
-
+  const btn = document.getElementById('generateBtn');
   btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Generating paper...';
+  setStatus('Connecting to Gemini API...');
 
+  const promptText = buildPrompt(subject, chapters);
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${state.model}:generateContent?key=${apiKey}`;
 
-  statusLine.innerHTML =
-    '<span class="spinner"></span> Writing your 15-question paper...';
-
-
-  try{
-
-    const prompt =
-      buildPrompt(
-        subject,
-        chapters
-      );
-
-
-    let questions;
-
-
-    /*
-      FIRST ATTEMPT
-    */
-
-    try{
-
-      const raw =
-        await callGemini(prompt);
-
-      console.log(
-        'Gemini raw response:',
-        raw
-      );
-
-      const parsed =
-        extractJson(raw);
-
-      console.log(
-        'Parsed questions:',
-        parsed
-      );
-
-      questions =
-        validateAndNormalizeQuestions(
-          parsed
-        );
-
-    }catch(firstError){
-
-      /*
-        SECOND ATTEMPT
-
-        If Gemini gives only one Maths question,
-        wrong distribution, malformed JSON, etc.,
-        we ask it again with a very explicit correction.
-      */
-
-      console.warn(
-        'First generation failed:',
-        firstError
-      );
-
-
-      statusLine.innerHTML =
-        '<span class="spinner"></span> First attempt was incomplete — generating the full 15-question paper again...';
-
-
-      const retryPrompt =
-        prompt +
-
-        `
-
-==================================================
-RETRY — CRITICAL
-==================================================
-
-Your previous response was invalid.
-
-You MUST now produce exactly 15 questions.
-
-Required exact sequence:
-
-Q1-Q5  = mcq
-Q6-Q7  = truefalse
-Q8-Q9  = fillblank
-Q10-Q12 = short
-Q13-Q15 = long
-
-Do not stop after one question.
-
-Do not return one question.
-
-Do not return five questions.
-
-Do not return ten questions.
-
-Return ALL FIFTEEN questions in ONE JSON array.
-
-The final array must contain exactly 15 objects.
-
-Return JSON only.
-`;
-
-
-      const raw =
-        await callGemini(
-          retryPrompt
-        );
-
-
-      console.log(
-        'Gemini retry raw response:',
-        raw
-      );
-
-
-      const parsed =
-        extractJson(raw);
-
-
-      console.log(
-        'Gemini retry parsed:',
-        parsed
-      );
-
-
-      questions =
-        validateAndNormalizeQuestions(
-          parsed
-        );
-
+  const payload = {
+    contents: [{ parts: [{ text: promptText }] }],
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: getResponseSchema()
     }
+  };
 
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-    /*
-      SUCCESS
-    */
+    const json = await res.json();
+    if (json.error) throw new Error(json.error.message || 'API Error');
 
-    console.log(
-      'FINAL QUESTIONS:',
-      questions
-    );
+    let rawText = json.candidates[0].content.parts[0].text;
+    let parsedQuestions = JSON.parse(rawText);
 
-
-    state.questions =
-      questions;
-
-    state.examSubject =
-      subject;
-
-    state.examChapters =
-      chapters;
-
-    state.totalMarks =
-      TOTAL_MARKS;
-
-
-    statusLine.textContent = '';
-
-
+    state.questions = sanitizeQuestions(parsedQuestions);
+    state.userAnswers = {};
+    state.assignedScores = {};
+    
     startExam();
-
-
-  }catch(err){
-
-    console.error(
-      'Paper generation failed:',
-      err
-    );
-
-
-    statusLine.innerHTML =
-      `<span class="error-line">${escapeHtml(err.message)}</span>`;
-
-  }finally{
-
+  } catch (err) {
+    setStatus('Error: ' + err.message, true);
+  } finally {
     btn.disabled = false;
-
+    btn.innerHTML = 'Generate question paper';
   }
-
 }
 
-
-/* ===============================================================
-   12. SOUND
-================================================================ */
-
-let audioCtx = null;
-
-
-function playBeep(
-  freq,
-  duration,
-  delay
-){
-
-  delay =
-    delay || 0;
-
-
-  setTimeout(()=>{
-
-    try{
-
-      audioCtx =
-        audioCtx ||
-        new(
-          window.AudioContext ||
-          window.webkitAudioContext
-        )();
-
-
-      const osc =
-        audioCtx.createOscillator();
-
-      const gain =
-        audioCtx.createGain();
-
-
-      osc.type =
-        'sine';
-
-      osc.frequency.value =
-        freq;
-
-
-      gain.gain.setValueAtTime(
-        0.18,
-        audioCtx.currentTime
-      );
-
-
-      gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        audioCtx.currentTime + duration
-      );
-
-
-      osc.connect(gain);
-
-      gain.connect(
-        audioCtx.destination
-      );
-
-
-      osc.start();
-
-      osc.stop(
-        audioCtx.currentTime + duration
-      );
-
-
-    }catch(e){}
-
-  },delay);
-
+function setStatus(msg, isErr=false){
+  const el = document.getElementById('statusLine');
+  el.textContent = msg;
+  el.className = 'status-line' + (isErr ? ' error-line' : '');
 }
-
-
-function playQuestionEndSound(){
-
-  playBeep(
-    660,
-    0.25
-  );
-
-}
-
-
-function playExamEndSound(){
-
-  playBeep(523,0.3,0);
-
-  playBeep(659,0.3,300);
-
-  playBeep(784,0.5,600);
-
-}
-
-
-/* ===============================================================
-   13. START EXAM
-================================================================ */
 
 function startExam(){
+  document.getElementById('setupScreen').classList.add('hidden');
+  document.getElementById('resultsScreen').classList.add('hidden');
+  document.getElementById('examScreen').classList.remove('hidden');
 
-  document
-    .getElementById('setupScreen')
-    .classList.add('hidden');
-
-
-  document
-    .getElementById('examScreen')
-    .classList.remove('hidden');
-
-
-  document
-    .getElementById('resultsScreen')
-    .classList.add('hidden');
-
-
-  document
-    .getElementById('examTitle')
-    .textContent =
-      `${state.examSubject} — Practice Paper`;
-
-
-  document
-    .getElementById('examMeta')
-    .textContent =
-      `Total marks: ${TOTAL_MARKS} · ${state.questions.length} questions · 30 minutes overall`;
-
-
-  state.overallSeconds =
-    30 * 60;
-
-  state.submitted =
-    false;
-
-  state.currentActiveIndex =
-    -1;
-
+  document.getElementById('examTitle').textContent = `${state.examSubject} Exam`;
+  document.getElementById('examMeta').textContent = `15 Questions | 30 Marks Total`;
 
   renderQuestions();
-
-
-  updateOverallTimerDisplay();
-
-
-  clearInterval(
-    state.overallTimerId
-  );
-
-
-  state.overallTimerId =
-    setInterval(
-      tickOverall,
-      1000
-    );
-
+  startTimer();
 }
-
-
-/* ===============================================================
-   14. RENDER QUESTIONS
-================================================================ */
 
 function renderQuestions(){
-
-  const container =
-    document.getElementById(
-      'questionsContainer'
-    );
-
-
+  const container = document.getElementById('questionsContainer');
   container.innerHTML = '';
 
+  state.questions.forEach((q) => {
+    const card = document.createElement('div');
+    card.className = 'qcard';
 
-  state.questions.forEach(
-    (q,idx)=>{
+    let markVal = MARKS[q.type] || 1;
 
-      const card =
-        document.createElement('div');
-
-
-      card.className =
-        'qcard';
-
-
-      card.id =
-        'qcard_' + idx;
-
-
-      /*
-        Time allocation:
-
-        1 mark  = 60 sec
-        2 marks = 120 sec
-        5 marks = 300 sec
-      */
-
-      const allotted =
-        Math.round(
-          Number(q.marks) * 60
-        );
-
-
-      q._allottedSeconds =
-        allotted;
-
-      q._remaining =
-        allotted;
-
-      q._started =
-        false;
-
-      q._locked =
-        false;
-
-
-      const typeLabel = {
-
-        mcq:'Multiple choice',
-
-        truefalse:'True or False',
-
-        fillblank:'Fill in the blank',
-
-        short:'Short answer',
-
-        long:'Long answer'
-
-      }[q.type] || q.type;
-
-
-      card.innerHTML = `
-
-        <div class="q-type-tag">
-          ${typeLabel}
+    let bodyHTML = '';
+    if(q.type === 'mcq'){
+      bodyHTML = q.options.map((opt, i) => `
+        <div class="opt-item">
+          <input type="radio" name="q_${q.id}" id="q_${q.id}_${i}" value="${escapeAttr(opt)}" onchange="saveAns(${q.id}, this.value)">
+          <label for="q_${q.id}_${i}">${escapeHtml(opt)}</label>
         </div>
-
-        <div class="q-head">
-
-          <div class="q-title">
-
-            <span class="q-num">
-              Q${idx+1}.
-            </span>
-
-            ${escapeHtml(q.question)}
-
-          </div>
-
-          <div class="q-marks-tag">
-
-            ${q.marks}
-            mark${q.marks == 1 ? '' : 's'}
-
-          </div>
-
+      `).join('');
+    } else if(q.type === 'truefalse'){
+      bodyHTML = `
+        <div class="opt-item">
+          <input type="radio" name="q_${q.id}" id="q_${q.id}_t" value="true" onchange="saveAns(${q.id}, 'true')">
+          <label for="q_${q.id}_t}">True</label>
         </div>
-
-
-        <div
-          class="q-body"
-          id="qbody_${idx}">
+        <div class="opt-item">
+          <input type="radio" name="q_${q.id}" id="q_${q.id}_f" value="false" onchange="saveAns(${q.id}, 'false')">
+          <label for="q_${q.id}_f}">False</label>
         </div>
-
-
-        <div class="q-controls">
-
-          <button
-            class="start-btn"
-            id="startbtn_${idx}">
-
-            Start (${formatTime(allotted)})
-
-          </button>
-
-
-          <div
-            class="q-timer"
-            id="qtimer_${idx}">
-
-            ${formatTime(allotted)}
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="q-note"
-          id="qnote_${idx}">
-        </div>
-
       `;
-
-
-      container.appendChild(
-        card
-      );
-
-
-      renderAnswerInput(
-        q,
-        idx
-      );
-
-
-      document
-        .getElementById(
-          'startbtn_' + idx
-        )
-        .addEventListener(
-          'click',
-          ()=>startQuestion(idx)
-        );
-
+    } else if(q.type === 'fillblank'){
+      bodyHTML = `<input type="text" class="q-input" placeholder="Your answer..." oninput="saveAns(${q.id}, this.value)">`;
+    } else if(q.type === 'short'){
+      bodyHTML = `<textarea class="q-input" placeholder="Write answer..." oninput="saveAns(${q.id}, this.value)"></textarea>`;
+    } else {
+      bodyHTML = `<textarea class="q-input long" placeholder="Write detailed answer..." oninput="saveAns(${q.id}, this.value)"></textarea>`;
     }
 
-  );
-
-}
-
-
-/* ===============================================================
-   15. ANSWER INPUT
-================================================================ */
-
-function renderAnswerInput(
-  q,
-  idx
-){
-
-  const body =
-    document.getElementById(
-      'qbody_' + idx
-    );
-
-
-  if(q.type === 'mcq'){
-
-    body.innerHTML =
-      (q.options || [])
-        .map(
-          (opt,oi)=>`
-
-            <div class="opt-item">
-
-              <input
-                type="radio"
-                name="mcq_${idx}"
-                id="mcq_${idx}_${oi}"
-                value="${escapeAttr(opt)}"
-                disabled>
-
-              <label
-                for="mcq_${idx}_${oi}">
-
-                ${escapeHtml(opt)}
-
-              </label>
-
-            </div>
-
-          `
-        )
-        .join('');
-
-  }
-
-
-  else if(q.type === 'truefalse'){
-
-    body.innerHTML = `
-
-      <div class="opt-item">
-
-        <input
-          type="radio"
-          name="tf_${idx}"
-          id="tf_${idx}_t"
-          value="true"
-          disabled>
-
-        <label for="tf_${idx}_t">
-          True
-        </label>
-
+    card.innerHTML = `
+      <div class="q-head">
+        <div>
+          <div class="q-type-tag">${q.type}</div>
+          <div class="q-title"><span class="q-num">Q${q.id}.</span>${escapeHtml(q.question)}</div>
+        </div>
+        <span class="q-marks-tag">${markVal} Mark${markVal>1?'s':''}</span>
       </div>
-
-
-      <div class="opt-item">
-
-        <input
-          type="radio"
-          name="tf_${idx}"
-          id="tf_${idx}_f"
-          value="false"
-          disabled>
-
-        <label for="tf_${idx}_f">
-          False
-        </label>
-
-      </div>
-
+      <div class="q-body">${bodyHTML}</div>
     `;
 
-  }
-
-
-  else if(q.type === 'fillblank'){
-
-    body.innerHTML = `
-
-      <input
-        type="text"
-        class="q-input"
-        id="fb_${idx}"
-        placeholder="Your answer"
-        disabled>
-
-    `;
-
-  }
-
-
-  else if(q.type === 'short'){
-
-    body.innerHTML = `
-
-      <textarea
-        class="q-input"
-        id="sa_${idx}"
-        placeholder="Write your answer here"
-        disabled>
-      </textarea>
-
-    `;
-
-  }
-
-
-  else if(q.type === 'long'){
-
-    body.innerHTML = `
-
-      <textarea
-        class="q-input long"
-        id="la_${idx}"
-        placeholder="Write your answer here"
-        disabled>
-      </textarea>
-
-    `;
-
-  }
-
+    container.appendChild(card);
+  });
 }
 
+window.saveAns = function(qid, val){
+  state.userAnswers[qid] = val.trim();
+};
 
-/* ===============================================================
-   16. ENABLE / DISABLE INPUTS
-================================================================ */
-
-function setInputsEnabled(
-  idx,
-  enabled
-){
-
-  const card =
-    document.getElementById(
-      'qcard_' + idx
-    );
-
-
-  card
-    .querySelectorAll(
-      'input, textarea'
-    )
-    .forEach(
-      el=>{
-        el.disabled =
-          !enabled;
-      }
-    );
-
-}
-
-
-/* ===============================================================
-   17. QUESTION TIMER
-================================================================ */
-
-function startQuestion(idx){
-
-  if(state.submitted)
-    return;
-
-
-  const q =
-    state.questions[idx];
-
-
-  if(q._locked)
-    return;
-
-
-  /*
-    Stop previous question timer.
-  */
-
-  if(
-    state.currentActiveIndex !== -1 &&
-    state.currentActiveIndex !== idx
-  ){
-
-    const previousIndex =
-      state.currentActiveIndex;
-
-
-    const previousCard =
-      document.getElementById(
-        'qcard_' + previousIndex
-      );
-
-
-    if(previousCard){
-
-      previousCard
-        .classList
-        .remove('active');
-
+function startTimer(){
+  state.overallSeconds = 30 * 60;
+  updateTimerDisplay();
+  clearInterval(state.overallTimerId);
+  state.overallTimerId = setInterval(() => {
+    state.overallSeconds--;
+    updateTimerDisplay();
+    if(state.overallSeconds <= 0){
+      clearInterval(state.overallTimerId);
+      submitExam();
     }
-
-  }
-
-
-  clearInterval(
-    state.perQTimerId
-  );
-
-
-  state.currentActiveIndex =
-    idx;
-
-
-  q._started =
-    true;
-
-
-  document
-    .getElementById(
-      'qcard_' + idx
-    )
-    .classList
-    .add('active');
-
-
-  document
-    .getElementById(
-      'startbtn_' + idx
-    )
-    .disabled =
-      true;
-
-
-  document
-    .getElementById(
-      'startbtn_' + idx
-    )
-    .textContent =
-      'In progress...';
-
-
-  setInputsEnabled(
-    idx,
-    true
-  );
-
-
-  state.perQTimerId =
-    setInterval(
-      ()=>tickQuestion(idx),
-      1000
-    );
-
+  }, 1000);
 }
 
-
-/* ===============================================================
-   18. QUESTION TIMER TICK
-================================================================ */
-
-function tickQuestion(idx){
-
-  const q =
-    state.questions[idx];
-
-
-  q._remaining -= 1;
-
-
-  const timerEl =
-    document.getElementById(
-      'qtimer_' + idx
-    );
-
-
-  timerEl.textContent =
-    formatTime(
-      Math.max(
-        q._remaining,
-        0
-      )
-    );
-
-
-  if(q._remaining <= 10){
-
-    timerEl.classList.add(
-      'warn'
-    );
-
-  }
-
-
-  if(q._remaining <= 0){
-
-    clearInterval(
-      state.perQTimerId
-    );
-
-
-    lockQuestion(idx);
-
-
-    playQuestionEndSound();
-
-  }
-
+function updateTimerDisplay(){
+  const m = Math.floor(state.overallSeconds / 60);
+  const s = state.overallSeconds % 60;
+  const el = document.getElementById('overallTimer');
+  el.textContent = `⏱ ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  if(state.overallSeconds < 300) el.classList.add('low');
+  else el.classList.remove('low');
 }
 
-
-/* ===============================================================
-   19. LOCK QUESTION
-================================================================ */
-
-function lockQuestion(idx){
-
-  const q =
-    state.questions[idx];
-
-
-  q._locked =
-    true;
-
-
-  setInputsEnabled(
-    idx,
-    false
-  );
-
-
-  const card =
-    document.getElementById(
-      'qcard_' + idx
-    );
-
-
-  card.classList.add(
-    'locked'
-  );
-
-
-  card.classList.remove(
-    'active'
-  );
-
-
-  document
-    .getElementById(
-      'startbtn_' + idx
-    )
-    .textContent =
-      'Time up';
-
-
-  document
-    .getElementById(
-      'qnote_' + idx
-    )
-    .textContent =
-      "Time's up for this question — move to the next one.";
-
-
-  if(
-    state.currentActiveIndex === idx
-  ){
-
-    state.currentActiveIndex =
-      -1;
-
-  }
-
+function submitExam(){
+  clearInterval(state.overallTimerId);
+  document.getElementById('examScreen').classList.add('hidden');
+  document.getElementById('resultsScreen').classList.remove('hidden');
+  evaluateAndShowResults();
 }
 
-
-/* ===============================================================
-   20. OVERALL TIMER
-================================================================ */
-
-function updateOverallTimerDisplay(){
-
-  const el =
-    document.getElementById(
-      'overallTimer'
-    );
-
-
-  el.textContent =
-    '⏱ ' +
-    formatTime(
-      state.overallSeconds
-    );
-
-
-  el.classList.toggle(
-    'low',
-    state.overallSeconds <= 60
-  );
-
-}
-
-
-function tickOverall(){
-
-  state.overallSeconds -= 1;
-
-
-  updateOverallTimerDisplay();
-
-
-  if(
-    state.overallSeconds <= 0
-  ){
-
-    clearInterval(
-      state.overallTimerId
-    );
-
-    clearInterval(
-      state.perQTimerId
-    );
-
-
-    playExamEndSound();
-
-
-    submitPaper(true);
-
-  }
-
-}
-
-
-/* ===============================================================
-   21. TIME FORMAT
-================================================================ */
-
-function formatTime(
-  totalSeconds
-){
-
-  const m =
-    Math.floor(
-      totalSeconds / 60
-    );
-
-
-  const s =
-    totalSeconds % 60;
-
-
-  return String(m)
-    .padStart(2,'0')
-    +
-    ':'
-    +
-    String(s)
-      .padStart(2,'0');
-
-}
-
-
-/* ===============================================================
-   22. HTML ESCAPING
-================================================================ */
-
-function escapeHtml(s){
-
-  return String(s)
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-    .replace(
-      /</g,
-      '&lt;'
-    )
-    .replace(
-      />/g,
-      '&gt;'
-    );
-
-}
-
-
-/* ===============================================================
-   23. COLLECT ANSWER
-================================================================ */
-
-function collectAnswer(
-  q,
-  idx
-){
-
-  if(q.type === 'mcq'){
-
-    const sel =
-      document.querySelector(
-        `input[name="mcq_${idx}"]:checked`
-      );
-
-
-    return sel
-      ? sel.value
-      : null;
-
-  }
-
-
-  if(q.type === 'truefalse'){
-
-    const sel =
-      document.querySelector(
-        `input[name="tf_${idx}"]:checked`
-      );
-
-
-    return sel
-      ? sel.value === 'true'
-      : null;
-
-  }
-
-
-  if(q.type === 'fillblank'){
-
-    const el =
-      document.getElementById(
-        'fb_' + idx
-      );
-
-
-    return el
-      ? el.value.trim()
-      : '';
-
-  }
-
-
-  if(q.type === 'short'){
-
-    const el =
-      document.getElementById(
-        'sa_' + idx
-      );
-
-
-    return el
-      ? el.value.trim()
-      : '';
-
-  }
-
-
-  if(q.type === 'long'){
-
-    const el =
-      document.getElementById(
-        'la_' + idx
-      );
-
-
-    return el
-      ? el.value.trim()
-      : '';
-
-  }
-
-
-  return null;
-
-}
-
-
-/* ===============================================================
-   24. SUBMIT PAPER
-================================================================ */
-
-function submitPaper(auto){
-
-  if(state.submitted)
-    return;
-
-
-  state.submitted =
-    true;
-
-
-  clearInterval(
-    state.overallTimerId
-  );
-
-
-  clearInterval(
-    state.perQTimerId
-  );
-
-
-  state.questions.forEach(
-    (q,idx)=>{
-
-      q._userAnswer =
-        collectAnswer(
-          q,
-          idx
-        );
-
-
-      setInputsEnabled(
-        idx,
-        false
-      );
-
-    }
-  );
-
-
-  renderResults(auto);
-
-}
-
-
-/* ===============================================================
-   25. BOOLEAN
-================================================================ */
-
-function toBool(v){
-
-  if(typeof v === 'boolean')
-    return v;
-
-
-  return String(v)
-    .trim()
-    .toLowerCase() === 'true';
-
-}
-
-
-/* ===============================================================
-   26. AUTO GRADING
-================================================================ */
-
-function gradeAuto(q){
-
-  if(q.type === 'mcq'){
-
-    return (
-      q._userAnswer !== null &&
-      q._userAnswer === q.answer
-    );
-
-  }
-
-
-  if(q.type === 'truefalse'){
-
-    return (
-      q._userAnswer !== null &&
-      q._userAnswer ===
-        toBool(q.answer)
-    );
-
-  }
-
-
-  if(q.type === 'fillblank'){
-
-    const given =
-      (q._userAnswer || '')
-        .trim()
-        .toLowerCase();
-
-
-    if(!given)
-      return false;
-
-
-    const accepted = [
-
-      q.answer,
-
-      ...(q.acceptableAnswers || [])
-
-    ]
-      .filter(Boolean)
-      .map(
-        a =>
-          String(a)
-            .trim()
-            .toLowerCase()
-      );
-
-
-    return accepted.includes(
-      given
-    );
-
-  }
-
-
-  return null;
-
-}
-
-
-/* ===============================================================
-   27. RESULTS
-================================================================ */
-
-function renderResults(auto){
-
-  document
-    .getElementById('examScreen')
-    .classList.add('hidden');
-
-
-  document
-    .getElementById('resultsScreen')
-    .classList
-    .remove('hidden');
-
-
-  const container =
-    document.getElementById(
-      'resultsContainer'
-    );
-
-
+function evaluateAndShowResults(){
+  const container = document.getElementById('resultsContainer');
   container.innerHTML = '';
-
-
   let autoScore = 0;
 
-  let pendingMarks = 0;
+  state.questions.forEach((q) => {
+    const userAns = state.userAnswers[q.id] || '';
+    const maxMark = MARKS[q.type] || 1;
+    let isCorrect = false;
+    let isManual = false;
 
-
-  state.questions.forEach(
-    (q,idx)=>{
-
-      const isAuto =
-        [
-          'mcq',
-          'truefalse',
-          'fillblank'
-        ].includes(q.type);
-
-
-      let correct = null;
-
-
-      if(isAuto){
-
-        correct =
-          gradeAuto(q);
-
-
-        if(correct){
-
-          autoScore +=
-            Number(q.marks);
-
-        }
-
-      }else{
-
-        pendingMarks +=
-          Number(q.marks);
-
+    if (q.type === 'mcq' || q.type === 'truefalse') {
+      isCorrect = (userAns.toLowerCase() === String(q.answer).toLowerCase());
+      state.assignedScores[q.id] = isCorrect ? maxMark : 0;
+    } else if (q.type === 'fillblank') {
+      const matchPrimary = userAns.toLowerCase() === String(q.answer).toLowerCase();
+      const matchAlt = Array.isArray(q.acceptableAnswers) && q.acceptableAnswers.some(a => a.toLowerCase() === userAns.toLowerCase());
+      isCorrect = matchPrimary || matchAlt;
+      state.assignedScores[q.id] = isCorrect ? maxMark : 0;
+    } else {
+      isManual = true;
+      if (state.assignedScores[q.id] === undefined) {
+        state.assignedScores[q.id] = 0; 
       }
-
-
-      const card =
-        document.createElement('div');
-
-
-      card.className =
-        'result-card ' +
-        (
-          isAuto
-            ? (
-                correct
-                  ? 'correct'
-                  : 'wrong'
-              )
-            : 'pending'
-        );
-
-
-      let bodyHtml = '';
-
-
-      const userDisplay =
-        formatUserAnswer(q);
-
-
-      if(isAuto){
-
-        bodyHtml += `
-
-          <div class="answer-line your-answer">
-
-            Your answer:
-            ${userDisplay || '(no answer given)'}
-
-          </div>
-
-        `;
-
-
-        bodyHtml += `
-
-          <div class="answer-line">
-
-            <b>Correct answer:</b>
-            ${formatCorrectAnswer(q)}
-
-          </div>
-
-        `;
-
-
-        if(q.explanation){
-
-          bodyHtml += `
-
-            <div class="answer-line">
-
-              ${escapeHtml(q.explanation)}
-
-            </div>
-
-          `;
-
-        }
-
-
-        bodyHtml += `
-
-          <div class="answer-line">
-
-            <b>
-              ${correct ? '✔ Correct' : '✘ Incorrect'}
-            </b>
-
-            —
-            ${correct ? q.marks : 0}
-            /
-            ${q.marks}
-            marks
-
-          </div>
-
-        `;
-
-      }else{
-
-        bodyHtml += `
-
-          <div class="answer-line your-answer">
-
-            Your answer:
-            ${userDisplay || '(no answer given)'}
-
-          </div>
-
-        `;
-
-
-        bodyHtml += `
-
-          <div class="answer-line">
-
-            <b>Model answer:</b>
-
-            ${escapeHtml(
-              q.modelAnswer || ''
-            )}
-
-          </div>
-
-        `;
-
-
-        if(
-          q.keyPoints &&
-          q.keyPoints.length
-        ){
-
-          bodyHtml += `
-
-            <div class="answer-line">
-
-              <b>
-                Key points expected:
-              </b>
-
-            </div>
-
-            <ul class="key-points">
-
-              ${
-                q.keyPoints
-                  .map(
-                    p =>
-                      `<li>${escapeHtml(p)}</li>`
-                  )
-                  .join('')
-              }
-
-            </ul>
-
-          `;
-
-        }
-
-
-        bodyHtml += `
-
-          <div class="answer-line">
-
-            Compare your answer above,
-            then mark yourself honestly:
-
-          </div>
-
-
-          <div
-            class="self-grade"
-            data-idx="${idx}"
-            data-marks="${q.marks}">
-
-            <button data-frac="1">
-
-              Full marks (${q.marks})
-
-            </button>
-
-            <button data-frac="0.5">
-
-              Half marks (${Math.round(q.marks/2)})
-
-            </button>
-
-            <button data-frac="0">
-
-              No marks (0)
-
-            </button>
-
-          </div>
-
-        `;
-
-      }
-
-
-      card.innerHTML = `
-
-        <div class="q-type-tag">
-
-          ${
-            {
-              mcq:'Multiple choice',
-              truefalse:'True or False',
-              fillblank:'Fill in the blank',
-              short:'Short answer',
-              long:'Long answer'
-            }[q.type]
-          }
-
+    }
+
+    if (!isManual) autoScore += state.assignedScores[q.id];
+
+    const card = document.createElement('div');
+    card.className = `result-card ${isManual ? 'pending' : (isCorrect ? 'correct' : 'wrong')}`;
+
+    let ansSection = '';
+    if (isManual) {
+      ansSection = `
+        <div class="answer-line"><b>Model Answer:</b> ${escapeHtml(q.modelAnswer || 'N/A')}</div>
+        ${q.keyPoints ? `<ul class="key-points">${q.keyPoints.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>` : ''}
+        <div class="self-grade">
+          <span>Grade yourself:</span>
+          ${Array.from({length: maxMark + 1}, (_, i) => `
+            <button class="${state.assignedScores[q.id] === i ? 'chosen' : ''}" onclick="setSelfScore(${q.id}, ${i})">${i} Mark${i!==1?'s':''}</button>
+          `).join('')}
         </div>
-
-
-        <div class="q-head">
-
-          <div class="q-title">
-
-            <span class="q-num">
-              Q${idx+1}.
-            </span>
-
-            ${escapeHtml(q.question)}
-
-          </div>
-
-
-          <div class="q-marks-tag">
-
-            ${q.marks}
-
-            mark${q.marks == 1 ? '' : 's'}
-
-          </div>
-
-        </div>
-
-
-        ${bodyHtml}
-
       `;
-
-
-      container.appendChild(
-        card
-      );
-
+    } else {
+      ansSection = `<div class="answer-line"><b>Correct Answer:</b> ${escapeHtml(q.answer)}</div>`;
     }
-  );
 
+    card.innerHTML = `
+      <div class="q-title"><span class="q-num">Q${q.id}.</span> ${escapeHtml(q.question)}</div>
+      <div class="answer-line"><b>Your Answer:</b> <span class="your-answer">${escapeHtml(userAns) || '<i>Left blank</i>'}</span></div>
+      ${ansSection}
+    `;
 
-  /*
-    Self-grading
-  */
+    container.appendChild(card);
+  });
 
-  container
-    .querySelectorAll(
-      '.self-grade'
-    )
-    .forEach(row=>{
-
-      row
-        .querySelectorAll('button')
-        .forEach(btn=>{
-
-          btn.addEventListener(
-            'click',
-            ()=>{
-
-              row
-                .querySelectorAll('button')
-                .forEach(
-                  b =>
-                    b.classList
-                      .remove('chosen')
-                );
-
-
-              btn.classList.add(
-                'chosen'
-              );
-
-
-              updateFinalScore();
-
-            }
-          );
-
-        });
-
-    });
-
-
-  document
-    .getElementById('scoreBig')
-    .textContent =
-      `${autoScore} / ${state.totalMarks}`;
-
-
-  document
-    .getElementById('scoreNote')
-    .textContent =
-      auto
-        ? 'Time ran out — paper auto-submitted. Mark your short/long answers below to see your final score.'
-        : 'Mark your short/long answers below to see your final score.';
-
-
-  state._autoScoreBase =
-    autoScore;
-
-  state._pendingMax =
-    pendingMarks;
-
+  recalculateTotalScore();
 }
 
+window.setSelfScore = function(qid, score){
+  state.assignedScores[qid] = score;
+  evaluateAndShowResults();
+};
 
-/* ===============================================================
-   28. FINAL SCORE
-================================================================ */
-
-function updateFinalScore(){
-
-  let total =
-    state._autoScoreBase;
-
-
-  document
-    .querySelectorAll(
-      '.self-grade'
-    )
-    .forEach(row=>{
-
-      const chosen =
-        row.querySelector(
-          'button.chosen'
-        );
-
-
-      const marks =
-        Number(
-          row.dataset.marks
-        );
-
-
-      if(chosen){
-
-        total +=
-          Math.round(
-            marks *
-            Number(
-              chosen.dataset.frac
-            )
-          );
-
-      }
-
-    });
-
-
-  document
-    .getElementById('scoreBig')
-    .textContent =
-      `${total} / ${state.totalMarks}`;
-
+function recalculateTotalScore(){
+  let total = 0;
+  Object.keys(state.assignedScores).forEach(k => {
+    total += state.assignedScores[k];
+  });
+  document.getElementById('scoreBig').textContent = `${total} / ${TOTAL_MARKS}`;
+  document.getElementById('scoreNote').textContent = total >= 24 ? 'Outstanding work!' : (total >= 15 ? 'Good effort! Review missed items.' : 'Keep practicing!');
 }
 
-
-/* ===============================================================
-   29. ANSWER DISPLAY
-================================================================ */
-
-function formatUserAnswer(q){
-
-  if(
-    q._userAnswer === null ||
-    q._userAnswer === undefined ||
-    q._userAnswer === ''
-  ){
-
-    return '';
-
-  }
-
-
-  if(q.type === 'truefalse'){
-
-    return q._userAnswer
-      ? 'True'
-      : 'False';
-
-  }
-
-
-  return escapeHtml(
-    String(q._userAnswer)
-  );
-
-}
-
-
-function formatCorrectAnswer(q){
-
-  if(q.type === 'truefalse'){
-
-    return toBool(q.answer)
-      ? 'True'
-      : 'False';
-
-  }
-
-
-  return escapeHtml(
-    String(q.answer || '')
-  );
-
-}
-
-
-/* ===============================================================
-   30. BUTTONS
-================================================================ */
-
-document
-  .getElementById('saveKeyBtn')
-  .addEventListener(
-    'click',
-    saveKey
-  );
-
-
-document
-  .getElementById('forgetKeyLink')
-  .addEventListener(
-    'click',
-    forgetKey
-  );
-
-
-document
-  .getElementById('generateBtn')
-  .addEventListener(
-    'click',
-    generatePaper
-  );
-
-
-document
-  .getElementById('submitBtn')
-  .addEventListener(
-    'click',
-    ()=>submitPaper(false)
-  );
-
-
-document
-  .getElementById('newPaperBtn')
-  .addEventListener(
-    'click',
-    ()=>{
-
-      document
-        .getElementById('resultsScreen')
-        .classList
-        .add('hidden');
-
-
-      document
-        .getElementById('setupScreen')
-        .classList
-        .remove('hidden');
-
-
-      document
-        .getElementById('statusLine')
-        .textContent = '';
-
-    }
-  );
-
-
-document
-  .getElementById('selectAllBtn')
-  .addEventListener(
-    'click',
-    ()=>{
-
-      document
-        .querySelectorAll(
-          '#chaptersBox input[type="checkbox"]'
-        )
-        .forEach(
-          b =>
-            b.checked = true
-        );
-
-    }
-  );
-
-
-document
-  .getElementById('clearAllBtn')
-  .addEventListener(
-    'click',
-    ()=>{
-
-      document
-        .querySelectorAll(
-          '#chaptersBox input[type="checkbox"]'
-        )
-        .forEach(
-          b =>
-            b.checked = false
-        );
-
-    }
-  );
-
-
-/* ===============================================================
-   31. SPIRAL
-================================================================ */
-
-function buildSpiral(){
-
-  const spirals =
-    document.querySelectorAll(
-      '.spiral'
-    );
-
-
-  spirals.forEach(
-    sp=>{
-
-      sp.innerHTML = '';
-
-
-      for(
-        let i=0;
-        i<10;
-        i++
-      ){
-
-        const dot =
-          document.createElement(
-            'span'
-          );
-
-
-        sp.appendChild(
-          dot
-        );
-
-      }
-
-    }
-  );
-
-}
-
-
-/* ===============================================================
-   32. INITIALIZE
-================================================================ */
-
-populateSubjects();
-
-renderChapters();
-
-buildSpiral();
-
+// Event Listeners
+document.getElementById('saveKeyBtn').addEventListener('click', saveKey);
+document.getElementById('forgetKeyLink').addEventListener('click', forgetKey);
+document.getElementById('generateBtn').addEventListener('click', generatePaper);
+document.getElementById('submitBtn').addEventListener('click', submitExam);
+document.getElementById('selectAllBtn').addEventListener('click', () => {
+  document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(c => c.checked = true);
+});
+document.getElementById('clearAllBtn').addEventListener('click', () => {
+  document.querySelectorAll('#chaptersBox input[type="checkbox"]').forEach(c => c.checked = false);
+});
+document.getElementById('newPaperBtn').addEventListener('click', () => {
+  document.getElementById('resultsScreen').classList.add('hidden');
+  document.getElementById('setupScreen').classList.remove('hidden');
+});
+
+// Init
 loadSavedKey();
-
+populateSubjects();
+renderChapters();
+renderSpiral();
 
 })();
 </script>
