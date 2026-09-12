@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class 6 Pro Practice Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF6E9;
+    --paper-line:#DCE3CF;
+    --board:#20463A;
+    --board-dark:#163329;
+    --ink:#2B3A4A;
+    --marker-red:#D6493C;
+    --pencil-yellow:#F2B705;
+    --leaf:#4C8B6B;
+    --leaf-light:#D9EEDF;
+    --paper-shadow: 0 18px 40px -18px rgba(32,70,58,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--board);
+    background-image: radial-gradient(circle at 10% 15%, rgba(255,255,255,0.035) 0, transparent 40%), radial-gradient(circle at 90% 85%, rgba(255,255,255,0.03) 0, transparent 40%);
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    padding: 20px 16px 60px;
+  }
+  h1,h2,h3,.brand,.q-marks-tag{font-family:'Baloo 2', sans-serif;}
+  .wrap{max-width:900px;margin:0 auto;}
+
+  /* Header Styles */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; margin-bottom:22px; flex-wrap:wrap;
+  }
+  .brand{
+    color:#fff; font-size:26px; font-weight:800;
+  }
+  .brand span{
+    font-family:'Caveat',cursive; color:var(--pencil-yellow); font-size:32px;
+  }
+  .key-box{
+    background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+    border-radius:12px; padding:10px; display:flex; gap:8px; align-items:center;
+  }
+  .key-box input{
+    background:transparent; border:none; color:#fff; outline:none; width:180px; font-size:13px;
+  }
+  .key-box select{
+    background: #163329; color: white; border: 1px solid #4C8B6B; border-radius: 4px; padding: 4px;
+  }
+  .btn-save{
+    background:var(--pencil-yellow); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer;
+  }
+
+  /* Notebook Styles */
+  .notebook{
+    background:var(--paper); border-radius:18px; box-shadow:var(--paper-shadow);
+    padding: 40px 40px 40px 70px; position:relative; min-height: 500px;
+    background-image: repeating-linear-gradient(to bottom, transparent, transparent 34px, var(--paper-line) 35px);
+    background-position: 0 100px;
+  }
+  .notebook::before{
+    content:""; position:absolute; left:45px; top:0; bottom:0; width:2px; background: rgba(214,73,60,0.2);
+  }
+  .spiral{
+    position:absolute; left:10px; top:30px; bottom:30px; width:20px;
+    display:flex; flex-direction:column; justify-content:space-around;
+  }
+  .spiral b{
+    width:25px; height:25px; background:var(--board-dark); border-radius:50%;
+    box-shadow: inset 0 0 0 6px var(--paper);
+  }
+
+  /* Setup Screen */
+  .title-area h2{ margin:0; font-size:28px; color:var(--board-dark); }
+  .title-area p{ margin:5px 0 25px; color:#666; font-size:14px; }
+  
+  .field-group{ margin-bottom:20px; }
+  label{ display:block; font-weight:700; font-size:13px; margin-bottom:8px; color:var(--board-dark); text-transform:uppercase; }
+  select.input-main, textarea.input-main{
+    width:100%; padding:12px; border-radius:10px; border:2px solid #DCE3CF; font-size:15px; outline:none;
+  }
+  .chapter-list{
+    background:#fff; border:2px solid #DCE3CF; border-radius:10px; padding:15px;
+    max-height:250px; overflow-y:auto; margin-top:10px;
+  }
+  .chapter-item{ display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid #f0f0f0; }
+  .chapter-item:last-child{ border:none; }
+  .chapter-item input{ width:18px; height:18px; cursor:pointer; }
+  
+  .btn-generate{
+    background:var(--marker-red); color:white; border:none; padding:15px 30px; 
+    border-radius:12px; font-size:18px; font-weight:800; cursor:pointer;
+    box-shadow: 0 4px 0 #b3392d; transition:all 0.2s; font-family:'Baloo 2';
+  }
+  .btn-generate:active{ transform:translateY(3px); box-shadow:none; }
+  .btn-generate:disabled{ background:#ccc; box-shadow:none; cursor:not-allowed; }
+
+  /* Exam Screen */
+  .exam-header{
+    display:flex; justify-content:space-between; align-items:center;
+    border-bottom:2px dashed #DCE3CF; padding-bottom:15px; margin-bottom:25px;
+  }
+  .timer-pill{
+    background:var(--board-dark); color:white; padding:8px 16px; border-radius:30px;
+    font-family:'Baloo 2'; font-size:20px; font-weight:700;
+  }
+  .timer-pill.urgent{ background:var(--marker-red); animation: blink 1s infinite; }
+  @keyframes blink{ 50%{opacity:0.7;} }
+
+  .q-card{
+    background:white; border:1px solid #e0e0e0; border-radius:12px;
+    padding:20px; margin-bottom:20px; position:relative;
+  }
+  .q-card.active{ border-left:6px solid var(--leaf); background:#f9fffb; }
+  .q-header{ display:flex; justify-content:space-between; margin-bottom:12px; }
+  .q-num{ font-weight:800; color:var(--leaf); font-size:18px; }
+  .q-marks-tag{ background:var(--leaf-light); padding:2px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+  .q-text{ font-size:16px; line-height:1.6; font-weight:600; margin-bottom:15px; }
+  
+  /* Inputs */
+  .opt-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .opt-btn{
+    padding:10px; border:1px solid #ddd; border-radius:8px; cursor:pointer;
+    display:flex; align-items:center; gap:10px; font-size:14px;
+  }
+  .opt-btn:hover{ background:#f5f5f5; }
+  .opt-btn input{ cursor:pointer; }
+  .text-answer{ width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; font-family:inherit; }
+
+  /* Results */
+  .score-hero{
+    background:var(--leaf); color:white; border-radius:15px; padding:30px; text-align:center; margin-bottom:30px;
+  }
+  .score-val{ font-size:60px; font-weight:800; line-height:1; }
+  .result-item{ padding:15px; border-bottom:1px solid #ddd; }
+  .res-correct{ color: #2e7d32; font-weight: 700; }
+  .res-wrong{ color: #d32f2f; font-weight: 700; }
+
+  .hidden{ display:none; }
+  .loader{ border: 4px solid #f3f3f3; border-top: 4px solid var(--marker-red); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; display:inline-block; vertical-align:middle; margin-right:10px; }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><span>Class 6</span> Exam Pro</div>
+    <div class="key-box">
+      <input type="password" id="apiKey" placeholder="Enter Gemini API Key">
+      <select id="modelSelect">
+        <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+        <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+      </select>
+      <button class="btn-save" onclick="saveKey()">Save</button>
+    </div>
+  </div>
+
+  <!-- SETUP -->
+  <div id="setupScreen" class="notebook">
+    <div class="spiral" id="spiral"></div>
+    <div class="title-area">
+      <h2>Question Paper Generator</h2>
+      <p>Select your subject and chapters to generate a 30-mark practice paper.</p>
+    </div>
+
+    <div class="field-group">
+      <label>Select Subject</label>
+      <select id="subjectSel" class="input-main" onchange="loadChapters()">
+        <option value="">-- Choose Subject --</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Science">Science</option>
+        <option value="English">English</option>
+        <option value="Social Science">Social Science</option>
+        <option value="Hindi">Hindi</option>
+        <option value="Computer Science">Computer Science</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label>Select Chapters</label>
+      <div id="chapterList" class="chapter-list">
+        <div style="color:#999; font-size:14px;">Select a subject first...</div>
+      </div>
+    </div>
+
+    <button id="genBtn" class="btn-generate" onclick="generateExam()">Generate 30-Mark Paper</button>
+    <div id="statusMsg" style="margin-top:15px; font-weight:600; color:var(--board-dark);"></div>
+  </div>
+
+  <!-- EXAM -->
+  <div id="examScreen" class="notebook hidden">
+    <div class="spiral"></div>
+    <div class="exam-header">
+      <div>
+        <h2 id="displaySubject" style="margin:0; color:var(--board-dark);">Subject</h2>
+        <div id="displayMeta" style="font-size:13px; color:#666;">30 Marks · Class 6</div>
+      </div>
+      <div id="mainTimer" class="timer-pill">30:00</div>
+    </div>
+
+    <div id="questionContainer"></div>
+
+    <div style="text-align:center; margin-top:30px;">
+      <button class="btn-generate" onclick="submitExam()">Submit Final Answers</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultScreen" class="notebook hidden">
+    <div class="spiral"></div>
+    <div class="score-hero">
+      <div style="font-size:18px; opacity:0.9;">Your Practice Score</div>
+      <div class="score-val" id="scoreValue">0/30</div>
+    </div>
+    <div id="resultSummary"></div>
+    <button class="btn-generate" style="margin-top:20px;" onclick="location.reload()">Start New Test</button>
+  </div>
+</div>
+
+<script>
+// --- CONFIGURATION DATA ---
+const SUBJECT_DATA = {
+  "Mathematics": ["Patterns in Mathematics", "Lines and Angles", "Number Play", "Data Handling", "Prime Time", "Perimeter and Area", "Fractions", "Symmetry", "The Other Side of Zero"],
+  "Science": ["Wonderful World of Science", "Diversity in Living World", "Mindful Eating", "Exploring Magnets", "Measurement of Length", "Materials Around Us", "Temperature", "States of Water", "Separation Methods"],
+  "English": ["Nouns & Pronouns", "Verbs & Tenses", "Reading Comprehension", "Active & Passive Voice", "Adjectives", "Sentence Kinds", "The Personality of Siblings", "A Life on Our Planet"],
+  "Social Science": ["Locating Places on Earth", "Oceans and Continents", "Indian Civilization", "Unity in Diversity", "Democracy & Governance", "Timeline of History"],
+  "Hindi": ["चिड़िया और चुरुन्गुन", "गौरा", "अनोखा बदला", "सूरज का निमंत्रण", "संज्ञा और भेद", "विशेषण", "मुहावरे"],
+  "Computer Science": ["Excel Concepts", "Python Intro", "HTML & Web Design", "Cloud Computing", "Cyber Security", "AI Basics"]
+};
+
+let examData = [];
+let userAnswers = {};
+let timeLeft = 1800; // 30 mins
+let timerInterval;
+
+// --- INITIALIZATION ---
+function init() {
+  const savedKey = localStorage.getItem('gemini_api_key');
+  if (savedKey) document.getElementById('apiKey').value = savedKey;
+  
+  const spiral = document.getElementById('spiral');
+  for(let i=0; i<12; i++) spiral.innerHTML += '<b></b>';
+}
+init();
+
+function saveKey() {
+  const key = document.getElementById('apiKey').value;
+  localStorage.setItem('gemini_api_key', key);
+  alert("Key Saved!");
+}
+
+function loadChapters() {
+  const sub = document.getElementById('subjectSel').value;
+  const list = document.getElementById('chapterList');
+  list.innerHTML = "";
+  if (!sub) return;
+
+  SUBJECT_DATA[sub].forEach(ch => {
+    const item = document.createElement('div');
+    item.className = "chapter-item";
+    item.innerHTML = `<input type="checkbox" class="ch-box" value="${ch}"> <span>${ch}</span>`;
+    list.appendChild(item);
+  });
+}
+
+// --- AI GENERATION ENGINE ---
+async function generateExam() {
+  const key = document.getElementById('apiKey').value;
+  const subject = document.getElementById('subjectSel').value;
+  const model = document.getElementById('modelSelect').value;
+  const selectedCh = Array.from(document.querySelectorAll('.ch-box:checked')).map(cb => cb.value);
+
+  if (!key) return alert("Please enter API Key");
+  if (!subject) return alert("Please select a subject");
+  if (selectedCh.length === 0) return alert("Select at least one chapter");
+
+  const btn = document.getElementById('genBtn');
+  const status = document.getElementById('statusMsg');
+  btn.disabled = true;
+  status.innerHTML = `<div class="loader"></div> Teacher is writing your paper... please wait (10-20s)`;
+
+  // THE PROMPT - Carefully engineered to prevent "one question" bug
+  const prompt = `
+    You are a Class 6 school teacher. Create a 30-mark exam paper for "${subject}".
+    Chapters: ${selectedCh.join(", ")}.
+
+    RULES:
+    1. TOTAL MARKS MUST BE EXACTLY 30.
+    2. QUESTION COUNT: You must provide between 10 and 15 questions total. DO NOT combine all marks into 1 or 2 questions.
+    3. MIX: Include MCQs (1 mark), Fill in the blanks (1 mark), and Short Answer (2-3 marks).
+    4. MATH SPECIFIC: For Mathematics, use plain text for formulas (e.g., area = l x b, 2^2). Do not include questions requiring complex diagrams or physical tools.
+    5. No markdown, no intro text. Return ONLY a valid JSON array.
+
+    JSON SCHEMA:
+    [
+      {
+        "id": 1,
+        "type": "mcq",
+        "question": "...",
+        "options": ["A", "B", "C", "D"],
+        "answer": "correct option text",
+        "marks": 1
+      },
+      {
+        "id": 2,
+        "type": "text",
+        "question": "...",
+        "answer": "short correct phrase or number",
+        "marks": 1
+      },
+      {
+        "id": 3,
+        "type": "descriptive",
+        "question": "...",
+        "answer": "Detailed model answer for grading",
+        "marks": 3
+      }
+    ]
+  `;
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, responseMimeType: "application/json" }
+      })
+    });
+
+    const data = await response.json();
+    const rawJson = data.candidates[0].content.parts[0].text;
+    examData = JSON.parse(rawJson);
+
+    // Double check mark sum
+    const total = examData.reduce((acc, q) => acc + q.marks, 0);
+    if (total < 25) throw new Error("Paper too short. Retrying...");
+
+    startExam(subject);
+  } catch (err) {
+    console.error(err);
+    status.innerHTML = "Error: " + err.message + ". Try clicking Generate again.";
+    btn.disabled = false;
+  }
+}
+
+// --- EXAM LOGIC ---
+function startExam(subject) {
+  document.getElementById('setupScreen').classList.add('hidden');
+  document.getElementById('examScreen').classList.remove('hidden');
+  document.getElementById('displaySubject').innerText = subject;
+  
+  const container = document.getElementById('questionContainer');
+  container.innerHTML = "";
+
+  examData.forEach((q, index) => {
+    const div = document.createElement('div');
+    div.className = "q-card";
+    div.innerHTML = `
+      <div class="q-header">
+        <span class="q-num">Question ${index + 1}</span>
+        <span class="q-marks-tag">${q.marks} Mark${q.marks > 1 ? 's' : ''}</span>
+      </div>
+      <div class="q-text">${q.question}</div>
+      <div class="q-input-area" id="q-input-${q.id}"></div>
+    `;
+    container.appendChild(div);
+
+    const inputArea = document.getElementById(`q-input-${q.id}`);
+    if (q.type === 'mcq') {
+      const grid = document.createElement('div');
+      grid.className = "opt-grid";
+      q.options.forEach(opt => {
+        grid.innerHTML += `
+          <label class="opt-btn">
+            <input type="radio" name="q-${q.id}" value="${opt}" onchange="recordAnswer(${q.id}, '${opt}')">
+            ${opt}
+          </label>
+        `;
+      });
+      inputArea.appendChild(grid);
+    } else {
+      inputArea.innerHTML = `<input type="text" class="text-answer" placeholder="Type your answer..." oninput="recordAnswer(${q.id}, this.value)">`;
+    }
+  });
+
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+function recordAnswer(qId, val) {
+  userAnswers[qId] = val;
+}
+
+function updateTimer() {
+  timeLeft--;
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+  const el = document.getElementById('mainTimer');
+  el.innerText = display;
+  if (timeLeft < 300) el.classList.add('urgent');
+  if (timeLeft <= 0) submitExam();
+}
+
+// --- GRADING ---
+function submitExam() {
+  clearInterval(timerInterval);
+  document.getElementById('examScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+
+  let score = 0;
+  let totalAvailable = 0;
+  const summary = document.getElementById('resultSummary');
+  summary.innerHTML = "<h3>Review Your Answers:</h3>";
+
+  examData.forEach(q => {
+    totalAvailable += q.marks;
+    const userAns = (userAnswers[q.id] || "").trim().toLowerCase();
+    const correctAns = String(q.answer).trim().toLowerCase();
+    
+    let isCorrect = false;
+    if (q.type === 'mcq' || q.marks === 1) {
+      if (userAns === correctAns) {
+        score += q.marks;
+        isCorrect = true;
+      }
+    } else {
+      // For descriptive, we give partial credit if they typed something 
+      // In a real app, this would be AI graded, here we simplify
+      if (userAns.length > 5) {
+        score += q.marks; // Giving full credit for practice
+        isCorrect = true;
+      }
+    }
+
+    summary.innerHTML += `
+      <div class="result-item">
+        <strong>Q: ${q.question}</strong><br>
+        <span class="${isCorrect ? 'res-correct' : 'res-wrong'}">
+          Your Answer: ${userAnswers[q.id] || "No Answer"}
+        </span><br>
+        <small style="color:#666">Correct Answer: ${q.answer}</small>
+      </div>
+    `;
+  });
+
+  document.getElementById('scoreValue').innerText = `${score} / ${totalAvailable}`;
+}
+</script>
+
+</body>
+</html>
