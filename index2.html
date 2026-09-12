@@ -1619,6 +1619,26 @@ The distribution MUST be:
    exactly 4 options each
    exactly 1 mark each
 
+   IMPORTANT MCQ ANSWER RULE:
+For every MCQ, the "answer" field MUST contain the exact text of the correct option,
+not A, B, C, D, 1, 2, 3, or 4.
+
+Example:
+"options": [
+  "12",
+  "18",
+  "24",
+  "30"
+],
+"answer": "24"
+
+Do NOT return:
+"answer": "C"
+Do NOT return:
+"answer": "3"
+
+
+
 2. Questions 6-7:
    type = "truefalse"
    exactly 2 questions
@@ -2077,302 +2097,349 @@ function extractJson(text){
    15 questions with the correct distribution.
 ================================================================ */
 
-function validateAndNormalizeQuestions(questions){
+function validateAndNormalizeQuestions(questions) {
+  if (!Array.isArray(questions)) {
+    throw new Error('Gemini did not return a question array.');
+  }
 
-  if(!Array.isArray(questions)){
-
+  if (questions.length !== 15) {
     throw new Error(
-      'Gemini did not return a question array.'
+      `Gemini returned ${questions.length} questions. Exactly 15 are required.`
     );
-
   }
 
-
-  if(questions.length !== TOTAL_QUESTIONS){
-
-    throw new Error(
-      `Gemini returned ${questions.length} questions instead of exactly 15.`
-    );
-
-  }
-
-
-  const counts = {
-    mcq:0,
-    truefalse:0,
-    fillblank:0,
-    short:0,
-    long:0
-  };
-
-
-  questions.forEach((q,index)=>{
-
-    if(!q || typeof q !== 'object'){
-
-      throw new Error(
-        `Question ${index+1} is invalid.`
-      );
-
-    }
-
-
-    if(
-      ![
-        'mcq',
-        'truefalse',
-        'fillblank',
-        'short',
-        'long'
-      ].includes(q.type)
-    ){
-
-      throw new Error(
-        `Question ${index+1} has an invalid type.`
-      );
-
-    }
-
-
-    if(
-      !q.question ||
-      typeof q.question !== 'string'
-    ){
-
-      throw new Error(
-        `Question ${index+1} has no valid question text.`
-      );
-
-    }
-
-
-    counts[q.type]++;
-
-
-    /*
-      MCQ validation
-    */
-
-    if(q.type === 'mcq'){
-
-      if(
-        !Array.isArray(q.options) ||
-        q.options.length !== 4
-      ){
-
-        throw new Error(
-          `MCQ question ${index+1} must have exactly 4 options.`
-        );
-
-      }
-
-
-      if(
-        !q.answer ||
-        !q.options.includes(q.answer)
-      ){
-
-        throw new Error(
-          `MCQ question ${index+1} has an invalid correct answer.`
-        );
-
-      }
-
-    }
-
-
-    /*
-      True/False validation
-    */
-
-    if(q.type === 'truefalse'){
-
-      const answer =
-        String(q.answer || '')
-          .trim()
-          .toLowerCase();
-
-      if(
-        answer !== 'true' &&
-        answer !== 'false'
-      ){
-
-        throw new Error(
-          `True/False question ${index+1} has an invalid answer.`
-        );
-
-      }
-
-      q.answer = answer;
-
-    }
-
-
-    /*
-      Fill blank validation
-    */
-
-    if(q.type === 'fillblank'){
-
-      if(
-        !q.answer ||
-        typeof q.answer !== 'string'
-      ){
-
-        throw new Error(
-          `Fill-in-the-blank question ${index+1} has no answer.`
-        );
-
-      }
-
-    }
-
-
-    /*
-      Short / long answer validation
-    */
-
-    if(
-      q.type === 'short' ||
-      q.type === 'long'
-    ){
-
-      if(
-        !q.modelAnswer ||
-        typeof q.modelAnswer !== 'string'
-      ){
-
-        throw new Error(
-          `Question ${index+1} is missing its model answer.`
-        );
-
-      }
-
-    }
-
-  });
-
-
-  /*
-    EXACT COUNTS
-  */
-
-  for(const type of Object.keys(PAPER_STRUCTURE)){
-
-    if(
-      counts[type] !== PAPER_STRUCTURE[type]
-    ){
-
-      throw new Error(
-        `Invalid paper structure: ${type} has ${counts[type]} questions; expected ${PAPER_STRUCTURE[type]}.`
-      );
-
-    }
-
-  }
-
-
-  /*
-    Reorder questions according to the required
-    paper structure.
-
-    This protects us if Gemini returns the right
-    questions but puts them in a strange order.
-  */
-
-  const ordered = [
-
-    ...questions.filter(q=>q.type === 'mcq'),
-
-    ...questions.filter(q=>q.type === 'truefalse'),
-
-    ...questions.filter(q=>q.type === 'fillblank'),
-
-    ...questions.filter(q=>q.type === 'short'),
-
-    ...questions.filter(q=>q.type === 'long')
-
+  const expectedTypes = [
+    'mcq', 'mcq', 'mcq', 'mcq', 'mcq',
+    'truefalse', 'truefalse',
+    'fillblank', 'fillblank',
+    'short', 'short', 'short',
+    'long', 'long', 'long'
   ];
 
+  const markMap = {
+    mcq: 1,
+    truefalse: 1,
+    fillblank: 1,
+    short: 2,
+    long: 5
+  };
 
-  /*
-    Assign ID + MARKS ourselves.
-  */
-
-  ordered.forEach((q,index)=>{
-
-    q.id =
-      index + 1;
-
-    q.marks =
-      MARKS[q.type];
-
-    if(q.type === 'mcq'){
-
-      q.options =
-        q.options
-          .map(String);
-
+  const normalized = questions.map((q, index) => {
+    if (!q || typeof q !== 'object') {
+      throw new Error(`Question ${index + 1} is invalid.`);
     }
 
-    if(q.type === 'fillblank'){
+    const expectedType = expectedTypes[index];
 
-      if(!Array.isArray(q.acceptableAnswers)){
+    if (q.type !== expectedType) {
+      throw new Error(
+        `Question ${index + 1} must be ${expectedType}, but Gemini returned ${q.type}.`
+      );
+    }
 
+    if (!q.question || typeof q.question !== 'string') {
+      throw new Error(`Question ${index + 1} has no question text.`);
+    }
+
+    // ----------------------------------------
+    // Normalize basic fields
+    // ----------------------------------------
+
+    q.id = index + 1;
+    q.type = expectedType;
+    q.marks = markMap[expectedType];
+
+    // ----------------------------------------
+    // MCQ
+    // ----------------------------------------
+
+    if (expectedType === 'mcq') {
+      if (!Array.isArray(q.options) || q.options.length !== 4) {
+        throw new Error(
+          `MCQ question ${index + 1} must have exactly 4 options.`
+        );
+      }
+
+      q.options = q.options.map(x => String(x).trim());
+
+      if (q.options.some(x => !x)) {
+        throw new Error(
+          `MCQ question ${index + 1} contains an empty option.`
+        );
+      }
+
+      if (
+        q.answer === undefined ||
+        q.answer === null ||
+        String(q.answer).trim() === ''
+      ) {
+        throw new Error(
+          `MCQ question ${index + 1} has no correct answer.`
+        );
+      }
+
+      const rawAnswer = String(q.answer).trim();
+
+      // Accept A/B/C/D
+      const letterMatch = rawAnswer.match(/^([A-D])(?:[\).:\-]|\s|$)/i);
+
+      // Accept 1/2/3/4
+      const numberMatch = rawAnswer.match(/^([1-4])(?:[\).:\-]|\s|$)/);
+
+      let answerIndex = -1;
+
+      if (letterMatch) {
+        answerIndex = letterMatch[1].toUpperCase().charCodeAt(0) - 65;
+      } else if (numberMatch) {
+        answerIndex = parseInt(numberMatch[1], 10) - 1;
+      }
+
+      // If Gemini gave A/B/C/D or 1/2/3/4
+      if (answerIndex >= 0 && answerIndex < 4) {
+        q.answer = q.options[answerIndex];
+      } else {
+        // Otherwise match the answer against option text
+        const normalizedAnswer = rawAnswer
+          .toLowerCase()
+          .replace(/\s+/g, ' ')
+          .trim();
+
+        const exactIndex = q.options.findIndex(option =>
+          option.toLowerCase()
+            .replace(/\s+/g, ' ')
+            .trim() === normalizedAnswer
+        );
+
+        if (exactIndex >= 0) {
+          q.answer = q.options[exactIndex];
+        } else {
+          // Try removing leading A), B), C), D) from option text
+          const cleanedAnswer = normalizedAnswer.replace(
+            /^[a-d][\).:\-\s]+/i,
+            ''
+          );
+
+          const fuzzyIndex = q.options.findIndex(option => {
+            const cleanedOption = option
+              .toLowerCase()
+              .replace(/\s+/g, ' ')
+              .trim()
+              .replace(/^[a-d][\).:\-\s]+/i, '');
+
+            return cleanedOption === cleanedAnswer;
+          });
+
+          if (fuzzyIndex >= 0) {
+            q.answer = q.options[fuzzyIndex];
+          } else {
+            throw new Error(
+              `MCQ question ${index + 1} has an invalid correct answer. ` +
+              `Gemini returned: "${rawAnswer}". ` +
+              `Options are: ${q.options.join(' | ')}`
+            );
+          }
+        }
+      }
+    }
+
+    // ----------------------------------------
+    // TRUE / FALSE
+    // ----------------------------------------
+
+    if (expectedType === 'truefalse') {
+      if (
+        q.answer === undefined ||
+        q.answer === null ||
+        String(q.answer).trim() === ''
+      ) {
+        throw new Error(
+          `True/False question ${index + 1} has no correct answer.`
+        );
+      }
+
+      let answer = String(q.answer).trim().toLowerCase();
+
+      if (
+        answer === 'true' ||
+        answer === 't' ||
+        answer === 'yes'
+      ) {
+        q.answer = 'True';
+      } else if (
+        answer === 'false' ||
+        answer === 'f' ||
+        answer === 'no'
+      ) {
+        q.answer = 'False';
+      } else {
+        throw new Error(
+          `True/False question ${index + 1} has an invalid answer: "${q.answer}".`
+        );
+      }
+    }
+
+    // ----------------------------------------
+    // FILL IN THE BLANK
+    // ----------------------------------------
+
+    if (expectedType === 'fillblank') {
+      if (
+        q.answer === undefined ||
+        q.answer === null ||
+        String(q.answer).trim() === ''
+      ) {
+        throw new Error(
+          `Fill-in-the-blank question ${index + 1} has no correct answer.`
+        );
+      }
+
+      q.answer = String(q.answer).trim();
+
+      if (!Array.isArray(q.acceptableAnswers)) {
         q.acceptableAnswers = [];
-
       }
 
+      q.acceptableAnswers = q.acceptableAnswers
+        .filter(x => x !== null && x !== undefined)
+        .map(x => String(x).trim())
+        .filter(Boolean);
+
+      // Always include the main answer
+      if (
+        !q.acceptableAnswers.some(
+          x => x.toLowerCase() === q.answer.toLowerCase()
+        )
+      ) {
+        q.acceptableAnswers.unshift(q.answer);
+      }
     }
 
-    if(q.type === 'short'){
+    // ----------------------------------------
+    // SHORT ANSWER
+    // ----------------------------------------
 
-      if(!Array.isArray(q.keyPoints)){
+    if (expectedType === 'short') {
+      if (
+        !q.modelAnswer ||
+        typeof q.modelAnswer !== 'string' ||
+        !q.modelAnswer.trim()
+      ) {
+        throw new Error(
+          `Short question ${index + 1} has no model answer.`
+        );
+      }
 
+      q.modelAnswer = q.modelAnswer.trim();
+
+      if (!Array.isArray(q.keyPoints)) {
         q.keyPoints = [];
-
       }
-
     }
 
-    if(q.type === 'long'){
+    // ----------------------------------------
+    // LONG ANSWER
+    // ----------------------------------------
 
-      if(!Array.isArray(q.keyPoints)){
+    if (expectedType === 'long') {
+      if (
+        !q.modelAnswer ||
+        typeof q.modelAnswer !== 'string' ||
+        !q.modelAnswer.trim()
+      ) {
+        throw new Error(
+          `Long question ${index + 1} has no model answer.`
+        );
+      }
 
+      q.modelAnswer = q.modelAnswer.trim();
+
+      if (!Array.isArray(q.keyPoints)) {
         q.keyPoints = [];
-
       }
-
     }
 
+    // ----------------------------------------
+    // Optional fields
+    // ----------------------------------------
+
+    q.explanation = q.explanation
+      ? String(q.explanation).trim()
+      : '';
+
+    return q;
   });
 
+  // ----------------------------------------
+  // Final type/count verification
+  // ----------------------------------------
 
-  /*
-    Final safety check.
-  */
+  const counts = {
+    mcq: 0,
+    truefalse: 0,
+    fillblank: 0,
+    short: 0,
+    long: 0
+  };
 
-  const finalMarks =
-    ordered.reduce(
-      (sum,q)=>
-        sum + Number(q.marks),
-      0
-    );
+  normalized.forEach(q => {
+    counts[q.type]++;
+  });
 
-
-  if(finalMarks !== TOTAL_MARKS){
-
-    throw new Error(
-      `Internal paper error: total marks became ${finalMarks} instead of 30.`
-    );
-
+  if (counts.mcq !== 5) {
+    throw new Error(`Expected 5 MCQs, got ${counts.mcq}.`);
   }
 
+  if (counts.truefalse !== 2) {
+    throw new Error(
+      `Expected 2 True/False questions, got ${counts.truefalse}.`
+    );
+  }
 
-  return ordered;
+  if (counts.fillblank !== 2) {
+    throw new Error(
+      `Expected 2 fill-in-the-blank questions, got ${counts.fillblank}.`
+    );
+  }
 
+  if (counts.short !== 3) {
+    throw new Error(
+      `Expected 3 short-answer questions, got ${counts.short}.`
+    );
+  }
+
+  if (counts.long !== 3) {
+    throw new Error(
+      `Expected 3 long-answer questions, got ${counts.long}.`
+    );
+  }
+
+  // ----------------------------------------
+  // Force exact 30 marks
+  // ----------------------------------------
+
+  const totalMarks = normalized.reduce(
+    (sum, q) => sum + q.marks,
+    0
+  );
+
+  if (totalMarks !== 30) {
+    throw new Error(
+      `Invalid total marks: ${totalMarks}. Expected exactly 30.`
+    );
+  }
+
+  console.log(
+    'Validated paper:',
+    normalized.map(q => ({
+      id: q.id,
+      type: q.type,
+      marks: q.marks,
+      answer: q.type === 'mcq' ? q.answer : undefined
+    }))
+  );
+
+  return normalized;
 }
-
 
 /* ===============================================================
    11. GENERATE PAPER
