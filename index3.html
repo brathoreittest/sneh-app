@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Class 6 Practice Exam Pro</title>
+<title>Class 6 Exam Pro - 2026 Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -17,271 +17,230 @@
     --pencil-yellow:#F2B705;
     --leaf:#4C8B6B;
     --leaf-light:#D9EEDF;
-    --paper-shadow: 0 18px 40px -18px rgba(32,70,58,0.35);
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0; height: 100%;}
   body{
     background: var(--board);
-    background-image: radial-gradient(circle at 10% 15%, rgba(255,255,255,0.035) 0, transparent 40%);
     font-family:'Inter', sans-serif;
     color:var(--ink);
-    padding: 20px 15px;
+    padding: 20px;
+    margin: 0;
   }
-  .wrap{max-width:900px; margin:0 auto;}
+  .wrap{ max-width:900px; margin:0 auto; }
 
-  /* Header Section */
-  .header{
+  /* Header */
+  .top-nav{
     display:flex; justify-content:space-between; align-items:center;
     margin-bottom:20px; flex-wrap:wrap; gap:15px;
   }
-  .brand{ color:#fff; font-size:24px; font-weight:800; font-family:'Baloo 2'; }
-  .brand span{ font-family:'Caveat'; color:var(--pencil-yellow); font-size:30px; }
+  .logo{ color:#fff; font-size:26px; font-weight:800; font-family:'Baloo 2'; }
+  .logo span{ font-family:'Caveat'; color:var(--pencil-yellow); font-size:32px; }
   
-  .api-settings{
+  .settings-pill{
     background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    padding: 10px; border-radius: 12px; display: flex; gap: 8px; align-items: center;
+    padding: 10px; border-radius: 12px; display: flex; gap: 8px;
   }
-  .api-settings input, .api-settings select{
+  .settings-pill input, .settings-pill select{
     background: #163329; color: #fff; border: 1px solid #4C8B6B;
-    padding: 6px; border-radius: 6px; font-size: 12px; outline: none;
+    padding: 6px; border-radius: 6px; font-size: 13px; outline: none;
   }
-  .btn-save{ background: var(--pencil-yellow); border:none; padding:6px 12px; border-radius:6px; font-weight:700; cursor:pointer; }
 
-  /* Notebook Styles */
-  .notebook{
-    background:var(--paper); border-radius:20px; box-shadow:var(--paper-shadow);
-    padding: 40px 40px 40px 65px; position:relative; min-height: 600px;
+  /* Notebook Styling */
+  .paper{
+    background:var(--paper); border-radius:20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    padding: 40px 40px 40px 70px; position:relative; min-height: 600px;
     background-image: repeating-linear-gradient(to bottom, transparent, transparent 34px, var(--paper-line) 35px);
     background-position: 0 100px;
   }
-  .notebook::before{
-    content:""; position:absolute; left:45px; top:0; bottom:0; width:2px; background: rgba(214,73,60,0.25);
+  .paper::before{
+    content:""; position:absolute; left:50px; top:0; bottom:0; width:2px; background: rgba(214,73,60,0.2);
   }
-  .spiral{
-    position:absolute; left:12px; top:30px; bottom:30px; width:20px;
+  .rings{
+    position:absolute; left:15px; top:30px; bottom:30px; width:25px;
     display:flex; flex-direction:column; justify-content:space-around;
   }
-  .spiral b{ width:22px; height:22px; background:var(--board-dark); border-radius:50%; box-shadow: inset 0 0 0 6px var(--paper); }
+  .rings b{ width:22px; height:22px; background:var(--board-dark); border-radius:50%; box-shadow: inset 0 0 0 6px var(--paper); }
 
-  /* Setup Screen */
-  .setup-title{ font-family:'Baloo 2'; color:var(--board-dark); font-size:28px; margin:0; }
-  .setup-sub{ color:#666; font-size:14px; margin-bottom:25px; }
+  /* UI Elements */
+  .field{ margin-bottom:20px; }
+  label{ display:block; font-weight:700; font-size:12px; color:var(--board-dark); margin-bottom:6px; text-transform:uppercase; }
+  .box{ width:100%; padding:12px; border-radius:10px; border:2px solid #DCE3CF; font-size:15px; background:white; }
   
-  .form-group{ margin-bottom:20px; }
-  label{ display:block; font-weight:700; font-size:13px; color:var(--board-dark); margin-bottom:8px; text-transform:uppercase; }
-  .styled-input{ width:100%; padding:12px; border-radius:10px; border:2px solid #DCE3CF; font-size:15px; outline:none; background:white; }
-  
-  .chapters-container{
+  .ch-grid{
     background:white; border:2px solid #DCE3CF; border-radius:10px; padding:15px;
-    max-height:220px; overflow-y:auto; margin-top:10px;
+    max-height:200px; overflow-y:auto;
   }
-  .ch-row{ display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid #f2f2f2; }
-  .ch-row input{ width:18px; height:18px; cursor:pointer; }
+  .ch-item{ display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #f0f0f0; font-size:14px; }
 
-  .btn-gen{
-    background:var(--marker-red); color:white; border:none; padding:16px 32px; 
+  .btn-action{
+    background:var(--marker-red); color:white; border:none; padding:16px 35px; 
     border-radius:14px; font-size:18px; font-weight:800; cursor:pointer;
-    box-shadow: 0 5px 0 #9e3228; transition:0.2s; font-family:'Baloo 2';
+    box-shadow: 0 5px 0 #9e3228; font-family:'Baloo 2';
   }
-  .btn-gen:active{ transform:translateY(3px); box-shadow:none; }
-  .btn-gen:disabled{ background:#999; box-shadow:none; cursor:not-allowed; }
+  .btn-action:active{ transform:translateY(3px); box-shadow:none; }
+  .btn-action:disabled{ background:#ccc; box-shadow:none; }
 
   /* Exam Interface */
-  .exam-meta{ display:flex; justify-content:space-between; align-items:center; border-bottom:2px dashed #DCE3CF; padding-bottom:15px; margin-bottom:25px; }
-  .timer-box{ background:var(--board-dark); color:white; padding:8px 20px; border-radius:30px; font-family:'Baloo 2'; font-size:22px; }
+  .exam-head{ display:flex; justify-content:space-between; align-items:center; border-bottom:2px dashed #DCE3CF; margin-bottom:25px; padding-bottom:10px; }
+  .timer{ background:var(--board-dark); color:white; padding:8px 18px; border-radius:30px; font-family:'Baloo 2'; font-size:22px; }
   
-  .q-card{ background:white; border:1px solid #e0e0e0; border-radius:15px; padding:25px; margin-bottom:20px; position:relative; }
-  .q-card.active{ border: 2px solid var(--leaf); box-shadow: 0 0 15px rgba(76,139,107,0.1); }
-  .q-head{ display:flex; justify-content:space-between; margin-bottom:15px; }
-  .q-mark{ background:var(--leaf-light); padding:3px 12px; border-radius:12px; font-size:12px; font-weight:700; color:var(--leaf); }
-  .q-text{ font-size:17px; font-weight:600; line-height:1.6; margin-bottom:20px; }
+  .q-block{ background:white; border:1px solid #ddd; border-radius:15px; padding:25px; margin-bottom:20px; }
+  .q-meta{ display:flex; justify-content:space-between; margin-bottom:10px; font-weight:700; color:var(--leaf); }
+  .q-text{ font-size:17px; font-weight:600; margin-bottom:15px; line-height:1.5; }
   
-  .opt-list{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-  .opt-item{ 
-    border:1px solid #ddd; padding:12px; border-radius:10px; cursor:pointer; 
-    display:flex; align-items:center; gap:10px; transition: 0.2s;
-  }
-  .opt-item:hover{ background:#f8fdfa; border-color:var(--leaf); }
-  .text-box{ width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; font-size:15px; }
-
-  /* Scoring */
-  .result-banner{ background:var(--leaf); color:white; padding:30px; border-radius:15px; text-align:center; margin-bottom:30px; }
-  .score-circle{ font-size:54px; font-weight:800; font-family:'Baloo 2'; }
-  .res-detail{ border-bottom:1px solid #eee; padding:15px 0; }
-  .status-tag{ font-weight:800; padding:2px 8px; border-radius:5px; font-size:12px; }
-  .tag-correct{ background:#d4edda; color:#155724; }
-  .tag-wrong{ background:#f8d7da; color:#721c24; }
+  .opt-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .opt-label{ border:1px solid #ddd; padding:12px; border-radius:10px; cursor:pointer; display:flex; align-items:center; gap:10px; }
+  .opt-label:hover{ background:#f9fffb; }
 
   .hidden{ display:none; }
-  .loading-spinner { border: 4px solid rgba(0,0,0,0.1); border-left-color: var(--marker-red); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 10px;}
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading { font-weight:bold; color:var(--marker-red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <header class="header">
-    <div class="brand"><span>Class 6</span> ExamPro</div>
-    <div class="api-settings">
+  <div class="top-nav">
+    <div class="logo"><span>Class 6</span> Exam Pro</div>
+    <div class="settings-pill">
       <input type="password" id="apiKey" placeholder="Gemini API Key">
       <select id="modelSelect">
-        <option value="gemini-2.0-flash">Gemini 2.0 Flash (Fastest)</option>
-        <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
-        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deepest)</option>
+        <option value="gemini-3.8-flash">Gemini 3.8 Flash (Latest)</option>
+        <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+        <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+        <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+        <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option>
       </select>
-      <button class="btn-save" onclick="saveConfig()">Save</button>
+      <button style="background:var(--pencil-yellow); border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-weight:bold;" onclick="saveKey()">Save</button>
     </div>
-  </header>
+  </div>
 
-  <!-- SETUP SCREEN -->
-  <div id="setupScreen" class="notebook">
-    <div class="spiral"></div>
-    <h2 class="setup-title">Generate Practice Paper</h2>
-    <p class="setup-sub">Choose a subject to create a custom 30-mark exam based on your syllabus.</p>
+  <!-- START SCREEN -->
+  <div id="setupScreen" class="paper">
+    <div class="rings"></div>
+    <h2 style="font-family:'Baloo 2'; color:var(--board-dark); margin-top:0;">Practice Paper Setup</h2>
+    <p style="color:#666; margin-bottom:30px;">Select subject and chapters to generate your 30-mark exam.</p>
 
-    <div class="form-group">
+    <div class="field">
       <label>Subject</label>
-      <select id="subjectId" class="styled-input" onchange="updateChapters()">
-        <option value="">-- Select Subject --</option>
+      <select id="subject" class="box" onchange="loadCh()">
+        <option value="">-- Select --</option>
         <option value="Mathematics">Mathematics</option>
         <option value="Science">Science</option>
         <option value="English">English</option>
         <option value="Social Science">Social Science</option>
         <option value="Hindi">Hindi</option>
+        <option value="Sanskrit">Sanskrit</option>
         <option value="Computer Science">Computer Science</option>
       </select>
     </div>
 
-    <div class="form-group">
-      <label>Include Chapters</label>
-      <div id="chapterBox" class="chapters-container">
-        <div style="color:#999; padding:20px; text-align:center;">Select a subject to view chapters...</div>
+    <div class="field">
+      <label>Chapters</label>
+      <div id="chList" class="ch-grid">
+        <div style="color:#999; padding:10px;">Select a subject first...</div>
       </div>
     </div>
 
-    <button id="genBtn" class="btn-gen" onclick="generatePaper()">Generate 30-Mark Exam</button>
-    <div id="status" style="margin-top:15px; font-weight:600;"></div>
+    <button id="genBtn" class="btn-action" onclick="generate()">Generate Exam</button>
+    <div id="status" style="margin-top:15px;"></div>
   </div>
 
   <!-- EXAM SCREEN -->
-  <div id="examScreen" class="notebook hidden">
-    <div class="spiral"></div>
-    <div class="exam-meta">
+  <div id="examScreen" class="paper hidden">
+    <div class="rings"></div>
+    <div class="exam-head">
       <div>
-        <h2 id="examSubjectDisplay" style="margin:0; font-family:'Baloo 2';">Subject</h2>
-        <span style="font-size:13px; color:#666;">Class 6 Practice Paper · 30 Marks</span>
+        <h2 id="exSub" style="margin:0; font-family:'Baloo 2';">Subject</h2>
+        <span style="font-size:12px; color:#666;">Class 6 Syllabus · Total Marks: 30</span>
       </div>
-      <div id="timer" class="timer-box">30:00</div>
+      <div id="timer" class="timer">30:00</div>
     </div>
-
-    <div id="questionList"></div>
-
-    <div style="text-align:center; padding-top:30px;">
-      <button class="btn-gen" onclick="endExam()">Submit Examination</button>
+    <div id="qContainer"></div>
+    <div style="text-align:center; margin-top:20px;">
+      <button class="btn-action" onclick="finish()">Submit Answers</button>
     </div>
   </div>
 
   <!-- RESULT SCREEN -->
-  <div id="resultScreen" class="notebook hidden">
-    <div class="spiral"></div>
-    <div class="result-banner">
-      <div style="font-size:18px;">Total Score</div>
-      <div class="score-circle" id="finalScore">0/30</div>
+  <div id="resultScreen" class="paper hidden">
+    <div class="rings"></div>
+    <div style="background:var(--leaf); color:white; padding:30px; border-radius:15px; text-align:center;">
+      <div style="font-size:18px;">Examination Result</div>
+      <div id="scoreBox" style="font-size:50px; font-weight:800; font-family:'Baloo 2';">0/30</div>
     </div>
-    <div id="resultSummary"></div>
-    <button class="btn-gen" style="margin-top:20px; width:100%;" onclick="location.reload()">Take Another Test</button>
+    <div id="summary" style="margin-top:25px;"></div>
+    <button class="btn-action" style="width:100%; margin-top:20px;" onclick="location.reload()">Start New Paper</button>
   </div>
-
 </div>
 
 <script>
-const SYLLABUS = {
-  "Mathematics": ["Number Play", "Fractions", "Decimals", "Data Handling", "Mensuration (Perimeter & Area)", "Algebra Intro", "Ratio & Proportion", "Lines and Angles", "Prime Time"],
-  "Science": ["Food & Components", "Sorting Materials", "Separation of Substances", "Getting to Know Plants", "Body Movements", "Motion & Measurement", "Light & Shadows", "Electricity", "Magnets"],
-  "English": ["Reading Comprehension", "Nouns & Pronouns", "Tenses", "Adjectives", "Active/Passive Voice", "Determiners", "Paragraph Writing"],
-  "Social Science": ["Earth in Solar System", "Maps", "Major Landforms", "Indus Valley Civilization", "Vedic Age", "Local Government", "Democracy"],
-  "Hindi": ["चिड़िया और चुरुन्गुन", "गौरा", "विशेषण", "मुहावरे", "संज्ञा", "लिंग और वचन"],
-  "Computer Science": ["Advanced Excel", "Python Basics", "HTML Tags", "Cyber Safety", "AI Basics", "Cloud Apps"]
+const DATA = {
+  "Mathematics": ["Patterns in Math", "Lines and Angles", "Number Play", "Data Handling", "Prime Time", "Perimeter and Area", "Fractions", "Symmetry"],
+  "Science": ["Living World", "Magnets", "Motion & Measurement", "Materials", "Temperature", "States of Water", "Separation", "Healthy Body"],
+  "English": ["Nouns", "Tenses", "Voice", "Comprehension", "Sentence Kinds", "Adverbs", "Modals"],
+  "Social Science": ["Earth & Solar System", "Civilization", "Democracy", "Local Govt", "Unity in Diversity", "History Timeline"],
+  "Hindi": ["चिड़िया और चुरुन्गुन", "गौरा", "अनारको", "व्याकरण - संज्ञा", "मुहावरे"],
+  "Sanskrit": ["संस्कृत-वर्णमाला", "शब्द-परिचयः", "धातु-परिचयः", "प्रार्थना"],
+  "Computer Science": ["Excel", "Python", "HTML", "Cloud Apps", "Cyber Security", "AI Basics"]
 };
 
-let questions = [];
+let exam = [];
 let answers = {};
-let secondsLeft = 1800;
-let timerId;
+let time = 1800;
+let tInterval;
 
-// --- Persistence ---
-function saveConfig() {
-  localStorage.setItem('gemini_key', document.getElementById('apiKey').value);
-  localStorage.setItem('gemini_model', document.getElementById('modelSelect').value);
-  alert("Settings Saved!");
+function saveKey() {
+  localStorage.setItem('g_key', document.getElementById('apiKey').value);
+  alert("Saved!");
 }
 
-function loadConfig() {
-  const k = localStorage.getItem('gemini_key');
-  const m = localStorage.getItem('gemini_model');
+window.onload = () => {
+  const k = localStorage.getItem('g_key');
   if(k) document.getElementById('apiKey').value = k;
-  if(m) document.getElementById('modelSelect').value = m;
-  
-  // Build spirals
-  document.querySelectorAll('.spiral').forEach(s => {
-    for(let i=0; i<12; i++) s.innerHTML += '<b></b>';
-  });
-}
-loadConfig();
+  document.querySelectorAll('.rings').forEach(r => { for(let i=0; i<12; i++) r.innerHTML += '<b></b>'; });
+};
 
-// --- UI Logic ---
-function updateChapters() {
-  const sub = document.getElementById('subjectId').value;
-  const box = document.getElementById('chapterBox');
-  box.innerHTML = "";
-  if(!sub) return;
-
-  SYLLABUS[sub].forEach(ch => {
-    box.innerHTML += `<div class="ch-row"><input type="checkbox" class="ch-tick" value="${ch}"> <span>${ch}</span></div>`;
+function loadCh() {
+  const s = document.getElementById('subject').value;
+  const list = document.getElementById('chList');
+  list.innerHTML = "";
+  if(!s) return;
+  DATA[s].forEach(c => {
+    list.innerHTML += `<div class="ch-item"><input type="checkbox" class="ch-tick" value="${c}"> <span>${c}</span></div>`;
   });
 }
 
-// --- API Logic (Fixed for Multiple Questions) ---
-async function generatePaper() {
+async function generate() {
   const key = document.getElementById('apiKey').value;
-  const sub = document.getElementById('subjectId').value;
-  const model = document.getElementById('modelSelect').value;
-  const selected = Array.from(document.querySelectorAll('.ch-tick:checked')).map(t => t.value);
+  const sub = document.getElementById('subject').value;
+  const mod = document.getElementById('modelSelect').value;
+  const chs = Array.from(document.querySelectorAll('.ch-tick:checked')).map(t => t.value);
 
-  if(!key) return alert("Please enter your API Key");
-  if(!sub || selected.length === 0) return alert("Please select subject and chapters");
+  if(!key || !sub || chs.length === 0) return alert("Fill all details!");
 
   const btn = document.getElementById('genBtn');
-  const status = document.getElementById('status');
   btn.disabled = true;
-  status.innerHTML = `<span class="loading-spinner"></span> Generating 30-Mark paper for ${sub}...`;
+  document.getElementById('status').innerHTML = `<span class="loading">Generating 30-Mark Paper using ${mod}...</span>`;
 
   const prompt = `
-    Create a Class 6 school practice exam for the subject "${sub}". 
-    Topic focus: ${selected.join(", ")}.
+    Subject: Class 6 ${sub}. 
+    Chapters: ${chs.join(", ")}.
     
-    PAPER RULES:
-    1. Total marks MUST be exactly 30.
-    2. QUESTION COUNT: You MUST create at least 12 distinct questions. Do not combine everything into one question.
-    3. DISTRIBUTION:
-       - Part A: 10 MCQs (1 mark each)
-       - Part B: 5 Fill in the blanks or One-word answers (1 mark each)
-       - Part C: 3 Short Answers (3 marks each)
-       - Part D: 1 Long Answer (6 marks)
-    4. MATH: Use text notation (e.g. 1/2, 5^2, area = l x b).
-    5. No markdown. Return ONLY a valid JSON array.
-
-    JSON SCHEMA:
-    [
-      {"id": 1, "type": "mcq", "question": "...", "options": ["A", "B", "C", "D"], "answer": "...", "marks": 1},
-      {"id": 2, "type": "text", "question": "...", "answer": "...", "marks": 1},
-      {"id": 3, "type": "descriptive", "question": "...", "answer": "Model answer for student to compare", "marks": 3}
-    ]
+    EXAM BLUEPRINT:
+    - TOTAL MARKS: Exactly 30.
+    - STRUCTURE: Minimum 12 questions, Maximum 18.
+    - Part 1: 10 MCQs (1 Mark each)
+    - Part 2: 5 One-word/Fill-in-blanks (1 Mark each)
+    - Part 3: 3 Short Answers (3 Marks each)
+    - Part 4: 1 Long Answer (6 Marks)
+    
+    MATH RULE: For Mathematics, use clear text. No single-question papers.
+    Return ONLY a JSON array: [{"id":1,"type":"mcq","question":"...","options":["..."],"answer":"...","marks":1}]
   `;
 
   try {
-    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mod}:generateContent?key=${key}`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -290,120 +249,87 @@ async function generatePaper() {
       })
     });
 
-    const data = await resp.json();
-    const text = data.candidates[0].content.parts[0].text;
-    questions = JSON.parse(text);
-    
-    startExam(sub);
+    const d = await res.json();
+    exam = JSON.parse(d.candidates[0].content.parts[0].text);
+    start(sub);
   } catch (e) {
-    console.error(e);
-    status.innerHTML = "Error generating paper. Please check API Key or try again.";
+    document.getElementById('status').innerHTML = "Error: Model unavailable or key invalid.";
     btn.disabled = false;
   }
 }
 
-// --- Exam Session ---
-function startExam(sub) {
+function start(sub) {
   document.getElementById('setupScreen').classList.add('hidden');
   document.getElementById('examScreen').classList.remove('hidden');
-  document.getElementById('examSubjectDisplay').innerText = sub;
+  document.getElementById('exSub').innerText = sub;
   
-  const container = document.getElementById('questionList');
-  container.innerHTML = "";
+  const cont = document.getElementById('qContainer');
+  cont.innerHTML = "";
 
-  questions.forEach((q, idx) => {
-    const card = document.createElement('div');
-    card.className = "q-card";
-    card.innerHTML = `
-      <div class="q-head">
-        <span style="font-weight:800; color:var(--leaf)">Question ${idx+1}</span>
-        <span class="q-mark">${q.marks} Mark${q.marks>1?'s':''}</span>
-      </div>
+  exam.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = "q-block";
+    div.innerHTML = `
+      <div class="q-meta"><span>Question ${i+1}</span> <span>${q.marks} Mark(s)</span></div>
       <div class="q-text">${q.question}</div>
-      <div id="input-area-${q.id}"></div>
+      <div id="ans-${q.id}"></div>
     `;
-    container.appendChild(card);
+    cont.appendChild(div);
 
-    const inputArea = document.getElementById(`input-area-${q.id}`);
+    const aArea = document.getElementById(`ans-${q.id}`);
     if(q.type === 'mcq') {
-      const opts = document.createElement('div');
-      opts.className = "opt-list";
+      const g = document.createElement('div');
+      g.className = "opt-grid";
       q.options.forEach(o => {
-        opts.innerHTML += `
-          <label class="opt-item">
-            <input type="radio" name="q-${q.id}" value="${o}" onchange="saveAns(${q.id}, '${o}')">
-            ${o}
-          </label>
-        `;
+        g.innerHTML += `<label class="opt-label"><input type="radio" name="q${q.id}" value="${o}" onchange="ans(${q.id},'${o}')">${o}</label>`;
       });
-      inputArea.appendChild(opts);
-    } else if(q.type === 'text') {
-      inputArea.innerHTML = `<input type="text" class="text-box" placeholder="Your answer..." oninput="saveAns(${q.id}, this.value)">`;
+      aArea.appendChild(g);
     } else {
-      inputArea.innerHTML = `<textarea class="text-box" rows="3" placeholder="Explain your answer..." oninput="saveAns(${q.id}, this.value)"></textarea>`;
+      aArea.innerHTML = `<input type="text" class="box" placeholder="Your answer..." oninput="ans(${q.id},this.value)">`;
     }
   });
 
-  timerId = setInterval(updateTimer, 1000);
+  tInterval = setInterval(() => {
+    time--;
+    let m = Math.floor(time/60), s = time%60;
+    document.getElementById('timer').innerText = `${m}:${s<10?'0'+s:s}`;
+    if(time<=0) finish();
+  }, 1000);
 }
 
-function saveAns(qid, val) { answers[qid] = val; }
+function ans(id, v) { answers[id] = v; }
 
-function updateTimer() {
-  secondsLeft--;
-  const m = Math.floor(secondsLeft/60);
-  const s = secondsLeft % 60;
-  document.getElementById('timer').innerText = `${m}:${s < 10 ? '0'+s : s}`;
-  if(secondsLeft <= 0) endExam();
-}
-
-// --- Grading ---
-function endExam() {
-  clearInterval(timerId);
+function finish() {
+  clearInterval(tInterval);
   document.getElementById('examScreen').classList.add('hidden');
   document.getElementById('resultScreen').classList.remove('hidden');
 
-  let totalScore = 0;
-  let maxMarks = 0;
-  const summary = document.getElementById('resultSummary');
-  summary.innerHTML = "";
+  let score = 0;
+  const sum = document.getElementById('summary');
+  sum.innerHTML = "";
 
-  questions.forEach(q => {
-    maxMarks += q.marks;
-    const userAns = (answers[q.id] || "").trim().toLowerCase();
-    const correctAns = String(q.answer).trim().toLowerCase();
-    
-    let isCorrect = false;
-    if(q.type !== 'descriptive') {
-      if(userAns === correctAns) {
-        totalScore += q.marks;
-        isCorrect = true;
-      }
+  exam.forEach(q => {
+    const u = (answers[q.id] || "").trim().toLowerCase();
+    const c = String(q.answer).trim().toLowerCase();
+    let correct = false;
+
+    if(q.marks === 1) {
+       if(u === c) { score += 1; correct = true; }
     } else {
-      // For descriptive in a simple app, we award marks if they wrote a reasonable amount
-      if(userAns.length > 15) {
-        totalScore += q.marks;
-        isCorrect = true;
-      }
+       if(u.length > 10) { score += q.marks; correct = true; } // Descriptive credit
     }
 
-    summary.innerHTML += `
-      <div class="res-detail">
-        <div style="display:flex; justify-content:space-between;">
-          <span style="font-weight:700;">Q: ${q.question}</span>
-          <span class="status-tag ${isCorrect ? 'tag-correct' : 'tag-wrong'}">${isCorrect ? 'Correct' : 'Incorrect'}</span>
-        </div>
-        <div style="font-size:14px; margin-top:5px;">
-          Your Answer: <span style="color:#666">${answers[q.id] || "No response"}</span><br>
-          Correct Answer: <span style="color:var(--leaf)">${q.answer}</span>
-        </div>
+    sum.innerHTML += `
+      <div style="border-bottom:1px solid #eee; padding:10px 0;">
+        <div style="font-weight:700;">${q.question}</div>
+        <div style="color:${correct?'green':'red'}">Your Ans: ${answers[q.id]||'None'}</div>
+        <div style="font-size:12px; color:#666;">Correct: ${q.answer}</div>
       </div>
     `;
   });
 
-  document.getElementById('finalScore').innerText = `${totalScore} / ${maxMarks}`;
+  document.getElementById('scoreBox').innerText = `${score}/30`;
 }
-
 </script>
 </body>
 </html>
