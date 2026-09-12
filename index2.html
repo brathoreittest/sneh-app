@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Class 6 Practice Exam</title>
 
-<!-- Preconnect to BOTH font hosts (gstatic was missing) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Variable fonts: fewer files, faster render -->
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500..800&family=Inter:opsz,wght@14..32,400..700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -40,7 +38,6 @@
   h1,h2,h3,.brand,.q-marks-tag{font-family:'Baloo 2', system-ui, sans-serif;}
   .wrap{max-width:880px;margin:0 auto;}
 
-  /* ---- Header ---- */
   .topbar{
     display:flex; align-items:center; justify-content:space-between;
     gap:16px; margin-bottom:22px; flex-wrap:wrap;
@@ -76,7 +73,6 @@
   .key-btn:hover{filter:brightness(1.05);}
   .key-status{font-size:11px; color:var(--leaf-light); margin-top:4px; min-height:14px;}
 
-  /* ---- Notebook card ---- */
   .notebook{
     position:relative;
     background:var(--paper);
@@ -151,7 +147,6 @@
   .status-line{margin-top:14px; font-size:13px; color:#5b6b62; min-height:18px;}
   .error-line{color:var(--marker-red); font-weight:600;}
 
-  /* ---- Exam header/timer ---- */
   .exam-top{
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
     gap:14px; margin-bottom:22px; padding-bottom:16px; border-bottom:2px dashed #cdd8c6;
@@ -172,7 +167,6 @@
   }
   .submit-btn:hover{background:var(--board-dark);}
 
-  /* ---- Question card ---- */
   .qcard{
     background:#fff; border:1.5px solid #e2e8dc; border-radius:14px;
     padding:18px 20px; margin-bottom:16px; position:relative;
@@ -216,7 +210,6 @@
   .q-timer.warn{color:var(--marker-red);}
   .q-note{font-size:12px; color:#8b9a90; margin-top:4px;}
 
-  /* ---- Results ---- */
   .score-banner{
     background: var(--leaf); color:#fff; border-radius:14px; padding:20px 24px;
     display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:12px;
@@ -269,10 +262,11 @@
       <div class="key-box">
         <input id="apiKeyInput" type="password" placeholder="Gemini API key (AIza...)" autocomplete="off">
         <select id="modelSelect" aria-label="Gemini model">
-          <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (fastest)</option>
-          <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (recommended)</option>
-          <option value="gemini-2.5-pro">Gemini 2.5 Pro (best quality)</option>
-          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (fastest)</option>
+          <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+          <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+          <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+          <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (latest, recommended)</option>
         </select>
         <button class="key-btn" id="saveKeyBtn">Save</button>
       </div>
@@ -451,7 +445,7 @@ const SUBJECTS = {
 ---------------------------------------------------------------- */
 const state = {
   apiKey: '',
-  model: 'gemini-2.5-flash',
+  model: 'gemini-3.8-flash',
   questions: [],
   currentActiveIndex: -1,
   overallSeconds: 30 * 60,
@@ -483,10 +477,6 @@ function formatTime(totalSeconds){
 }
 function setKeyStatus(msg){ $('keyStatus').textContent = msg; }
 
-/**
- * Normalize an answer string for comparison.
- * Strips: case, punctuation, extra whitespace, leading articles.
- */
 function normalizeAnswer(s){
   return String(s == null ? '' : s)
     .toLowerCase()
@@ -542,7 +532,7 @@ function forgetKey(){
 }
 
 /* ---------------------------------------------------------------
-   5. SETUP SCREEN — subject / chapter rendering
+   5. SETUP SCREEN
 ---------------------------------------------------------------- */
 function populateSubjects(){
   const sel = $('subjectSelect');
@@ -604,7 +594,6 @@ function getSelectedChapters(){
     const ta = $('freeTextChapters');
     const txt = ta ? ta.value.trim() : '';
     if(!txt) return [];
-    // split on commas, semicolons, or newlines
     return txt.split(/[,;\n]+/).map(s=>s.trim()).filter(Boolean);
   }
   const boxes = document.querySelectorAll('#chaptersBox input[type="checkbox"]:checked');
@@ -660,12 +649,6 @@ Long answer (4 or 5 marks each):
 Respond with the raw JSON array ONLY.`;
 }
 
-/**
- * Validate & repair a generated question array.
- * - Ensures MCQ.answer matches one of its options (fuzzy).
- * - Ensures truefalse.answer is "true"/"false".
- * - Drops questions that can't be salvaged.
- */
 function validateQuestions(questions){
   const cleaned = [];
   for(const q of questions){
@@ -675,18 +658,15 @@ function validateQuestions(questions){
 
     if(q.type === 'mcq'){
       if(!Array.isArray(q.options) || q.options.length < 2) continue;
-      // Try to match q.answer against options
       const target = normalizeAnswer(q.answer);
       let matched = q.options.find(o => normalizeAnswer(o) === target);
       if(!matched){
-        // Fuzzy: option contains answer or answer contains option
         matched = q.options.find(o => {
           const n = normalizeAnswer(o);
           return n && target && (n.includes(target) || target.includes(n));
         });
       }
       if(!matched){
-        // Salvage: pick the option with the most word-overlap with the answer
         const tWords = new Set(target.split(' ').filter(Boolean));
         let best = null, bestScore = 0;
         for(const o of q.options){
@@ -697,11 +677,10 @@ function validateQuestions(questions){
         if(best && bestScore > 0) matched = best;
       }
       if(!matched){
-        // Give up on this question rather than ship a broken one
         console.warn('Dropping MCQ with unmatchable answer:', q);
         continue;
       }
-      q.answer = matched; // normalise to exact option text
+      q.answer = matched;
     }
 
     if(q.type === 'truefalse'){
@@ -720,7 +699,6 @@ function validateQuestions(questions){
 
     cleaned.push(q);
   }
-  // renumber ids
   cleaned.forEach((q,i)=> q.id = i+1);
   return cleaned;
 }
@@ -748,17 +726,16 @@ async function callGemini(prompt){
     }
   };
 
-  // thinkingConfig is only valid on 2.5 models
-  const is25 = /gemini-2\.5/.test(state.model);
   const generationConfig = {
     temperature: 0.6,
     maxOutputTokens: 16384,
     responseMimeType: 'application/json',
     responseSchema: responseSchema
   };
-  if(is25){
-    // 2.5-pro doesn't accept thinkingBudget:0; 2.5-flash/flash-lite do
-    generationConfig.thinkingConfig = { thinkingBudget: 0 };
+
+  // Gemini 3.x uses thinkingLevel (low/medium/high) — NOT thinkingBudget
+  if (/gemini-3\./.test(state.model)) {
+    generationConfig.thinkingConfig = { thinkingLevel: 'low' };
   }
 
   const resp = await fetch(url, {
@@ -801,7 +778,6 @@ function extractJson(text){
   try{
     return JSON.parse(jsonStr);
   }catch(e){
-    // Repair common slips: trailing commas, control chars
     const repaired = jsonStr
       .replace(/,\s*([\]}])/g, '$1')
       .replace(/[\u0000-\u0009\u000B\u000C\u000E-\u001F]/g, '');
