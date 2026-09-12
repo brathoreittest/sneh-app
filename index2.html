@@ -739,9 +739,18 @@ async function callGemini(prompt){
   // truncating the JSON response. thinkingBudget: 0 gives the entire
   // token budget to the actual question-paper output.
   // -----------------------------------------------------------------
-  if (/gemini-3\./.test(state.model)) {
-    generationConfig.thinkingConfig = { thinkingBudget: 0 };
-  }
+  // Gemini 3.6 Flash supports 'minimal' — the closest to thinking-off
+if (/gemini-3\.6/.test(state.model)) {
+  generationConfig.thinkingConfig = { thinkingLevel: 'minimal' };
+} 
+// Gemini 3.8 and 3.7 do NOT support 'minimal' — must use 'low'
+else if (/gemini-3\.(8|7)/.test(state.model)) {
+  generationConfig.thinkingConfig = { thinkingLevel: 'low' };
+}
+// Fallback for other 3.x
+else if (/gemini-3\./.test(state.model)) {
+  generationConfig.thinkingConfig = { thinkingLevel: 'low' };
+}
 
   const resp = await fetch(url, {
     method: 'POST',
